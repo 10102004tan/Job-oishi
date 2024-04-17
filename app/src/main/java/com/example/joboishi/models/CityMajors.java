@@ -1,5 +1,7 @@
 package com.example.joboishi.models;
 
+import java.util.Objects;
+
 public class CityMajors {
     private String name_city;
     private Boolean checked_city;
@@ -23,6 +25,19 @@ public class CityMajors {
     public CityMajors(String name_city, Boolean checked_city) {
         this.name_city = name_city;
         this.checked_city = checked_city;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CityMajors that = (CityMajors) o;
+        return Objects.equals(name_city, that.name_city) && Objects.equals(checked_city, that.checked_city);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name_city, checked_city);
     }
 
     @Override

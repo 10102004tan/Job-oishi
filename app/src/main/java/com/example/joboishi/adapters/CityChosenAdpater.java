@@ -62,10 +62,7 @@ public class CityChosenAdpater extends RecyclerView.Adapter<CityChosenAdpater.My
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    Toast.makeText(context, position + "", Toast.LENGTH_SHORT).show();
-                    if (position != RecyclerView.NO_POSITION) {
-
-                    }
+                    itemClickListener.onItemClick(MyViewHolder.this, position);
                 }
             });
         }
@@ -73,7 +70,7 @@ public class CityChosenAdpater extends RecyclerView.Adapter<CityChosenAdpater.My
 
     // Dinh nghia Interface
     public interface ItemClickListener {
-        public void onItemClick(RegisterMajorAdapter.MyViewHolder holder, int position);
+        public void onItemClick(MyViewHolder holder, int position);
 
     }
 }

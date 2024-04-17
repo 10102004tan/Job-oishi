@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joboishi.R;
 import com.example.joboishi.adapters.RegisterMajorAdapter;
 import com.example.joboishi.adapters.MajorChosenAdapter;
 import com.example.joboishi.databinding.RegisterMajorLayoutBinding;
@@ -58,6 +59,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
         }
 
         updateChosenCountTextView();
+        updateButtonBackground();
         // Set adapter cho RecyclerView hiển thị danh sách majors
         registerMajorAdapter = new RegisterMajorAdapter(this, majors);
 
@@ -69,29 +71,28 @@ public class RegisterMajorActivity extends AppCompatActivity{
         registerMajorAdapter.setItemClickListener(new RegisterMajorAdapter.ItemClickListener() {
             @Override
             public void onItemClick(RegisterMajorAdapter.MyViewHolder holder, int position) {
-                    if (position != RecyclerView.NO_POSITION) {
-                        updateChosenCountTextView();
-                        RegisterMajors clickedMajor = majors.get(position);
-                        // Kiểm tra nếu major chưa được chọn
-                        if (!clickedMajor.getChecked()) {
-                            // Thêm major vào danh sách majorsChosen
+                if (position != RecyclerView.NO_POSITION) {
+                    RegisterMajors clickedMajor = majors.get(position);
+                    if (!clickedMajor.getChecked()) {
+                        if (majorsChosen.size() < 5) { // Kiểm tra số lượng majors đã chọn có đạt tối đa chưa
                             majorsChosen.add(clickedMajor);
+                            updateChosenCountTextView();
                         } else {
-                            majorsChosen.remove(clickedMajor);
+                            Toast.makeText(RegisterMajorActivity.this, "Bạn đã chọn tối đa 5 vị trí.", Toast.LENGTH_SHORT).show();
+                            return; // Không thêm major mới vào danh sách nếu đã đạt tối đa
                         }
-                        // Thay đổi trạng thái của CheckBox khi click vào CardView
-                        clickedMajor.setChecked(!clickedMajor.getChecked());
-
-                        registerMajorAdapter.notifyItemChanged(position);
-                        majorChosenAdapter.notifyDataSetChanged();
-
-                        // Hiển thị Toast để kiểm tra
-                        Log.d("TAG", majorsChosen.size() + "");
+                    } else {
+                        majorsChosen.remove(clickedMajor);
+                        updateChosenCountTextView();
                     }
-
+                    clickedMajor.setChecked(!clickedMajor.getChecked());
+                    registerMajorAdapter.notifyItemChanged(position);
+                    majorChosenAdapter.notifyDataSetChanged();
+                    updateButtonBackground(); // Gọi hàm để cập nhật nền của nút
+                }
             }
-
         });
+
 
         // Set adapter cho RecyclerView hiển thị danh sách majors đã chọn
         majorChosenAdapter = new MajorChosenAdapter(this, majorsChosen);
@@ -119,6 +120,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
                         break;
                     }
                 }
+                updateButtonBackground(); // Gọi hàm để cập nhật nền của nút
 
             }
         });
@@ -136,9 +138,6 @@ public class RegisterMajorActivity extends AppCompatActivity{
                     // Chuyển đến NextActivity
                     startActivity(intent);
 
-                } else {
-                    // Hiển thị thông báo cho người dùng rằng họ cần phải chọn ít nhất một vị trí trước khi tiếp tục
-                    Toast.makeText(RegisterMajorActivity.this, "Bạn cần phải chọn ít nhất một vị trí trước khi tiếp tục", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -147,7 +146,16 @@ public class RegisterMajorActivity extends AppCompatActivity{
     private boolean hasMajorsChosen() {
         return majorsChosen != null && !majorsChosen.isEmpty();
     }
-
+    private void updateButtonBackground() {
+        AppCompatButton btnNext = registerMajorLayoutBinding.btnNextAdress;
+        if (hasMajorsChosen()) {
+            btnNext.setBackgroundResource(R.drawable.background_button);
+            btnNext.setTextColor(getResources().getColor(R.color.white));
+        } else {
+            btnNext.setBackgroundResource(R.drawable.background_button_disable);
+            btnNext.setTextColor(getResources().getColor(R.color.btn_disable));
+        }
+    }
     private void updateChosenCountTextView() {
         TextView countChosenAllow = registerMajorLayoutBinding.countChosenAllow;
         if (majorsChosen != null) {
