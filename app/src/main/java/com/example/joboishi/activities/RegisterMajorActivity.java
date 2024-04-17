@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joboishi.adapters.RegisterMajorAdapter;
-import com.example.joboishi.adapters.RegisterMajorsChosenAdapter;
+import com.example.joboishi.adapters.MajorChosenAdapter;
 import com.example.joboishi.databinding.RegisterMajorLayoutBinding;
 import com.example.joboishi.models.RegisterMajors;
 
@@ -25,7 +26,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
     private ArrayList<RegisterMajors> majorsChosen = new ArrayList<>();
 
     RegisterMajorAdapter registerMajorAdapter;
-    RegisterMajorsChosenAdapter registerMajorsChosenAdapter;
+    MajorChosenAdapter majorChosenAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,23 +57,72 @@ public class RegisterMajorActivity extends AppCompatActivity{
             }
         }
 
+        updateChosenCountTextView();
         // Set adapter cho RecyclerView hiển thị danh sách majors
-        registerMajorAdapter = new RegisterMajorAdapter(this, majors, majorsChosen);
+        registerMajorAdapter = new RegisterMajorAdapter(this, majors);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         registerMajorLayoutBinding.showListMajor.setLayoutManager(layoutManager);
         registerMajorLayoutBinding.showListMajor.setAdapter(registerMajorAdapter);
 
+        registerMajorAdapter.setItemClickListener(new RegisterMajorAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(RegisterMajorAdapter.MyViewHolder holder, int position) {
+                    if (position != RecyclerView.NO_POSITION) {
+                        updateChosenCountTextView();
+                        RegisterMajors clickedMajor = majors.get(position);
+                        // Kiểm tra nếu major chưa được chọn
+                        if (!clickedMajor.getChecked()) {
+                            // Thêm major vào danh sách majorsChosen
+                            majorsChosen.add(clickedMajor);
+                        } else {
+                            majorsChosen.remove(clickedMajor);
+                        }
+                        // Thay đổi trạng thái của CheckBox khi click vào CardView
+                        clickedMajor.setChecked(!clickedMajor.getChecked());
+
+                        registerMajorAdapter.notifyItemChanged(position);
+                        majorChosenAdapter.notifyDataSetChanged();
+
+                        // Hiển thị Toast để kiểm tra
+                        Log.d("TAG", majorsChosen.size() + "");
+                    }
+
+            }
+
+        });
+
         // Set adapter cho RecyclerView hiển thị danh sách majors đã chọn
-        registerMajorsChosenAdapter = new RegisterMajorsChosenAdapter(this, majorsChosen, majors);
+        majorChosenAdapter = new MajorChosenAdapter(this, majorsChosen);
 
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
         layoutManager2.setOrientation(RecyclerView.HORIZONTAL);
         registerMajorLayoutBinding.showListMajorsChosen.setLayoutManager(layoutManager2);
-        registerMajorLayoutBinding.showListMajorsChosen.setAdapter(registerMajorsChosenAdapter);
+        registerMajorLayoutBinding.showListMajorsChosen.setAdapter(majorChosenAdapter);
 
-        updateChosenCountTextView();
+        majorChosenAdapter.setItemClickListener(new MajorChosenAdapter.ItemClickListener() {
+            @Override
+            public void onItemClick(MajorChosenAdapter.MyViewHolder holder, int position) {
+                RegisterMajors major = majorsChosen.get(position);
+                majorsChosen.remove(major);
+
+                // Xóa major khỏi danh sách majorsChosen
+                majorChosenAdapter.notifyDataSetChanged();
+                updateChosenCountTextView();
+                // Cập nhật trạng thái của major trong danh sách majors ban đầu
+                for (int i = 0; i < majors.size(); i++) {
+                    RegisterMajors originalMajor = majors.get(i);
+                    if (originalMajor.equals(major)) {
+                        originalMajor.setChecked(false);
+                        registerMajorAdapter.notifyItemChanged(i);
+                        break;
+                    }
+                }
+
+            }
+        });
+
 
         AppCompatButton btnNext = registerMajorLayoutBinding.btnNextAdress;
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -93,23 +143,25 @@ public class RegisterMajorActivity extends AppCompatActivity{
             }
         });
     }
+
     private boolean hasMajorsChosen() {
         return majorsChosen != null && !majorsChosen.isEmpty();
     }
 
     private void updateChosenCountTextView() {
         TextView countChosenAllow = registerMajorLayoutBinding.countChosenAllow;
-        if (majorsChosen != null && majorsChosen.size() > 0) {
+        if (majorsChosen != null) {
             int count = majorsChosen.size();
-            if (count == 5) {
-                countChosenAllow.setText("Bạn đã chọn tối đa.");
+            int remainingCount = 5 - count;
+            if (remainingCount > 0) {
+                countChosenAllow.setText("Bạn còn có thể chọn " + remainingCount + " vị trí.");
             } else {
-                countChosenAllow.setText("Bạn có thể chọn thêm " + (5 - count) + " vị trí.");
+                countChosenAllow.setText("Bạn đã chọn tối đa.");
             }
         } else {
             countChosenAllow.setText("Bạn có thể lựa chọn tối đa 5 vị trí.");
         }
-
     }
+
 
 }

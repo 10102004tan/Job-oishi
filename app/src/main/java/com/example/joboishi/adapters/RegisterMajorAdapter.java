@@ -17,17 +17,18 @@ import java.util.ArrayList;
 
 public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdapter.MyViewHolder> {
     private Activity context;
-    private ArrayList<RegisterMajors> majors;
-    private ArrayList<RegisterMajors> majorsChosen;
+    private ArrayList<RegisterMajors> majors = new ArrayList<>();
 
-    public RegisterMajorAdapter(Activity context, ArrayList<RegisterMajors> majors, ArrayList<RegisterMajors> majorsChosen) {
+    private ItemClickListener itemClickListener;
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public RegisterMajorAdapter(Activity context, ArrayList<RegisterMajors> majors) {
         this.context = context;
         this.majors = majors;
-        if (majorsChosen == null) {
-            this.majorsChosen = new ArrayList<>();
-        } else {
-            this.majorsChosen = majorsChosen;
-        }
+
     }
 
     @NonNull
@@ -65,30 +66,16 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        RegisterMajors clickedMajor = majors.get(position);
-                        // Kiểm tra nếu major chưa được chọn
-                        if (!clickedMajor.getChecked()) {
-                            // Thêm major vào danh sách majorsChosen
-                            majorsChosen.add(clickedMajor);
-                            notifyDataSetChanged();
-                        } else {
-                            majorsChosen.remove(clickedMajor);
-                            notifyDataSetChanged();
-                        }
-                        // Thay đổi trạng thái của CheckBox khi click vào CardView
-                        clickedMajor.setChecked(!clickedMajor.getChecked());
-                        // Cập nhật trạng thái của CheckBox trong RecyclerView
-                        notifyItemChanged(position);
-                        // Hiển thị Toast để kiểm tra
-                        Log.d("TAG", majorsChosen.size() + "");
-                        Toast.makeText(context, clickedMajor.getChecked().toString(), Toast.LENGTH_SHORT).show();
-                        notifyDataSetChanged();
-                    }
+                    itemClickListener.onItemClick(MyViewHolder.this, position);
                 }
 
             });
         }
+
+    }
+
+    public interface ItemClickListener {
+        public void onItemClick(MyViewHolder holder, int position);
 
     }
 

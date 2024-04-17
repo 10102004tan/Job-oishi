@@ -10,15 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.joboishi.databinding.CityItemBinding;
+import com.example.joboishi.models.CityMajors;
 
 import java.util.ArrayList;
 
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> {
     private Activity context;
-    private ArrayList<String> cities = new ArrayList<>();
-    private ArrayList<String> majorsChosen;
+    private ArrayList<CityMajors> cities = new ArrayList<>();
 
-    public CityAdapter(Activity context, ArrayList<String> cities) {
+    private ItemClickListener itemClickListener;
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public CityAdapter(Activity context, ArrayList<CityMajors> cities) {
         this.context = context;
         this.cities = cities;
 
@@ -34,9 +40,11 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String city = cities.get(position);
+        CityMajors city = cities.get(position);
 
-        holder.cityItemBinding.city.setText(city);
+        holder.cityItemBinding.city.setText(city.getName_city());
+        holder.cityItemBinding.customCheckbox.setChecked(city.getChecked_city());
+
     }
 
     @Override
@@ -55,11 +63,17 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "click", Toast.LENGTH_SHORT).show();
+                    int position = getAdapterPosition();
+                    itemClickListener.onItemClick(MyViewHolder.this, position);
                 }
 
             });
         }
+
+    }
+
+    public interface ItemClickListener {
+        public void onItemClick(CityAdapter.MyViewHolder holder, int position);
 
     }
 
