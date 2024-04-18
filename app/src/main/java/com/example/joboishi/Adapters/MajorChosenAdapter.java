@@ -1,16 +1,15 @@
-package com.example.joboishi.adapters;
+package com.example.joboishi.Adapters;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.joboishi.databinding.ChosenItemBinding;
-import com.example.joboishi.models.RegisterMajors;
+import com.example.joboishi.Models.RegisterMajors;
 
 import java.util.ArrayList;
 

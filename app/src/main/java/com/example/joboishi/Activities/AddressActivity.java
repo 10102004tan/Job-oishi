@@ -1,4 +1,4 @@
-    package com.example.joboishi.activities;
+    package com.example.joboishi.Activities;
 
     import android.content.Intent;
     import android.os.Bundle;
@@ -13,12 +13,11 @@
     import androidx.recyclerview.widget.RecyclerView;
 
     import com.example.joboishi.R;
-    import com.example.joboishi.adapters.CityAdapter;
-    import com.example.joboishi.adapters.CityChosenAdpater;
-    import com.example.joboishi.adapters.RegisterMajorAdapter;
+    import com.example.joboishi.Adapters.CityAdapter;
+    import com.example.joboishi.Adapters.CityChosenAdpater;
     import com.example.joboishi.databinding.AddressLayoutBinding;
-    import com.example.joboishi.models.CityMajors;
-    import com.example.joboishi.models.RegisterMajors;
+    import com.example.joboishi.Models.CityMajors;
+    import com.example.joboishi.Models.RegisterMajors;
 
     import java.util.ArrayList;
 

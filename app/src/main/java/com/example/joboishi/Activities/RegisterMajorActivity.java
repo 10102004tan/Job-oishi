@@ -1,4 +1,4 @@
-package com.example.joboishi.activities;
+package com.example.joboishi.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -7,16 +7,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joboishi.R;
-import com.example.joboishi.adapters.RegisterMajorAdapter;
-import com.example.joboishi.adapters.MajorChosenAdapter;
+import com.example.joboishi.Adapters.RegisterMajorAdapter;
+import com.example.joboishi.Adapters.MajorChosenAdapter;
 import com.example.joboishi.databinding.RegisterMajorLayoutBinding;
-import com.example.joboishi.models.RegisterMajors;
+import com.example.joboishi.Models.RegisterMajors;
 
 import java.util.ArrayList;
 

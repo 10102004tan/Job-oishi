@@ -1,4 +1,4 @@
-package com.example.joboishi.models;
+package com.example.joboishi.Models;
 
 import java.util.Objects;
 
