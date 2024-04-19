@@ -10,7 +10,28 @@
     <li>
        <h5> Perform</h5>
         <div>
-          
+          <ul>
+            <li>
+              Step1 : Create layout bottomsheetfragment.xml
+            </li>
+            <li>
+              Step2 : Create class MyBottomSheerDialogFragment extends BottomSheetDialogFragment
+            </li>
+            <li>
+              Step 3 : 
+              Overide method : onCreateView and inflate layout bottomsheetfragment.xml
+            </li>
+            <li>Step 4 : 
+              Overide method  : onViewCreated and set fragment on 
+              <div>
+                 if (fragment != null){ <br>
+                fragment = getFragment();<br>
+                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();<br>
+                fragmentTransaction.replace(R.id.fragment,fragment).commit();<br>
+              }
+              </div>
+            </li>
+          </ul>
         </div>
     </li>
   </ul>
