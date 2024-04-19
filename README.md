@@ -63,5 +63,5 @@
 
 <div>
   <h2>Result : </h2>
-  <img style="width:400px; height=500px;object-fit:contain" src="https://drive.google.com/file/d/1xWluv_G0jWedfrp3M5kcE3mWQvATOa5t/view?usp=sharing" alt="photo"/>
+  <img style="width:400px;height:500px;object-fit:contain" src="https://drive.google.com/file/d/1xWluv_G0jWedfrp3M5kcE3mWQvATOa5t/view?usp=sharing" alt="photo"/>
 </div>
