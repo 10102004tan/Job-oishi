@@ -61,6 +61,7 @@
 
             updateChosenCountTextView();
             updateButtonBackground();
+
             // Set adapter for city
             cityAdapter = new CityAdapter(this, listCity);
 

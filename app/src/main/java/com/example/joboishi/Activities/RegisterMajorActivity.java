@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.joboishi.R;
-import com.example.joboishi.Adapters.RegisterMajorAdapter;
 import com.example.joboishi.Adapters.MajorChosenAdapter;
-import com.example.joboishi.databinding.RegisterMajorLayoutBinding;
+import com.example.joboishi.Adapters.RegisterMajorAdapter;
 import com.example.joboishi.Models.RegisterMajors;
+import com.example.joboishi.R;
+
+import com.example.joboishi.databinding.RegisterMajorLayoutBinding;
 
 import java.util.ArrayList;
 
