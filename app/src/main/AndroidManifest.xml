@@ -16,7 +16,7 @@
             android:name=".Activities.AccountSettingActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.RegisterMajorActivity"
+            android:name=".Activities.MainActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
