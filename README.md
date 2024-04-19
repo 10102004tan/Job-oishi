@@ -22,7 +22,7 @@
               Overide method : onCreateView and inflate layout bottomsheetfragment.xml
             </li>
             <li>Step 4 : 
-              Overide method  : onViewCreated and set fragment on 
+              Overide method  : onViewCreated and set fragment on . Change fragment in onViewCreated because nó được gọi nhiều lần trong vòng đời trong khi onViewCreate chỉ được gọi 1 lần trong vòng đời
               <div>
                  if (fragment != null){ <br>
                 fragment = getFragment();<br>
@@ -38,7 +38,7 @@
 </div>
 <h2>How to use bottomsheetdialogfragment</h1>
 <div>
-  <h5>1)n activity</h5>
+  <h5>1)Use  activity</h5>
   <ul>
     <li>Step 1 : MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();</li>
     <li>Step 2 : Set fragmet want show in bottomsheet 
@@ -48,4 +48,20 @@
     </li>
     <li>Step 3 : Show bottomsheet : dialogFragment.show(getSupportFragmentManager(),dialogFragment.getTag());</li>
   </ul>
+
+  <h5>2)Use in fragment</h5>
+  <ul>
+    <li>Step 1 : MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();</li>
+    <li>Step 2 : Set fragmet want show in bottomsheet 
+      <div>
+        Exemple :  dialogFragment.setFragment(new MyJobFragment());
+      </div>
+    </li>
+    <li>Step 3 : dialogFragment.show(getActivity().getSupportFragmentManager(), dialogFragment.getTag());</li>
+  </ul>
+</div>
+
+<div>
+  <h2>Result : </h2>
+  <img style="width:400px; height=500px;object-fit:contain" src="https://drive.google.com/file/d/1xWluv_G0jWedfrp3M5kcE3mWQvATOa5t/view?usp=sharing" alt="photo"/>
 </div>
