@@ -22,7 +22,6 @@ public class MyJobFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMyJobBinding.inflate(inflater, container, false);
-
         ViewPagerMyJobAdpater adapter = new ViewPagerMyJobAdpater(this);
         binding.viewPagerMyJob.setAdapter(adapter);
 

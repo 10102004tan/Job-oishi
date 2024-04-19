@@ -4,36 +4,33 @@
     android:layout_width="match_parent"
     android:id="@+id/fragmentMyJob"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.MyJobFragment">
 
-   <androidx.appcompat.widget.Toolbar
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       app:title="Viec cua toi"
-       android:background="@color/white"/>
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:title="Viec cua toi" />
 
     <View
-        android:background="#eee"
         android:layout_width="match_parent"
-        android:layout_height="1dp" />
+        android:layout_height="1dp"
+        android:background="#eee" />
 
     <com.google.android.material.tabs.TabLayout
-        android:layout_width="match_parent"
         android:id="@+id/tabLayoutMyJob"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:background="@color/white"
-        app:tabSelectedTextColor="@color/black"
         app:tabGravity="fill"
         app:tabIndicatorAnimationMode="elastic"
-        android:layout_height="50dp"/>
+        app:tabSelectedTextColor="@color/black" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerMyJob"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </androidx.viewpager2.widget.ViewPager2>
-
-
+        android:layout_height="match_parent" />
 
 </LinearLayout>

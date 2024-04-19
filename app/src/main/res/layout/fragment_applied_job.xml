@@ -7,14 +7,12 @@
     android:background="#eee"
     tools:context=".Fragments.SavedJobFragment">
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listJob"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,6 +51,20 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnFiter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle_btn_bg"
+        android:drawableLeft="@drawable/bookmark_ic"
+        android:drawablePadding="10dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:text="BO LOC"
+        android:textColor="@color/white"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
