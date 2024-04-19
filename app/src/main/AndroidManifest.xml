@@ -13,14 +13,23 @@
         android:theme="@style/Theme.JobOishi"
         tools:targetApi="31">
         <activity
-            android:name=".Activities.DetailJobActivity"
-            android:exported="true">
+            android:name=".Activities.AccountSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.MainActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <activity
+            android:name=".Activities.AddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.SettingActivity"
+            android:exported="true">
 
+        </activity>
+    </application>
 </manifest>
