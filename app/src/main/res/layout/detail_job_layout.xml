@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F6FB"
+    android:background="@color/bg_color"
     android:orientation="vertical">
 
     <ScrollView
@@ -51,12 +51,13 @@
                                 android:layout_width="47dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:src="@drawable/ic_company"
+                                android:src="@drawable/verify_bg"
                                 app:layout_constraintBottom_toTopOf="@+id/ic_money"
                                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.5" />
+                                app:layout_constraintVertical_bias="0.5"
+                                />
 
                             <TextView
                                 android:id="@+id/txt_company_name"
@@ -128,7 +129,8 @@
                                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/ic_location"
-                                app:layout_constraintVertical_bias="0.5" />
+                                app:layout_constraintVertical_bias="0.5"
+                                app:tint="@color/blue" />
 
                             <TextView
                                 android:id="@+id/txt_job_bag"
@@ -358,6 +360,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txt_responsibilities"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance."
@@ -557,8 +560,8 @@
                     android:id="@+id/txt_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Online 2 ngay truoc"
-                    android:textSize="10dp"
+                    android:text="Computer Software • 11-15 nhân viên"
+                    android:textSize="12dp"
                     app:layout_constraintBottom_toBottomOf="@+id/avatar_company"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
