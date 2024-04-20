@@ -2,4 +2,12 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="btn_disable">#E0E0E0</color>
+    <color name="btn_enable">#E6F3F9</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="line_color">#E3E3E3</color>
+    <color name="bg_color">#F3F6FB</color>
+    <color name="grey">#A19E9E</color>
+    <color name="blue">#2285CD</color>
+    <color name="dark">#585859</color>
 </resources>
