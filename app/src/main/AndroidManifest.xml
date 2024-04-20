@@ -18,6 +18,15 @@
         <activity
             android:name=".Activities.RegisterMajorActivity"
             android:exported="true" >
+        </activity>
+        <activity
+            android:name=".Activities.MainActivity"
+            android:exported="true">
+        </activity>
+
+        <activity
+            android:name=".Activities.DetailJobActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
