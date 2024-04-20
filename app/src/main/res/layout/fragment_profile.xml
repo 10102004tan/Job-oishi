@@ -195,7 +195,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="horizontal">
-                    
+
                     <androidx.appcompat.widget.AppCompatButton
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -349,105 +349,6 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:background="@drawable/linear_background">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/compass"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp">
-            </ImageView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cho bạn"
-                android:layout_gravity="center"
-                android:textSize="17dp"
-                android:textColor="@color/grey"
-                android:textStyle="bold">
-            </TextView>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/bag"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp">
-            </ImageView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Việc của tôi"
-                android:layout_gravity="center"
-                android:textSize="17dp"
-                android:textColor="@color/grey"
-                android:textStyle="bold">
-            </TextView>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/message"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp">
-            </ImageView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chat"
-                android:layout_gravity="center"
-                android:textSize="17dp"
-                android:textColor="@color/grey"
-                android:textStyle="bold">
-            </TextView>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/user"
-                android:layout_marginLeft="35dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp">
-            </ImageView>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Tôi"
-                android:layout_gravity="center"
-                android:textSize="17dp"
-                android:textColor="@color/blue"
-                android:textStyle="bold">
-            </TextView>
-        </LinearLayout>
-    </LinearLayout>
 
 </LinearLayout>

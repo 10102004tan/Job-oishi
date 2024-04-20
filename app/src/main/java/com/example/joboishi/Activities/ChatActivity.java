@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.joboishi.R;
 
-public class MainActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_profile);
+        setContentView(R.layout.chat_glints);
     }
 }
