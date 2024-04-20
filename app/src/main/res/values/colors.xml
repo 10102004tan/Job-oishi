@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="grey">#9DA2A8</color>
+    <color name="blue">#0076FF</color>
+    <color name="background">#EFF2F5</color>
+    <color name="xamnhat">#DFE2E6</color>
+
 </resources>
