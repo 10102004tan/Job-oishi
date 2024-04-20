@@ -40,9 +40,12 @@
         </activity>
         <activity
             android:name=".Activities.AddressActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activities.SettingActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Activities.DetailJobActivity"
             android:exported="true" />
     </application>
 
