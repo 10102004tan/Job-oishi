@@ -22,8 +22,9 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.datto.demo_android.models.InforProfileAdd;
+
 import com.example.joboishi.Adapters.ProfileRecyclerViewAdapter;
+import com.example.joboishi.Models.InforProfileAdd;
 import com.example.joboishi.R;
 
 import java.util.ArrayList;

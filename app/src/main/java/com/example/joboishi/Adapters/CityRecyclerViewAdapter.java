@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 
-import com.datto.demo_android.api.ProvinceApiResponse;
+import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.ListCityRycBinding;
 

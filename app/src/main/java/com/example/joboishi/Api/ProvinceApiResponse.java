@@ -1,4 +1,4 @@
-package com.datto.demo_android.api;
+package com.example.joboishi.Api;
 
 import com.google.gson.annotations.SerializedName;
 

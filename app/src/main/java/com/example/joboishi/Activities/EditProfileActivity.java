@@ -26,8 +26,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.datto.demo_android.api.CountryApiResponse;
-import com.datto.demo_android.api.ProvinceApiResponse;
+import com.example.joboishi.Api.CountryApiResponse;
+import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
 import com.example.joboishi.Adapters.CountryRecyclerViewAdapter;
 import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
