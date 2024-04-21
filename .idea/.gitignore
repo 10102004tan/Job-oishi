@@ -1,0 +1,10 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+<<<<<<< HEAD
+=======
+.idea/deploymentTargetDropDown.xml
+.idea/gradle.xml
+.idea/misc.xml
+.idea/vcs.xml
+>>>>>>> 894a74110ff601d0e5c5ad6b167397cadbc262b2
