@@ -54,7 +54,6 @@ public class ProfileActivity extends AppCompatActivity {
         profileRecyclerViewData.add(new InforProfileAdd("Trường học gần đây", "Thêm học vấn để nhà tuyển dụng cân nhắc dễ dàng hơn", "Thêm học vẫn", ProfileRecyclerViewAdapter.EDU_ICON));
         profileRecyclerViewData.add(new InforProfileAdd("Top kỹ năng của bạn", "Cho nhà tuyển dụng thấy khả năng của bạn như thế nào", "Thêm kĩ năng", ProfileRecyclerViewAdapter.SKILL_ICON));
 
-
         // Get recycler view
         RecyclerView recyclerView = findViewById(R.id.profile_recycler_view);
         ProfileRecyclerViewAdapter recyclerViewAdapter = new ProfileRecyclerViewAdapter(this, profileRecyclerViewData, recyclerView);
