@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.joboishi.Adapters.JobAdapter;
+import com.example.joboishi.Fragments.BottomSheetDialog.FilterJobFragment;
 import com.example.joboishi.Models.Company;
 import com.example.joboishi.Models.Job;
 import com.example.joboishi.R;
@@ -41,16 +42,29 @@ public class AppliedJobFragment extends Fragment {
             binding.listJob.setVisibility(View.GONE);
         }
 
+        //Processing bottom sheet dialog filter
+        binding.btnFiter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
+               dialogFragment.setFragment(new FilterJobFragment());
+               dialogFragment.show(getActivity().getSupportFragmentManager(), dialogFragment.getTag());
+            }
+        });
+
         return binding.getRoot();
     }
     private void initData() {
         this.jobs = new ArrayList<>();
         Job job = new Job("Front-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
+        this.jobs.add(job);
+        this.jobs.add(job);
+        this.jobs.add(job);
+        this.jobs.add(job);
+        this.jobs.add(job);this.jobs.add(job);
+        this.jobs.add(job);
+        this.jobs.add(job);
+        this.jobs.add(job);
 
     }
 }
