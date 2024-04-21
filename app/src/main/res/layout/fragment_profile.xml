@@ -16,30 +16,69 @@
         android:orientation="horizontal"
         android:background="@color/background">
 
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:padding="10dp"
-            android:background="@drawable/image"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp">
-        </ImageView>
-        <EditText
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Đình Châu"
-            android:textSize="23dp"
-            android:textStyle="bold"
-            android:backgroundTint="@android:color/transparent">
-        </EditText>
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/setting"
-            android:layout_gravity="center"
-            android:layout_marginRight="10dp">
-        </ImageView>
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:background="@drawable/image"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp">
+            </ImageView>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Đình Châu"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@android:color/transparent">
+                </TextView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="5">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="099999999"
+                    android:textSize="18dp"
+                    android:backgroundTint="@android:color/transparent">
+                </TextView>
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/setting"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp">
+            </ImageView>
+        </LinearLayout>
+
+
+
+
 
     </LinearLayout>
 
@@ -57,6 +96,8 @@
         android:paddingRight="10dp">
 
         <androidx.cardview.widget.CardView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="20dp"
@@ -140,6 +181,8 @@
 
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="5"
@@ -211,6 +254,8 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="7"
@@ -241,17 +286,18 @@
                         android:layout_marginLeft="15dp"
                         android:textSize="18dp">
                     </TextView>
+
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/right_arrow_svgrepo_com"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:layout_gravity="center"
+                        android:background="@drawable/ic_next"
                         android:padding="20dp">
                     </ImageView>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="350dp"
+                    android:layout_width="300dp"
                     android:layout_height="1dp"
                     android:background="@color/grey"
                     android:layout_gravity="center">
@@ -277,16 +323,16 @@
                         android:textSize="18dp">
                     </TextView>
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/right_arrow_svgrepo_com"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/ic_next"
                         android:layout_gravity="center"
                         android:padding="20dp">
                     </ImageView>
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="350dp"
+                    android:layout_width="300dp"
                     android:layout_height="1dp"
                     android:background="@color/grey"
                     android:layout_gravity="center">
@@ -336,9 +382,9 @@
                     </LinearLayout>
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/right_arrow_svgrepo_com"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/ic_next"
                         android:layout_gravity="center"
                         android:padding="20dp">
                     </ImageView>

@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">Job oishi</string>
-<<<<<<< HEAD
     <string name="ho_n_thi_n_h_s">HOÀN THIỆN HỒ SƠ</string>
     <string name="h_s_glints">Hồ sơ Glints</string>
-=======
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -112,7 +110,6 @@
     <string name="year">Năm</string>
     <string name="first_job_qs">Bạn đi làm đâu tiên là khi nào ?</string>
     <string name="a_year_exp">1 năm kinh nghiệm</string>
->>>>>>> 894a74110ff601d0e5c5ad6b167397cadbc262b2
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

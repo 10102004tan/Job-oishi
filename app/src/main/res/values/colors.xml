@@ -2,13 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-<<<<<<< HEAD
-    <color name="grey">#9DA2A8</color>
-    <color name="blue">#0076FF</color>
     <color name="background">#EFF2F5</color>
     <color name="xamnhat">#DFE2E6</color>
-
-=======
     <color name="btn_disable">#E0E0E0</color>
     <color name="btn_enable">#E6F3F9</color>
     <color name="transparent">#00FFFFFF</color>
@@ -23,5 +18,4 @@
     <color name="blue">#1d7ca3</color>
     <color name="light_gray">#d9d9d9</color>
     <color name="red">#e74c3c</color>
->>>>>>> 894a74110ff601d0e5c5ad6b167397cadbc262b2
 </resources>
