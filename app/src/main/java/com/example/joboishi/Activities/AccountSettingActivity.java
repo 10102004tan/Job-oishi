@@ -2,6 +2,7 @@ package com.example.joboishi.Activities;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
@@ -29,6 +30,7 @@ public class AccountSettingActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     public void changBackGroundButton(AppCompatButton... buttons) {
         for (AppCompatButton button : buttons) {
             AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(this, R.animator.button_background_change);

@@ -7,5 +7,5 @@ import retrofit2.http.GET;
 
 public interface CountryApi {
     @GET("all")
-    Call<ArrayList<com.datto.demo_android.api.CountryApiResponse>> getData();
+    Call<ArrayList<CountryApiResponse>> getData();
 }

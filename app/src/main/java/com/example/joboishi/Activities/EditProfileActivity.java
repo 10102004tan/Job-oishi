@@ -26,14 +26,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import com.datto.demo_android.api.CountryApiResponse;
-import com.datto.demo_android.api.ProvinceApiResponse;
 import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
-import com.example.joboishi.Adapters.CountryRecyclerViewAdapter;
 import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.CountryApi;
+import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApi;
+import com.example.joboishi.Api.ProvinceApiResponse;
+import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
+import com.example.joboishi.Fragments.MyJobFragment;
+import com.example.joboishi.Fragments.SelectCountryFragment;
 import com.example.joboishi.R;
 import com.example.joboishi.Views.TimePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -59,9 +61,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private final ArrayList<String> EDUCATIONS = new ArrayList<>(Arrays.asList("Tiểu học", "Trung Học Cơ Sở", "Trung Học Phổ Thông", "Bảng Liên Kết", "Cao Đẳng", "Cử Nhân", "Thạc Sĩ", "Tiến Sĩ")); // List edu data
     private final ArrayList<String> EXPERIENCES = new ArrayList<>(Arrays.asList("Tôi đã có kinh nghiệm", "Tôi chưa có kinh nghiệm")); // List experience data
     private final Date currentDate = new Date();
-    // Định dạng ngày tháng
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-    // Chuyển đổi thành chuỗi
     private final String formattedDate = sdf.format(currentDate);
     private String experienceStartedDateValue = "04/2022"; // Begin employment time
     private String birthDate = "24/04/2004"; // birth date of user
@@ -78,10 +78,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView experienceTextView; // use to display experience of user
     private TextView birthDayTextView; // use to display birth date of user
     private String searchingValue = ""; // use to search country name
-    private ArrayList<CountryApiResponse> temp;
     private ArrayList<ProvinceApiResponse> tempCity;
     private String tempExperience = "";
     private boolean isHaveExperience = true; // experience of user
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private int dayOfBirth;
     private int monthOfBirth;
     private int yearOfBirth;
@@ -142,27 +142,6 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Get country data from api
-        CountryApi countryApi = ApiClient.getCountryAPI();
-        Call<ArrayList<CountryApiResponse>> callCountry = countryApi.getData();
-        callCountry.enqueue(new Callback<ArrayList<CountryApiResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<ArrayList<CountryApiResponse>> call, @NonNull Response<ArrayList<CountryApiResponse>> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    Log.d("COUNTRY_SIZE", response.body().size() + "");
-                    countryData.addAll(response.body());
-                    temp = new ArrayList<>(countryData);
-                } else {
-                    Log.d("COUNTRY_API_ERROR", "ERROR");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ArrayList<CountryApiResponse>> call, @NonNull Throwable t) {
-                Log.d("COUNTRY_API_ERROR", t.toString());
-            }
-        });
 
         // Get province data from api
         ProvinceApi provinceApi = ApiClient.getProvinceAPI();
@@ -246,97 +225,102 @@ public class EditProfileActivity extends AppCompatActivity {
     // Dialog country
     @SuppressLint({"PrivateResource", "NotifyDataSetChanged"})
     private void showCountryDialog() {
-        final BottomSheetDialog dialogCountry = new BottomSheetDialog(this);
-        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_country_layout, null);
-        dialogCountry.setContentView(view);
-        dialogCountry.show();
 
+        myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
+        myBottomSheetDialogFragment.setFragment(new SelectCountryFragment());
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(),myBottomSheetDialogFragment.getTag());
 
-        RecyclerView listCountryRyc = dialogCountry.findViewById(R.id.list_country_ryc);
-        CountryRecyclerViewAdapter recyclerViewAdapter = new CountryRecyclerViewAdapter(this, countryData, listCountryRyc, countrySelectedValue);
-        // Management layout of recycler view
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        assert listCountryRyc != null;
-        listCountryRyc.setLayoutManager(layoutManager);
-        listCountryRyc.setAdapter(recyclerViewAdapter);
-        recyclerViewAdapter.notifyDataSetChanged();
+//        final BottomSheetDialog dialogCountry = new BottomSheetDialog(this);
+//        @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_country_layout, null);
+//        dialogCountry.setContentView(view);
+//        dialogCountry.show();
 
-        // Click event for item of country recycler view
-        recyclerViewAdapter.setItemClickListener(new CountryRecyclerViewAdapter.ItemClickListener() {
-            @Override
-            public void onItemClick(CountryRecyclerViewAdapter.MyHolder holder) {
-                countrySelectedValue = countryData.get(holder.getPos()).getName().getCommon();
-                countryTextView.setText(countrySelectedValue);
-                countryData.clear();
-                countryData.addAll(temp);
-                searchingValue = "";
-                dialogCountry.dismiss();
-            }
-        });
-
-        // Input search country
-        EditText searchCountryEdt = dialogCountry.findViewById(R.id.input_search_country);
-        if (!searchingValue.isEmpty()) {
-            assert searchCountryEdt != null;
-            searchCountryEdt.setText(searchingValue);
-        }
-        assert searchCountryEdt != null;
-
-        searchCountryEdt.addTextChangedListener(new TextWatcher() {
-            final ArrayList<CountryApiResponse> searchData = new ArrayList<>();
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                searchingValue = s.toString();
-
-                if (s.toString().isEmpty()) {
-                    // If value search empty
-                    // Render first list to view
-                    countryData.clear();
-                    countryData.addAll(temp);
-                    recyclerViewAdapter.notifyDataSetChanged();
-                } else {
-                    // If value search not empty
-                    for (CountryApiResponse item :
-                            countryData) {
-                        if (checkPattern(item.getName().getCommon().toLowerCase(), ".*" + searchingValue.toLowerCase() + ".*")) {
-                            // TolowerCase search value and country value to compare
-                            // If country value contains search value => add to new array
-                            searchData.add(item);
-                        }
-                    }
-                    // After filter
-                    // If have results
-                    if (!searchData.isEmpty()) {
-                        // Update result to countryData array
-                        countryData.clear();
-                        countryData.addAll(searchData);
-                        searchData.clear(); // Clear data in searchArray after search
-                        recyclerViewAdapter.notifyDataSetChanged(); // Update to recycler view
-                    }
-                }
-            }
-        });
-
-        // Close dialog
-        ImageButton btnClose = dialogCountry.findViewById(R.id.btn_close_country_dialog);
-        assert btnClose != null;
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialogCountry.dismiss();
-            }
-        });
+//
+//        RecyclerView listCountryRyc = dialogCountry.findViewById(R.id.list_country_ryc);
+//        CountryRecyclerViewAdapter recyclerViewAdapter = new CountryRecyclerViewAdapter(this, countryData, listCountryRyc, countrySelectedValue);
+//        // Management layout of recycler view
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        assert listCountryRyc != null;
+//        listCountryRyc.setLayoutManager(layoutManager);
+//        listCountryRyc.setAdapter(recyclerViewAdapter);
+//        recyclerViewAdapter.notifyDataSetChanged();
+//
+//        // Click event for item of country recycler view
+//        recyclerViewAdapter.setItemClickListener(new CountryRecyclerViewAdapter.ItemClickListener() {
+//            @Override
+//            public void onItemClick(CountryRecyclerViewAdapter.MyHolder holder) {
+//                countrySelectedValue = countryData.get(holder.getPos()).getName().getCommon();
+//                countryTextView.setText(countrySelectedValue);
+//                countryData.clear();
+//                countryData.addAll(temp);
+//                searchingValue = "";
+//                dialogCountry.dismiss();
+//            }
+//        });
+//
+//        // Input search country
+//        EditText searchCountryEdt = dialogCountry.findViewById(R.id.input_search_country);
+//        if (!searchingValue.isEmpty()) {
+//            assert searchCountryEdt != null;
+//            searchCountryEdt.setText(searchingValue);
+//        }
+//        assert searchCountryEdt != null;
+//
+//        searchCountryEdt.addTextChangedListener(new TextWatcher() {
+//            final ArrayList<CountryApiResponse> searchData = new ArrayList<>();
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                searchingValue = s.toString();
+//
+//                if (s.toString().isEmpty()) {
+//                    // If value search empty
+//                    // Render first list to view
+//                    countryData.clear();
+//                    countryData.addAll(temp);
+//                    recyclerViewAdapter.notifyDataSetChanged();
+//                } else {
+//                    // If value search not empty
+//                    for (CountryApiResponse item :
+//                            countryData) {
+//                        if (checkPattern(item.getName().getCommon().toLowerCase(), ".*" + searchingValue.toLowerCase() + ".*")) {
+//                            // TolowerCase search value and country value to compare
+//                            // If country value contains search value => add to new array
+//                            searchData.add(item);
+//                        }
+//                    }
+//                    // After filter
+//                    // If have results
+//                    if (!searchData.isEmpty()) {
+//                        // Update result to countryData array
+//                        countryData.clear();
+//                        countryData.addAll(searchData);
+//                        searchData.clear(); // Clear data in searchArray after search
+//                        recyclerViewAdapter.notifyDataSetChanged(); // Update to recycler view
+//                    }
+//                }
+//            }
+//        });
+//
+//        // Close dialog
+//        ImageButton btnClose = dialogCountry.findViewById(R.id.btn_close_country_dialog);
+//        assert btnClose != null;
+//        btnClose.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialogCountry.dismiss();
+//            }
+//        });
     }
 
     // Dialog city
@@ -442,7 +426,6 @@ public class EditProfileActivity extends AppCompatActivity {
         @SuppressLint("InflateParams") View view = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_gender_layout, null);
         dialogGender.setContentView(view);
         dialogGender.show();
-
 
         RecyclerView listGenderRyc = dialogGender.findViewById(R.id.list_gender_ryc);
         SimpleStringRecyclerViewAdapter recyclerViewAdapter = new SimpleStringRecyclerViewAdapter(this, GENDERS, listGenderRyc, genderSelectedValue);
