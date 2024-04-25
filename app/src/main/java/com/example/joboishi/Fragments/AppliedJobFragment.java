@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,17 +89,28 @@ public class AppliedJobFragment extends Fragment {
                 binding.listJob.setVisibility(View.GONE);
                 binding.noData.setVisibility(View.VISIBLE);
                 binding.imageNoInternet.setVisibility(View.VISIBLE);
+
+                binding.listJob.setVisibility(View.GONE);
+                binding.noData.setVisibility(View.GONE);
+                binding.loading.setVisibility(View.VISIBLE);
+                binding.loading.startShimmerAnimation();
+                run();
             }
 
             @Override
             public void lowInternet() {
-                Toast.makeText(getActivity(), "Low internet", Toast.LENGTH_SHORT).show();
+                binding.listJob.setVisibility(View.GONE);
+                binding.noData.setVisibility(View.GONE);
+                binding.loading.setVisibility(View.VISIBLE);
+                binding.loading.startShimmerAnimation();
             }
 
             @Override
             public void goodInternet() {
                 binding.listJob.setVisibility(View.VISIBLE);
                 binding.noData.setVisibility(View.GONE);
+                binding.loading.setVisibility(View.GONE);
+                binding.loading.stopShimmerAnimation();
             }
         };
 
@@ -114,5 +126,17 @@ public class AppliedJobFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    private void run(){
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                binding.loading.setVisibility(View.INVISIBLE);
+                binding.noData.setVisibility(View.VISIBLE);
+                binding.loading.stopShimmerAnimation();
+            }
+        }, 3000);
     }
 }
