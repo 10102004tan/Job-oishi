@@ -1,7 +1,8 @@
 <div>
+   <h2>Libraries support</h2>
   <ul>
-  <h2>Libraries support</h2>
   <li> https://github.com/vinc3m1/RoundedImageView</li>
+  <li> implementation ("com.facebook.shimmer:shimmer:0.1.0@aar")</li>
 </ul>
 </div>
 <div>
@@ -70,4 +71,9 @@
 <div>
   <h2>Result : </h2>
   <a href="https://drive.google.com/file/d/1xWluv_G0jWedfrp3M5kcE3mWQvATOa5t/view?usp=sharing">See now ...</a>
+</div>
+
+<div>
+  <h2>How to create loading with  library "com.facebook.shimmer:shimmer:0.1.0@aar"</h2>
+  Pleae see code commit "init loading check with status internet"
 </div>
