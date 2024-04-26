@@ -15,10 +15,11 @@
         android:theme="@style/Theme.JobOishi"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.DetailCompanyActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.MyPersonalPageActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Activities.ChatActivity"
             android:exported="false" />
@@ -30,9 +31,20 @@
             android:exported="true" />
         <activity
             android:name=".Activities.RegisterMajorActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".Activities.MainActivity"
+            android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".Activities.DetailJobActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,14 +53,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.DetailJobActivity"
-            android:exported="true"></activity>
-        <activity
             android:name=".Activities.AddressActivity"
             android:exported="true" />
         <activity
             android:name=".Activities.SettingActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>
