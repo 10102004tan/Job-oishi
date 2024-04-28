@@ -5,8 +5,8 @@ import android.animation.AnimatorSet;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.joboishi.Fragments.BottomSheetDialog.BtsLogoutFragment;
 import com.example.joboishi.Fragments.BottomSheetDialog.ChooseLanguageDisplayFragment;
-import com.example.joboishi.Fragments.BottomSheetDialog.FilterJobFragment;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.R;
 
@@ -104,6 +104,15 @@ public class SettingActivity extends AppCompatActivity {
                     break;
             }
             return false;
+        });
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyBottomSheetDialogFragment fragment = MyBottomSheetDialogFragment.newInstance();
+                fragment.setFragment(new BtsLogoutFragment());
+                fragment.show(getSupportFragmentManager(), null);
+            }
         });
     }
 
