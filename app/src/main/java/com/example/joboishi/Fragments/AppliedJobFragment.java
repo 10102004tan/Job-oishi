@@ -41,7 +41,7 @@ public class AppliedJobFragment extends Fragment {
         if (jobs.size() != 0) {
             binding.listJob.setVisibility(View.VISIBLE);
             binding.noData.setVisibility(View.GONE);
-            JobAdapter adapter = new JobAdapter(jobs);
+            JobAdapter adapter = new JobAdapter(jobs,getContext());
             binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             binding.listJob.setAdapter(adapter);
         }

@@ -19,7 +19,9 @@ import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -37,13 +39,8 @@ public class SavedJobFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSavedJobBinding.inflate(inflater, container, false);
-
-//        initData();
         this.jobList = new ArrayList<>();
         getJobsTest();
-        adapter = new JobAdapter(jobList);
-        binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        binding.listJob.setAdapter(adapter);
         return binding.getRoot();
     }
 
@@ -54,22 +51,20 @@ public class SavedJobFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
         iJobsService = retrofit.create(IJobsService.class);
-
         Call<ArrayList<Job>> call = iJobsService.getListJobs();
         call.enqueue(new Callback<ArrayList<Job>>() {
             @Override
             public void onResponse(Call<ArrayList<Job>> call, Response<ArrayList<Job>> response) {
                 if (response.isSuccessful()){
                     jobList = response.body();
-                    adapter.notifyDataSetChanged();
-                }
-                else{
-                    Log.d("test1",response.message());
+                    adapter = new JobAdapter(jobList,getContext());
+                    binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+                    binding.listJob.setAdapter(adapter);
                 }
             }
             @Override
             public void onFailure(Call<ArrayList<Job>> call, Throwable t) {
-                Log.d("test2",t.getMessage()+"");
+                Log.d("error",t.getMessage()+"");
             }
         });
     }
