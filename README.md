@@ -76,8 +76,7 @@
 </div>
 
 
-#Deploy api in emulator
-<h2>Quiz start</h2>
+<h2>Deploy api in emulator</h2>
 <uL>
   <li>
     <div>
