@@ -41,7 +41,7 @@ public class AppliedJobFragment extends Fragment {
         if (jobs.size() != 0) {
             binding.listJob.setVisibility(View.VISIBLE);
             binding.noData.setVisibility(View.GONE);
-            JobAdapter adapter = new JobAdapter(jobs);
+            JobAdapter adapter = new JobAdapter(jobs,getContext());
             binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
             binding.listJob.setAdapter(adapter);
         }
@@ -64,15 +64,15 @@ public class AppliedJobFragment extends Fragment {
     }
     private void initData() {
         this.jobs = new ArrayList<>();
-        Job job = new Job("Front-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
+//        Job job = new Job("Front-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
 
     }
 

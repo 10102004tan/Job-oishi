@@ -1,8 +1,9 @@
-<div>
+
    <h2>Libraries support</h2>
   <ul>
   <li> https://github.com/vinc3m1/RoundedImageView</li>
   <li> implementation ("com.facebook.shimmer:shimmer:0.1.0@aar")</li>
+    <li>implementation ("com.github.bumptech.glide:glide:4.16.0")</li>
 </ul>
 </div>
 <div>
@@ -55,18 +56,14 @@
     </li>
     <li>Step 3 : Show bottomsheet : dialogFragment.show(getSupportFragmentManager(),dialogFragment.getTag());</li>
   </ul>
-
-  <h5>2)Use in fragment</h5>
-  <ul>
-    <li>Step 1 : MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();</li>
-    <li>Step 2 : Set fragmet want show in bottomsheet 
-      <div>
-        Exemple :  dialogFragment.setFragment(new MyJobFragment());
-      </div>
-    </li>
-    <li>Step 3 : dialogFragment.show(getActivity().getSupportFragmentManager(), dialogFragment.getTag());</li>
-  </ul>
-</div>
+    </div>
+  </li>
+  <li>
+    
+    add attribute in application mainifest : 
+      android:networkSecurityConfig="@xml/network_security_config"
+      
+  </li>
 
 <div>
   <h2>Result : </h2>
@@ -77,3 +74,24 @@
   <h2>How to create loading with  library "com.facebook.shimmer:shimmer:0.1.0@aar"</h2>
   Pleae see code commit "init loading check with status internet"
 </div>
+
+
+#Deploy api in emulator
+<h2>Quiz start</h2>
+<uL>
+  <li>
+    <div>
+      
+      Create res/xml/network_security_config.xml
+      <?xml version="1.0" encoding="utf-8"?>
+            <network-security-config>
+            <domain-config cleartextTrafficPermitted="true">
+            <domain includeSubdomains="true">10.0.2.2</domain>
+          </domain-config>
+      </network-security-config> 
+
+<div>
+  <li>
+    Use host : 10.0.2.2:[port] :)))
+  </li>
+</uL>
