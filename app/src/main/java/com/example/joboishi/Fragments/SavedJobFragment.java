@@ -2,46 +2,75 @@ package com.example.joboishi.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.joboishi.Adapters.JobAdapter;
+import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.Company;
 import com.example.joboishi.Models.Job;
-import com.example.joboishi.R;
-import com.example.joboishi.databinding.FragmentMyJobBinding;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SavedJobFragment extends Fragment {
 
     private FragmentSavedJobBinding binding;
-    private ArrayList<Job> jobs;
+    private ArrayList<Job> jobList;
+    private JobAdapter adapter;
+
+    private IJobsService iJobsService;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSavedJobBinding.inflate(inflater, container, false);
 
-        initData();
-        JobAdapter adapter = new JobAdapter(jobs);
+//        initData();
+        this.jobList = new ArrayList<>();
+        getJobsTest();
+        adapter = new JobAdapter(jobList);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
         return binding.getRoot();
     }
 
-    private void initData(){
-        this.jobs = new ArrayList<>();
-        Job job = new Job("Back-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
 
+    private void getJobsTest(){
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        iJobsService = retrofit.create(IJobsService.class);
+
+        Call<ArrayList<Job>> call = iJobsService.getListJobs();
+        call.enqueue(new Callback<ArrayList<Job>>() {
+            @Override
+            public void onResponse(Call<ArrayList<Job>> call, Response<ArrayList<Job>> response) {
+                if (response.isSuccessful()){
+                    jobList = response.body();
+                    adapter.notifyDataSetChanged();
+                }
+                else{
+                    Log.d("test1",response.message());
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<Job>> call, Throwable t) {
+                Log.d("test2",t.getMessage()+"");
+            }
+        });
     }
 }

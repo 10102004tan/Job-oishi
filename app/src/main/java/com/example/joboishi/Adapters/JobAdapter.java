@@ -29,7 +29,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         Job job = jobs.get(position);
-        holder.binding.jobTitleTxt.setText(job.getTitle());
+//        holder.binding.jobTitleTxt.setText(job.getTitle());
     }
 
     @Override

@@ -64,15 +64,15 @@ public class AppliedJobFragment extends Fragment {
     }
     private void initData() {
         this.jobs = new ArrayList<>();
-        Job job = new Job("Front-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
+//        Job job = new Job("Front-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
 
     }
 
