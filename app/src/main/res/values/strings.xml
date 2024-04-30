@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Job oishi</string>
+    <string name="ho_n_thi_n_h_s">HOÀN THIỆN HỒ SƠ</string>
+    <string name="h_s_glints">Hồ sơ Glints</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
