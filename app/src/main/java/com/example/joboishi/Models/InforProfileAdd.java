@@ -1,4 +1,4 @@
-package com.datto.demo_android.models;
+package com.example.joboishi.Models;
 
 public class InforProfileAdd {
     private String title;

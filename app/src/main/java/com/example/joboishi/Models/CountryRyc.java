@@ -1,4 +1,4 @@
-package com.datto.demo_android.models;
+package com.example.joboishi.Models;
 
 public class CountryRyc {
     private String countryName;
