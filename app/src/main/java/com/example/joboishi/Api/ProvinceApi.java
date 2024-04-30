@@ -7,5 +7,5 @@ import retrofit2.http.GET;
 
 public interface ProvinceApi {
     @GET("province")
-    Call<ArrayList<com.datto.demo_android.api.ProvinceApiResponse>> getData();
+    Call<ArrayList<ProvinceApiResponse>> getData();
 }
