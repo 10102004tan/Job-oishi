@@ -22,8 +22,7 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
         this.fragment = fragment;
     }
     public static MyBottomSheetDialogFragment newInstance() {
-        MyBottomSheetDialogFragment fragment = new MyBottomSheetDialogFragment();
-        return fragment;
+        return new MyBottomSheetDialogFragment();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +35,8 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
             fragment = getFragment();
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment,fragment).commit();
+
+
         }
     }
 }
