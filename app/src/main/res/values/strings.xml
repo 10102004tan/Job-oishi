@@ -80,6 +80,7 @@
     <string name="liked_des">Thêm các liên kết bổ sung để có một hồ sơ hoản hảo</string>
     <string name="profile_toolbar_title">Hồ sơ</string>
     <string name="edit_profile_toolbar_title">Chỉnh sửa hồ sơ</string>
+    <string name="job_criteria_toolbar_title">Tiêu chí công việc</string>
     <string name="btn_save_label">Lưu</string>
     <string name="label_input_name">Tên</string>
     <string name="your_name_label">Tên của bạn</string>
@@ -110,4 +111,22 @@
     <string name="a_year_exp">1 năm kinh nghiệm</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="desired_job">Công việc mong muốn</string>
+    <string name="desired_job_des">Job oishi vừa cập nhật lại danh sách tiêu chí công việc. Vui lòng kiểm tra và bấm chỉnh sửa để cập nhật lại</string>
+    <string name="enter_job_pos">Nhập vị trí công việc</string>
+    <string name="chose_more_3_option">Bạn có thể chọn thêm 3 lựa chọn</string>
+    <string name="backend_developer">Backend Developer</string>
+    <string name="desired_job_place">Địa điểm làm việc mong muốn</string>
+    <string name="desired_job_place_des">Job oishi sẽ đề xuất các công việc dựa trên địa điểm mong muốn của bạn. Nếu muốn cập nhật địa chỉ hiện tại, chỉnh sửa ở đây</string>
+    <string name="enter_city_name">Nhập tên thành phố</string>
+    <string name="HCM_city">Thành phố Hồ Chí Minh</string>
+    <string name="want_salary">Mức lương tháng kì vọng</string>
+    <string name="currency_vnd">VND</string>
+    <string name="_0_6_tr">0 - 6 Tr</string>
+    <string name="chose_form_of_job">Chọn hinh thức làm việc</string>
+    <string name="fulltime">Toàn thời gian</string>
+    <string name="parttime">Bán thời gian</string>
+    <string name="every_day">Mỗi ngày</string>
+    <string name="min">Tối thiểu</string>
+    <string name="max">Tối đa</string>
 </resources>
