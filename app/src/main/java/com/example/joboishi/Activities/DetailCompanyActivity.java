@@ -25,23 +25,23 @@ public class DetailCompanyActivity extends AppCompatActivity {
         binding = CompanyLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initData();
-        JobAdapter adapter = new JobAdapter(jobs);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        binding.jobsOfCompany.setLayoutManager(layoutManager);
-
-        binding.jobsOfCompany.setAdapter(adapter);
+//        initData();
+//        JobAdapter adapter = new JobAdapter(jobs);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        binding.jobsOfCompany.setLayoutManager(layoutManager);
+//
+//        binding.jobsOfCompany.setAdapter(adapter);
     }
 
-    private void initData(){
-        this.jobs = new ArrayList<>();
-        Job job = new Job("Back-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-
-    }
+//    private void initData(){
+//        this.jobs = new ArrayList<>();
+//        Job job = new Job("Back-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//
+//    }
 }

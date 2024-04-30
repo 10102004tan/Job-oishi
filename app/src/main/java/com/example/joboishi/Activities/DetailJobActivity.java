@@ -9,22 +9,35 @@ import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
+import android.util.Log;
 import android.view.View;
 
 import com.example.joboishi.Adapters.BenefitAdapter;
 import com.example.joboishi.Adapters.JobAdapter;
+import com.example.joboishi.Api.DetailJobAPI;
 import com.example.joboishi.Models.Company;
 import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class DetailJobActivity extends AppCompatActivity {
 
     private DetailJobLayoutBinding binding;
     private ArrayList<Job> jobs;
+    private Jobs jobDetail;
     private Intent intent;
+    private String jobId;
+    private DetailJobAPI detailJobAPI;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,12 +68,12 @@ public class DetailJobActivity extends AppCompatActivity {
         }
         binding.txtResponsibilities.setText(ssb);
 
-        initData();
-        JobAdapter adapter = new JobAdapter(jobs);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        binding.relatedJobs.setLayoutManager(layoutManager);
-        binding.relatedJobs.setAdapter(adapter);
+//        initData();
+//        JobAdapter adapter = new JobAdapter(jobs);
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        binding.relatedJobs.setLayoutManager(layoutManager);
+//        binding.relatedJobs.setAdapter(adapter);
 
 
         ArrayList list_benefits = new ArrayList();
@@ -82,17 +95,45 @@ public class DetailJobActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        Log.d("test", "hello");
+        getDetailJob("2033047", jobDetail );
+        Log.d("test", jobDetail.getContent());
     }
 
-    private void initData(){
-        this.jobs = new ArrayList<>();
-        Job job = new Job("Back-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
-        this.jobs.add(job);
+//    private void initData(){
+//        this.jobs = new ArrayList<>();
+//        Job job = new Job("Back-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//        this.jobs.add(job);
+//
+//    }
 
+    private void getDetailJob(String jobId, Jobs job) {
+        //Tao doi tuong retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DetailJobAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        detailJobAPI = retrofit.create(DetailJobAPI.class);
+        Call<Jobs> call = detailJobAPI.getJobDetail(jobId);
+        call.enqueue(new Callback<Jobs>() {
+            @Override
+            public void onResponse(Call<Jobs> call, Response<Jobs> response) {
+                if(response.isSuccessful()){
+                    Jobs detailJobs = response.body();
+                    assert detailJobs != null;
+                    jobDetail = detailJobs;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Jobs> call, Throwable t) {
+
+            }
+        });
     }
 
     private float dp(int dp) {
