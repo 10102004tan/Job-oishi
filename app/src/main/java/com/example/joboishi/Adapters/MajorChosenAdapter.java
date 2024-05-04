@@ -55,11 +55,6 @@ public class MajorChosenAdapter extends RecyclerView.Adapter<MajorChosenAdapter.
         return registerMajorsChosen.size();
     }
 
-    // Thêm một phương thức để xóa một major khỏi danh sách registerMajorsChosen
-    public void removeMajor(RegisterMajors major) {
-
-    }
-
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private ChosenItemBinding majorsChosenItemBinding;
