@@ -48,7 +48,16 @@ public class UserApiResponse {
     @SerializedName("time_starting_work")
     private String timeStartingWork;
 
-    public UserApiResponse(int id, String firstname, String lastname, String email, String birth, String gender, String education, String photoUrl, String timeStartingWork) {
+    @SerializedName("country")
+    private String country;
+
+    @SerializedName("city")
+    private String city;
+
+    @SerializedName("province")
+    private String province;
+
+    public UserApiResponse(int id, String firstname, String lastname, String email, String birth, String gender, String education, String photoUrl, String timeStartingWork, String city, String country, String province) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -58,6 +67,13 @@ public class UserApiResponse {
         this.education = education;
         this.photoUrl = photoUrl;
         this.timeStartingWork = timeStartingWork;
+        this.province = province;
+        this.city = city;
+        this.country = country;
+    }
+
+    public UserApiResponse() {
+
     }
 
     public int getId() {
@@ -130,5 +146,29 @@ public class UserApiResponse {
 
     public void setTimeStartingWork(String timeStartingWork) {
         this.timeStartingWork = timeStartingWork;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 }

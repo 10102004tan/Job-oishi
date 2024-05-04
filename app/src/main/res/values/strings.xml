@@ -131,4 +131,9 @@
     <string name="every_day">Mỗi ngày</string>
     <string name="min">Tối thiểu</string>
     <string name="max">Tối đa</string>
+    <string name="choose_contry_textview">Chọn quốc gia</string>
+    <string name="choose_city_textview">Chọn thành phố</string>
+    <string name="choose_gender_textview">Chọn giới tính</string>
+    <string name="choose_edu_textview">Chọn học vấn</string>
+    <string name="choose_birth_textview">Chọn ngày tháng năm sinh</string>
 </resources>
