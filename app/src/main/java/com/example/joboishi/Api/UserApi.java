@@ -13,5 +13,5 @@ public interface UserApi {
     Call<UserApiResponse> getDetailUser(@Path("id") int userId);
 
     @POST("{id}")
-    Call<UserApiResponse> updateUserInfo(@Body UserApiResponse userUpdateRequest);
+    Call<UserApiResponse> updateUserInfo(@Path("id") int userId ,@Body UserRequest userUpdateRequest);
 }
