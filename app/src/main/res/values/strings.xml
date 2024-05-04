@@ -112,4 +112,7 @@
     <string name="a_year_exp">1 năm kinh nghiệm</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="for_you">Cho bạn</string>
+    <string name="my_job">Việc của tôi</string>
+    <string name="i">Tôi</string>
 </resources>
