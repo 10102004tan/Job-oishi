@@ -30,7 +30,6 @@ public class MyJobFragment extends Fragment {
         */
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Da ung tuyen"));
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Viec da luu"));
-
         /*ADD LISTENER FOR tablayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

@@ -25,7 +25,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import com.example.joboishi.Api.CountryApiResponse;
+import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
 import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
 import com.example.joboishi.Api.ApiClient;
