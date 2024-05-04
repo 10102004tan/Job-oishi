@@ -12,6 +12,7 @@ import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.BenefitAdapter;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.DetailJobAPI;
@@ -45,28 +46,8 @@ public class DetailJobActivity extends AppCompatActivity {
         binding = DetailJobLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String longDescription = "Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance.\n" +
-                "Maintain and enhance our high-performance architecture, creating scalable and testable components.\n" +
-                "Collaborate cross-functionally with Product and Engineering teams to help define the product and system design.\n" +
-                "Contribute to the development of APIs, and microservices, and potentially involved in scripting tasks.\n";
-
-        String arr[] = longDescription.split("\n");
-        //lưu khoảng cách giữa ký tự đầu dòng và nội dung
-        int bulletGap = (int) dp(15);
-
-        SpannableStringBuilder ssb = new SpannableStringBuilder();
-        for (int i = 0; i < arr.length; i++) {
-            String line = arr[i];
-            SpannableString ss = new SpannableString(line);
-            ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append(ss);
-
-            //avoid last "\n"
-            if(i+1<arr.length)
-                ssb.append("\n");
-
-        }
-        binding.txtResponsibilities.setText(ssb);
+        // Show loading indicator initially
+        showLoadingIndicator();
 
 //        initData();
 //        JobAdapter adapter = new JobAdapter(jobs);
@@ -75,6 +56,7 @@ public class DetailJobActivity extends AppCompatActivity {
 //        binding.relatedJobs.setLayoutManager(layoutManager);
 //        binding.relatedJobs.setAdapter(adapter);
 
+        // Lợi ích recycler view
 
         ArrayList list_benefits = new ArrayList();
         list_benefits.add("Gio lam viec linh hoat");
@@ -84,10 +66,9 @@ public class DetailJobActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         layoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
         binding.benefitsList.setLayoutManager(layoutManager1);
-
         binding.benefitsList.setAdapter(benefitAdapter);
 
-
+        //Bat su kiem chuyen sanng chi tiet cong ty
         intent = new Intent(this, DetailCompanyActivity.class);
         binding.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,11 +77,29 @@ public class DetailJobActivity extends AppCompatActivity {
             }
         });
 
-        jobId = "2033048";
+        //Lay du lieu tu job api
+        jobId = "2033047";
         getDetailJob(jobId, new DetailJobCallback() {
             @Override
             public void onDetailJobLoaded(Jobs job) {
-                Log.d("test", job.getId());
+                // Hide loading indicator
+                hideLoadingIndicator();
+
+                String longDescription = job.getResponsibilities();
+                SpannableStringBuilder ssb = processStringWithBullet(longDescription.trim());
+                binding.txtResponsibilities.setText(ssb);
+
+                SpannableStringBuilder requirement = processStringWithBullet(job.getRequirements().trim());
+                binding.txtRequirements.setText(requirement);
+
+                binding.lblJobTitle.setText(job.getTitle());
+                Glide.with(DetailJobActivity.this)
+                        .load(job.getCompany_logo())
+                        .into(binding.imgCompanyLogo)
+                ;
+
+                binding.txtCompanyName.setText(job.getCompany_name());
+                binding.txtJobContent.setText(job.getContent());
             }
 
             @Override
@@ -108,6 +107,7 @@ public class DetailJobActivity extends AppCompatActivity {
                 // Xử lý khi có lỗi xảy ra
             }
         });
+
     }
 
 //    private void initData(){
@@ -121,6 +121,7 @@ public class DetailJobActivity extends AppCompatActivity {
 //
 //    }
 
+    //Ham gọi API
     private void getDetailJob(String jobId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
         Log.d("test", DetailJobAPI.BASE_URL);
@@ -154,7 +155,42 @@ public class DetailJobActivity extends AppCompatActivity {
         void onDetailJobFailed(String errorMessage);
     }
 
+    //Ham xu ly chuoi thanh cac dau cham dau dong
+    private SpannableStringBuilder processStringWithBullet(String longDescription){
+        String arr[] = longDescription.split("\n");
+        //lưu khoảng cách giữa ký tự đầu dòng và nội dung
+        int bulletGap = (int) dp(15);
+
+        SpannableStringBuilder ssb = new SpannableStringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            String line = arr[i];
+            SpannableString ss = new SpannableString(line);
+            ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            ssb.append(ss);
+
+            //avoid last "\n"
+            if(i+1<arr.length)
+                ssb.append("\n");
+
+        }
+        return ssb;
+    }
+
     private float dp(int dp) {
         return getResources().getDisplayMetrics().density * dp;
+    }
+
+    //Ham hien thi loading
+    private void showLoadingIndicator() {
+        // Show loading indicator (e.g., ProgressBar)
+        binding.layoutContent.setVisibility(View.GONE);
+        binding.progressBar.setVisibility(View.VISIBLE);
+    }
+
+    //Ham an loading
+    private void hideLoadingIndicator() {
+        // Hide loading indicator
+        binding.layoutContent.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.GONE);
     }
 }
