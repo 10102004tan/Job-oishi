@@ -20,17 +20,15 @@
             android:exported="true"/>
       <activity
             android:name=".Activities.SplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+      </activity>
         <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="true" />
-        <activity
-            android:name=".Activities.MyPersonalPageActivity"
-            android:exported="true"/>
         <activity
             android:name=".Activities.ChatActivity"
             android:exported="false" />
@@ -45,12 +43,9 @@
             android:exported="false" />
         <activity
             android:name=".Activities.HomeActivity"
-            android:exported="true">
-        <activity
-            android:name=".Activities.DetailJobActivity"
             android:exported="true"/>
         <activity
-            android:name=".Activities.MainActivity"
+            android:name=".Activities.DetailJobActivity"
             android:exported="true"/>
         <activity
             android:name=".Activities.AddressActivity"
@@ -61,7 +56,9 @@
         <receiver
             android:name=".BroadcastReceiver.InternetBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true"
+            android:permission="TODO"
+            tools:ignore="ExportedReceiver" />
     </application>
 
 </manifest>
