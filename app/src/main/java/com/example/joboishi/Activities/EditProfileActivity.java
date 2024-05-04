@@ -33,6 +33,8 @@ import com.example.joboishi.Api.CountryApi;
 import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApi;
 import com.example.joboishi.Api.ProvinceApiResponse;
+import com.example.joboishi.Api.UserApi;
+import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.SelectBirthFragment;
@@ -65,29 +67,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private final ArrayList<String> genderData = new ArrayList<>(Arrays.asList("Nam", "Nữ", "Khác")); // List gender data
     private final ArrayList<String> EDUCATIONS = new ArrayList<>(Arrays.asList("Tiểu học", "Trung Học Cơ Sở", "Trung Học Phổ Thông", "Bảng Liên Kết", "Cao Đẳng", "Cử Nhân", "Thạc Sĩ", "Tiến Sĩ")); // List edu data
     private final ArrayList<String> EXPERIENCES = new ArrayList<>(Arrays.asList("Tôi đã có kinh nghiệm", "Tôi chưa có kinh nghiệm")); // List experience data
-    private String experienceStartedDateValue = "04/2022"; // Begin employment time
 
 
-    private String experienceSelectedValue = "Tôi đã có kinh nghiệm"; // Hard experience of user
-    private String eduSelectedValue = "Cao Đẳng"; // Hard edu of user
-    private String countrySelectedValue = "Vietnam"; // Hard Nationality of user
-    private String citySelectedValue = "Thành phố Hồ Chí Minh"; // Hard City of user
-    private String genderSelectedValue = "Nam"; // Hard gender of user
-    private TextView countryTextView; // use to display country of user
-    private TextView cityTextView; // use to display city of user
-    private TextView genderTextView; // use to display gender of user
-    private TextView eduTextView; // use to display edu of user
-    private TextView experienceTextView; // use to display experience of user
-    private TextView birthDayTextView; // use to display birth date of user
-    private String tempExperience = "";
-    private boolean isHaveExperience = true; // experience of user
-    private final Date currentDate = new Date();
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-    private final String formattedDate = sdf.format(currentDate);
-    private int dayOfBirth;
-    private int monthOfBirth;
-    private int yearOfBirth;
-    private String birthDate = "24/04/2004"; // birth date of user
 
 
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
@@ -139,39 +120,61 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
         // Set default value for EditText
-        countryTextView = findViewById(R.id.selected_country_label);
+        // use to display country of user
+        TextView countryTextView = findViewById(R.id.selected_country_label);
+        // Hard Nationality of user
+        String countrySelectedValue = "Vietnam";
         countryTextView.setText(countrySelectedValue);
         countryFragment.setCountryTextView(countryTextView);
         countryFragment.setCountrySelectedValue(countrySelectedValue);
         countryFragment.setCountryData(countryData);
 
-        cityTextView = findViewById(R.id.selected_city_label);
+        // use to display city of user
+        TextView cityTextView = findViewById(R.id.selected_city_label);
+        // Hard City of user
+        String citySelectedValue = "Thành phố Hồ Chí Minh";
         cityTextView.setText(citySelectedValue);
         cityFragment.setCityData(provinceData);
         cityFragment.setCityTextView(cityTextView);
         cityFragment.setCitySelectedValue(citySelectedValue);
 
-        genderTextView = findViewById(R.id.selected_gender);
+        // use to display gender of user
+        TextView genderTextView = findViewById(R.id.selected_gender);
+        // Hard gender of user
+        String genderSelectedValue = "Nam";
         genderTextView.setText(genderSelectedValue);
         genderFragment.setGenderTextView(genderTextView);
         genderFragment.setGenderData(genderData);
         genderFragment.setGenderSelectedValue(genderSelectedValue);
-        
-        eduTextView = findViewById(R.id.selected_edu);
+
+        // use to display edu of user
+        TextView eduTextView = findViewById(R.id.selected_edu);
+        // Hard edu of user
+        String eduSelectedValue = "Cao Đẳng";
         eduTextView.setText(eduSelectedValue);
         eduFragment.setEduTextView(eduTextView);
         eduFragment.setEduData(EDUCATIONS);
         eduFragment.setEduSelectedValue(eduSelectedValue);
 
-        experienceTextView = findViewById(R.id.selected_experience);
+        // use to display experience of user
+        TextView experienceTextView = findViewById(R.id.selected_experience);
+        // Hard experience of user
+        String experienceSelectedValue = "Tôi đã có kinh nghiệm";
         experienceTextView.setText(experienceSelectedValue);
         experienceFragment.setExperienceSelectedValue(experienceSelectedValue);
+        // experience of user
+        boolean isHaveExperience = true;
         experienceFragment.setHaveExperience(isHaveExperience);
         experienceFragment.setExperienceData(EXPERIENCES);
         experienceFragment.setExperienceTextView(experienceTextView);
+        // Begin employment time
+        String experienceStartedDateValue = "04/2022";
         experienceFragment.setExperienceStartedDateValue(experienceStartedDateValue);
 
-        birthDayTextView = findViewById(R.id.selected_birth);
+        // use to display birth date of user
+        TextView birthDayTextView = findViewById(R.id.selected_birth);
+        // birth date of user
+        String birthDate = "24/04/2004";
         birthDayTextView.setText(birthDate);
         birthFragment.setBirthDate(birthDate);
         birthFragment.setBirthDayTextView(birthDayTextView);
@@ -225,6 +228,27 @@ public class EditProfileActivity extends AppCompatActivity {
                 Log.d("COUNTRY_API_ERROR", t.toString());
             }
         });
+
+        // Get user data from api
+        UserApi userApi = ApiClient.getUserAPI();
+        Call<UserApiResponse> callUser = userApi.getDetailUser(3);
+        callUser.enqueue(new Callback<UserApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    Log.d("User_Data", response.body().toString());
+                }else {
+                    Log.d("User_Data_Error", "ERROR");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                Log.d("User_Data_Error", t.toString());
+            }
+        });
+
 
         // Show bottom sheet dialog to choose country
         LinearLayout btnShowCountryBottomSheet = findViewById(R.id.btn_country_spinner);

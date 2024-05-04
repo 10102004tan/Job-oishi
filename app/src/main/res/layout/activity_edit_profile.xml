@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:networkSecurityConfig="@xml/network_security_config"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -409,8 +410,6 @@
                             android:contentDescription="@string/todo"
                             android:src="@drawable/down_arrow_backup_2_svgrepo_com" />
                     </LinearLayout>
-
-
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
