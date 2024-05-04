@@ -40,41 +40,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/imageNoData"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
             android:layout_weight="1"
             android:visibility="gone"
-            android:src="@drawable/nojob"
+            app:lottie_rawRes="@raw/no_data"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Khong co cong viec nao duoc luu"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/imageView2"
-            app:layout_constraintStart_toStartOf="@+id/imageView2" />
-
-        <ImageView
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/imageNoInternet"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            app:lottie_rawRes="@raw/a404"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/no_internet"/>
+           />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

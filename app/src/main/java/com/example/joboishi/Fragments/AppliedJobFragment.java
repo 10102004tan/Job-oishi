@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 public class AppliedJobFragment extends Fragment {
 
-   private FragmentAppliedJobBinding binding;
+    private FragmentAppliedJobBinding binding;
     private ArrayList<Job> jobs;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
@@ -36,7 +36,7 @@ public class AppliedJobFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAppliedJobBinding.inflate(inflater, container, false);
-        initData();
+        jobs = new ArrayList<>();
 
         if (jobs.size() != 0) {
             binding.listJob.setVisibility(View.VISIBLE);
@@ -50,6 +50,8 @@ public class AppliedJobFragment extends Fragment {
             binding.listJob.setVisibility(View.GONE);
         }
 
+
+
         //Processing bottom sheet dialog filter
         binding.btnFiter.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,19 +63,6 @@ public class AppliedJobFragment extends Fragment {
         });
 
         return binding.getRoot();
-    }
-    private void initData() {
-        this.jobs = new ArrayList<>();
-//        Job job = new Job("Front-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-
     }
 
 
@@ -87,29 +76,28 @@ public class AppliedJobFragment extends Fragment {
             @Override
             public void noInternet() {
                 binding.listJob.setVisibility(View.GONE);
-                binding.noData.setVisibility(View.VISIBLE);
+                binding.imageNoData.setVisibility(View.GONE);
+                binding.loading.setVisibility(View.GONE);
+                run();
                 binding.imageNoInternet.setVisibility(View.VISIBLE);
 
-                binding.listJob.setVisibility(View.GONE);
-                binding.noData.setVisibility(View.GONE);
-                binding.loading.setVisibility(View.VISIBLE);
-                binding.loading.startShimmerAnimation();
-                run();
             }
 
             @Override
             public void lowInternet() {
                 binding.listJob.setVisibility(View.GONE);
-                binding.noData.setVisibility(View.GONE);
                 binding.loading.setVisibility(View.VISIBLE);
+                binding.imageNoData.setVisibility(View.GONE);
+                binding.imageNoInternet.setVisibility(View.VISIBLE);
                 binding.loading.startShimmerAnimation();
             }
 
             @Override
             public void goodInternet() {
                 binding.listJob.setVisibility(View.VISIBLE);
-                binding.noData.setVisibility(View.GONE);
                 binding.loading.setVisibility(View.GONE);
+                binding.imageNoInternet.setVisibility(View.GONE);
+                binding.imageNoData.setVisibility(View.VISIBLE);
                 binding.loading.stopShimmerAnimation();
             }
         };
@@ -117,17 +105,12 @@ public class AppliedJobFragment extends Fragment {
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        registerInternetBroadcastReceiver();
-    }
+
 
     @Override
     public void onStop() {
         super.onStop();
     }
-
     private void run(){
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -138,5 +121,11 @@ public class AppliedJobFragment extends Fragment {
                 binding.loading.stopShimmerAnimation();
             }
         }, 3000);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerInternetBroadcastReceiver();
     }
 }

@@ -18,6 +18,7 @@
         android:text="Bo loc"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,26 +34,31 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <CheckBox
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Da ung tuyen / Bat dau chat ngay" />
 
         <CheckBox
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Da ung tuyen / Bat dau chat ngay" />
 
         <CheckBox
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Da ung tuyen / Bat dau chat ngay" />
 
         <CheckBox
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Da ung tuyen / Bat dau chat ngay" />
 
         <CheckBox
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Da ung tuyen / Bat dau chat ngay" />
@@ -68,7 +74,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
