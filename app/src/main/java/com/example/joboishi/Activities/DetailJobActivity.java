@@ -34,7 +34,7 @@ public class DetailJobActivity extends AppCompatActivity {
 
     private DetailJobLayoutBinding binding;
     private ArrayList<Job> jobs;
-    private Jobs jobDetail;
+    private Jobs jobDetail = new Jobs();
     private Intent intent;
     private String jobId;
     private DetailJobAPI detailJobAPI;
@@ -95,9 +95,19 @@ public class DetailJobActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Log.d("test", "hello");
-        getDetailJob("2033047", jobDetail );
-        Log.d("test", jobDetail.getContent());
+
+        jobId = "2033048";
+        getDetailJob(jobId, new DetailJobCallback() {
+            @Override
+            public void onDetailJobLoaded(Jobs job) {
+                Log.d("test", job.getId());
+            }
+
+            @Override
+            public void onDetailJobFailed(String errorMessage) {
+                // Xử lý khi có lỗi xảy ra
+            }
+        });
     }
 
 //    private void initData(){
@@ -111,8 +121,9 @@ public class DetailJobActivity extends AppCompatActivity {
 //
 //    }
 
-    private void getDetailJob(String jobId, Jobs job) {
+    private void getDetailJob(String jobId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
+        Log.d("test", DetailJobAPI.BASE_URL);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailJobAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -125,15 +136,22 @@ public class DetailJobActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
                     Jobs detailJobs = response.body();
                     assert detailJobs != null;
-                    jobDetail = detailJobs;
+                    callback.onDetailJobLoaded(detailJobs);
+                } else {
+                    callback.onDetailJobFailed("Failed to get job details");
                 }
             }
 
             @Override
             public void onFailure(Call<Jobs> call, Throwable t) {
-
+                callback.onDetailJobFailed("Failed to get job details: " + t.getMessage());
             }
         });
+    }
+
+    public interface DetailJobCallback {
+        void onDetailJobLoaded(Jobs job);
+        void onDetailJobFailed(String errorMessage);
     }
 
     private float dp(int dp) {

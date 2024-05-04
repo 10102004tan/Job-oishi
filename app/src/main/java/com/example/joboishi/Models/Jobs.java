@@ -34,6 +34,8 @@ public class Jobs {
     @SerializedName("is_applied")
     private boolean is_applied;
 
+    public Jobs(){}
+
     public Jobs(String id, String title, String content, String requirements, String responsibilities, String company_id, String company_name, String company_logo, ArrayList<String> skills, String experience, int is_edit, String is_salary_value, String job_level, boolean is_applied) {
         this.id = id;
         this.title = title;

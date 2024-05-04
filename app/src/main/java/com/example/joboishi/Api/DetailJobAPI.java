@@ -12,6 +12,6 @@ import retrofit2.http.Query;
 
 public interface DetailJobAPI {
     public static String BASE_URL = "http://10.0.2.2:3001/";
-    @GET("api/job/")
-    Call <Jobs> getJobDetail(@Query("id") String jobId);
+    @GET("api/job/id={id}")
+    Call<Jobs> getJobDetail(@Path("id") String jobId);
 }
