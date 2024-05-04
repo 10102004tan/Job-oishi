@@ -53,6 +53,9 @@
         <activity
             android:name=".Activities.SettingActivity"
             android:exported="true" />
+        <activity
+            android:name=".Activities.JobCriteriaActivity"
+            android:exported="true" />
         <receiver
             android:name=".BroadcastReceiver.InternetBroadcastReceiver"
             android:enabled="true"
