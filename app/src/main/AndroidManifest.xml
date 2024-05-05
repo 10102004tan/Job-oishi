@@ -25,12 +25,10 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+      </activity>
         <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="true" />
-        <activity
-            android:name=".Activities.MyPersonalPageActivity"
-            android:exported="true"/>
         <activity
             android:name=".Activities.ChatActivity"
             android:exported="false" />
