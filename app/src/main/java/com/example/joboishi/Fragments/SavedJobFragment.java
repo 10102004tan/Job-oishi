@@ -11,17 +11,11 @@ import android.view.ViewGroup;
 
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
-import com.example.joboishi.Models.Company;
-import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

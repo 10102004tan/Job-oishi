@@ -11,17 +11,16 @@ import android.text.Spanned;
 import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.BenefitAdapter;
-import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.DetailJobAPI;
-import com.example.joboishi.Models.Company;
-import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
@@ -78,7 +77,7 @@ public class DetailJobActivity extends AppCompatActivity {
         });
 
         //Lay du lieu tu job api
-        jobId = "2033047";
+        jobId = "2032880";
         getDetailJob(jobId, new DetailJobCallback() {
             @Override
             public void onDetailJobLoaded(Jobs job) {
@@ -100,6 +99,27 @@ public class DetailJobActivity extends AppCompatActivity {
 
                 binding.txtCompanyName.setText(job.getCompany_name());
                 binding.txtJobContent.setText(job.getContent());
+
+
+                // Xóa tất cả các TextView hiện có từ LinearLayout
+                binding.skillsLayout.removeAllViews();
+
+                // Thêm các TextView mới
+                for (String item : job.getSkills()) {
+                    TextView textView = new TextView(DetailJobActivity.this);
+                    textView.setLayoutParams(new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    ));
+                    textView.setText(item);
+                    textView.setBackgroundResource(R.drawable.text_badge);
+                    textView.setPadding(15, 5, 15, 5); // Thêm padding nếu cần
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
+                    params.setMargins(0, 0, 20, 0); // Khoảng cách giữa các TextView
+                    textView.setLayoutParams(params);
+                    binding.skillsLayout.addView(textView); // Thêm TextView vào LinearLayout
+                }
+
             }
 
             @Override
@@ -159,7 +179,7 @@ public class DetailJobActivity extends AppCompatActivity {
     private SpannableStringBuilder processStringWithBullet(String longDescription){
         String arr[] = longDescription.split("\n");
         //lưu khoảng cách giữa ký tự đầu dòng và nội dung
-        int bulletGap = (int) dp(15);
+        int bulletGap = (int) getResources().getDisplayMetrics().density * 15;
 
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         for (int i = 0; i < arr.length; i++) {
@@ -168,16 +188,15 @@ public class DetailJobActivity extends AppCompatActivity {
             ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             ssb.append(ss);
 
-            //avoid last "\n"
-            if(i+1<arr.length)
+            // Tránh thêm "\n" cuối cùng
+            if (i + 1 < arr.length)
                 ssb.append("\n");
+
+            // Thêm khoảng trống sau mỗi đoạn văn
+            ssb.append("\n");
 
         }
         return ssb;
-    }
-
-    private float dp(int dp) {
-        return getResources().getDisplayMetrics().density * dp;
     }
 
     //Ham hien thi loading

@@ -2,13 +2,12 @@ package com.example.joboishi.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.databinding.JobItemHolderBinding;
 import java.util.ArrayList;
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{

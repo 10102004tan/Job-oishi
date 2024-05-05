@@ -3,26 +3,19 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.BottomSheetDialog.FilterJobFragment;
-import com.example.joboishi.Models.Company;
-import com.example.joboishi.Models.Job;
-import com.example.joboishi.R;
+import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.databinding.FragmentAppliedJobBinding;
-import com.example.joboishi.databinding.FragmentMyJobBinding;
-import com.example.joboishi.databinding.FragmentSavedJobBinding;
 
 import java.util.ArrayList;
 

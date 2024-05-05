@@ -1,16 +1,12 @@
 package com.example.joboishi.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 
-import com.example.joboishi.Adapters.JobAdapter;
-import com.example.joboishi.Models.Company;
-import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.CompanyLayoutBinding;
-import com.example.joboishi.databinding.DetailJobLayoutBinding;
 
 import java.util.ArrayList;
 
