@@ -40,7 +40,10 @@
             android:exported="true" />
         <activity
             android:name=".Activities.RegisterMajorActivity"
-            android:exported="true" />
+            android:exported="false" />
+        <activity
+            android:name=".Activities.HomeActivity"
+            android:exported="true">
         <activity
             android:name=".Activities.DetailJobActivity"
             android:exported="true"/>
@@ -52,9 +55,7 @@
             android:exported="true" />
         <activity
             android:name=".Activities.SettingActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <receiver
             android:name=".BroadcastReceiver.InternetBroadcastReceiver"
             android:enabled="true"

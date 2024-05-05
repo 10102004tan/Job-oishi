@@ -35,8 +35,6 @@ public class MyBottomSheetDialogFragment extends BottomSheetDialogFragment {
             fragment = getFragment();
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment,fragment).commit();
-
-
         }
     }
 }
