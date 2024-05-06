@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ import com.example.joboishi.Fragments.SelectEducationFragment;
 import com.example.joboishi.Fragments.SelectExperienceFragment;
 import com.example.joboishi.Fragments.SelectGenderFragment;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.Views.TimePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -78,9 +80,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView genderTextView;
     private TextView firstNameTextView;
     private TextView lastNameTextView;
-
-
-
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private final ArrayList<CountryApiResponse> tempCountry = new ArrayList<>();
     private final ArrayList<ProvinceApiResponse> tempCity = new ArrayList<>();
@@ -90,18 +89,20 @@ public class EditProfileActivity extends AppCompatActivity {
     private final SelectGenderFragment genderFragment = new SelectGenderFragment();
     private final SelectEducationFragment eduFragment = new SelectEducationFragment();
     private final SelectExperienceFragment experienceFragment = new SelectExperienceFragment();
-
-
-
     private final String DEFAULT_COUNTRY_STR = "Chọn quốc gia";
     private final String DEFAULT_CITY_STR = "Chọn thành phố";
-    private final String DEFAULT_BIRTH_STR = "Chọn giới tính";
+    private final String DEFAULT_BIRTH_STR = "Chọn ngày tháng năm sinh của bạn";
     private final String DEFAULT_EDU_STR = "Chọn trình độ học vấn của bạn";
     private final String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
     private final String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
-    private final String DEFAULT_DATE_EXPERIENCE_STR = "0/0000";
+    private final int USER_ID = 7;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private LoadingDialog loadingDialog;
 
-    private final int USER_ID = 6;
+
+
+
+
 
     // Func to check if a string contains char
     // Ex: "Vietnam" will contains "vi" , "am" , "nam" , "iet"
@@ -122,6 +123,11 @@ public class EditProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Show dialog loading when fetching data
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.show();
+
 
 
         // Change toolbar title
@@ -198,7 +204,7 @@ public class EditProfileActivity extends AppCompatActivity {
         birthDayTextView = findViewById(R.id.selected_birth);
         // birth date of user
         String birthDate = "24/04/2004";
-        birthDayTextView.setText(birthDate);
+        birthDayTextView.setText(DEFAULT_BIRTH_STR);
         birthFragment.setBirthDate(birthDate);
         birthFragment.setBirthDayTextView(birthDayTextView);
 
@@ -209,6 +215,18 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 updateUserInfo();
+            }
+        });
+
+        // Update avatar user
+        ImageView btnUpdateAvatarUser = findViewById(R.id.update_avatar_user);
+        btnUpdateAvatarUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
 
@@ -286,44 +304,41 @@ public class EditProfileActivity extends AppCompatActivity {
                     firstNameTextView.setText(userData.getFirstname());
                     lastNameTextView.setText(userData.getLastname());
 
-                    if (userData.getCountry() == null){
-                        countryTextView.setText(R.string.choose_contry_textview);
-                    }else {
+                    if (userData.getCountry() != null){
+                        countryFragment.setCountrySelectedValue(userData.getCountry());
                         countryTextView.setText(userData.getCountry());
                     }
 
-                    if (userData.getCity() == null){
-                        cityTextView.setText(R.string.choose_city_textview);
-                    }else {
+                    if (userData.getCity() != null){
+                        cityFragment.setCitySelectedValue(userData.getCity());
                         cityTextView.setText(userData.getCity());
                     }
 
-                    if (userData.getGender() == null){
-                        genderTextView.setText(R.string.choose_gender_textview);
-                    }else {
+                    if (userData.getGender() != null){
+                        genderFragment.setGenderSelectedValue(userData.getGender());
                         genderTextView.setText(userData.getGender());
                     }
 
-                    if (userData.getEducation() == null){
-                        eduTextView.setText(R.string.choose_edu_textview);
-                    }else {
+                    if (userData.getEducation() != null){
+                        eduFragment.setEduSelectedValue(userData.getEducation());
                         eduTextView.setText(userData.getEducation());
                     }
 
-                    if (userData.getBirth() == null){
-                        birthDayTextView.setText(R.string.choose_birth_textview);
-                    }else {
+                    if (userData.getBirth() != null){
+                        birthFragment.setBirthDate(userData.getBirth());
                         birthDayTextView.setText(userData.getBirth());
                     }
 
                     if (userData.getTimeStartingWork() == null){
-                        experienceTextView.setText(R.string.not_experience);
                         experienceFragment.setHaveExperience(false);
                     }else {
                         experienceTextView.setText(userData.getTimeStartingWork());
                         experienceFragment.setHaveExperience(true);
                         experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
                     }
+
+                    // Dismiss dialog when api call done
+                    loadingDialog.cancel();
                 }else {
                     Log.d("User_Data_Error", "ERROR");
                 }

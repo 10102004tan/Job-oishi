@@ -2,11 +2,40 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="EditProfileActivity">
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\DattoDev\.android\avd\Pixel_7a_API_28.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-05-06T03:33:26.349138100Z" />
+        </State>
+      </entry>
       <entry key="JobCriteriaActivity">
         <State />
       </entry>
       <entry key="ProfileActivity">
-        <State />
+        <State>
+          <targetSelectedWithDropDown>
+            <Target>
+              <type value="QUICK_BOOT_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\DattoDev\.android\avd\Pixel_7a_API_28.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </targetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-05-06T04:23:02.908844500Z" />
+        </State>
       </entry>
       <entry key="app">
         <State />
