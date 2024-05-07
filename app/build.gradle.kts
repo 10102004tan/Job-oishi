@@ -2,6 +2,7 @@
 
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -45,7 +46,6 @@ android {
             }
         }
     }
-
 }
 
 dependencies {
@@ -66,4 +66,7 @@ dependencies {
     implementation ("com.facebook.shimmer:shimmer:0.1.0@aar")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.airbnb.android:lottie:3.4.0")
+    implementation("com.google.android.gms:play-services-auth:19.2.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }
