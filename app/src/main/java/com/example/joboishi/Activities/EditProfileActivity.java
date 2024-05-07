@@ -1,5 +1,6 @@
 package com.example.joboishi.Activities;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,11 +51,15 @@ import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.Views.TimePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermissionActivity;
+import com.gun0912.tedpermission.normal.TedPermission;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -223,10 +228,7 @@ public class EditProfileActivity extends AppCompatActivity {
         btnUpdateAvatarUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                // Call Choose user picture here
             }
         });
 
@@ -405,6 +407,10 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // Open Image Picker to choose picture
+    private void openImagePicker() {
     }
 
     // Dialog country
