@@ -20,44 +20,39 @@
             android:exported="true"/>
       <activity
             android:name=".Activities.SplashActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+      </activity>
         <activity
             android:name=".Activities.EditProfileActivity"
-            android:exported="true" />
-        <activity
-            android:name=".Activities.MyPersonalPageActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".Activities.ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.ProfileActivity"
+            android:name=".Activities.ChatActivity"
             android:exported="true" />
         <activity
+            android:name=".Activities.ProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.AccountSettingActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Activities.RegisterMajorActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.HomeActivity"
-            android:exported="true">
+            android:exported="false"/>
         <activity
             android:name=".Activities.DetailJobActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".Activities.MainActivity"
-            android:exported="true"/>
+            android:exported="false"/>
         <activity
             android:name=".Activities.AddressActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Activities.SettingActivity"
-            android:exported="true" />
+            android:exported="false" />
         <receiver
             android:name=".BroadcastReceiver.InternetBroadcastReceiver"
             android:enabled="true"
