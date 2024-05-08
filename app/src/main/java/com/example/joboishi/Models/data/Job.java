@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Job {
-
     @SerializedName("id")
     private String id;
     @SerializedName("title")
@@ -28,23 +27,24 @@ public class Job {
     @SerializedName("job_level")
     private String job_level;
     @SerializedName("recruitment_process")
-    private String recruitment_process;
+    private ArrayList<String> recruitment_process;
     @SerializedName("salary_value")
     private String salary_value;
     @SerializedName("is_salary_visible")
     private String is_salary_visible;
     @SerializedName("benefit")
-    private Benefit benefit;
+    private ArrayList<Benefit> benefit;
     @SerializedName("is_edit")
     private boolean is_edit;
     @SerializedName("is_applied")
     private boolean is_applied;
-    @SerializedName("created_at")
-    private Date created_at;
-    @SerializedName("update_at")
-    private Date update_at;
+//    @SerializedName("created_at")
+//    private Date created_at;
+//    @SerializedName("update_at")
+//    private Date update_at;
 
-    public Job(String id, String title, String content, String responsibilities, String requirements, Company company, ArrayList<String> skills, String experience, String job_type_str, String job_level, String recruitment_process, String salary_value, String is_salary_visible, Benefit benefit, boolean is_edit, boolean is_applied, Date created_at, Date update_at) {
+
+    public Job(String id, String title, String content, String responsibilities, String requirements, Company company, ArrayList<String> skills, String experience, String job_type_str, String job_level, ArrayList<String> recruitment_process, String salary_value, String is_salary_visible, ArrayList<Benefit> benefit, boolean is_edit, boolean is_applied) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -61,8 +61,6 @@ public class Job {
         this.benefit = benefit;
         this.is_edit = is_edit;
         this.is_applied = is_applied;
-        this.created_at = created_at;
-        this.update_at = update_at;
     }
 
     public String getId() {
@@ -145,11 +143,11 @@ public class Job {
         this.job_level = job_level;
     }
 
-    public String getRecruitment_process() {
+    public ArrayList<String> getRecruitment_process() {
         return recruitment_process;
     }
 
-    public void setRecruitment_process(String recruitment_process) {
+    public void setRecruitment_process(ArrayList<String> recruitment_process) {
         this.recruitment_process = recruitment_process;
     }
 
@@ -169,11 +167,11 @@ public class Job {
         this.is_salary_visible = is_salary_visible;
     }
 
-    public Benefit getBenefit() {
+    public ArrayList<Benefit> getBenefit() {
         return benefit;
     }
 
-    public void setBenefit(Benefit benefit) {
+    public void setBenefit(ArrayList<Benefit> benefit) {
         this.benefit = benefit;
     }
 
@@ -191,21 +189,5 @@ public class Job {
 
     public void setIs_applied(boolean is_applied) {
         this.is_applied = is_applied;
-    }
-
-    public Date getCreated_at() {
-        return created_at;
-    }
-
-    public void setCreated_at(Date created_at) {
-        this.created_at = created_at;
-    }
-
-    public Date getUpdate_at() {
-        return update_at;
-    }
-
-    public void setUpdate_at(Date update_at) {
-        this.update_at = update_at;
     }
 }

@@ -3,8 +3,6 @@ package com.example.joboishi.Models.data;
 import com.google.gson.annotations.SerializedName;
 
 public class Address {
-    @SerializedName("id")
-    private int id;
     @SerializedName("id_company")
     private int id_company;
     @SerializedName("street")
@@ -14,20 +12,11 @@ public class Address {
     @SerializedName("province")
     private String province;
 
-    public Address(int id, int id_company, String street, String district, String province) {
-        this.id = id;
+    public Address(int id_company, String street, String district, String province) {
         this.id_company = id_company;
         this.street = street;
         this.district = district;
         this.province = province;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getId_company() {

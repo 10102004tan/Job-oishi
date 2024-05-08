@@ -34,7 +34,7 @@ public class DetailJobActivity extends AppCompatActivity {
 
     private DetailJobLayoutBinding binding;
     private ArrayList<Job> jobs;
-    private Jobs jobDetail = new Jobs();
+    private Job jobDetail;
     private Intent intent;
     private String jobId;
     private DetailJobAPI detailJobAPI;
@@ -80,9 +80,11 @@ public class DetailJobActivity extends AppCompatActivity {
         jobId = "2032880";
         getDetailJob(jobId, new DetailJobCallback() {
             @Override
-            public void onDetailJobLoaded(Jobs job) {
+            public void onDetailJobLoaded(Job job) {
                 // Hide loading indicator
                 hideLoadingIndicator();
+
+                Log.d("test", job.getContent());
 
                 String longDescription = job.getResponsibilities();
                 SpannableStringBuilder ssb = processStringWithBullet(longDescription.trim());
@@ -93,11 +95,11 @@ public class DetailJobActivity extends AppCompatActivity {
 
                 binding.lblJobTitle.setText(job.getTitle());
                 Glide.with(DetailJobActivity.this)
-                        .load(job.getCompany_logo())
+                        .load(job.getCompany().getImage_logo())
                         .into(binding.imgCompanyLogo)
                 ;
 
-                binding.txtCompanyName.setText(job.getCompany_name());
+                binding.txtCompanyName.setText(job.getCompany().getDisplay_name());
                 binding.txtJobContent.setText(job.getContent());
 
 
@@ -150,28 +152,28 @@ public class DetailJobActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         detailJobAPI = retrofit.create(DetailJobAPI.class);
-        Call<Jobs> call = detailJobAPI.getJobDetail(jobId);
-        call.enqueue(new Callback<Jobs>() {
+        Call<Job> call = detailJobAPI.getJobDetail(jobId);
+        call.enqueue(new Callback<Job>() {
             @Override
-            public void onResponse(Call<Jobs> call, Response<Jobs> response) {
+            public void onResponse(Call<Job> call, Response<Job> response) {
                 if(response.isSuccessful()){
-                    Jobs detailJobs = response.body();
-                    assert detailJobs != null;
-                    callback.onDetailJobLoaded(detailJobs);
+                    Job detailJob = response.body();
+                    assert detailJob != null;
+                    callback.onDetailJobLoaded(detailJob);
                 } else {
                     callback.onDetailJobFailed("Failed to get job details");
                 }
             }
 
             @Override
-            public void onFailure(Call<Jobs> call, Throwable t) {
+            public void onFailure(Call<Job> call, Throwable t) {
                 callback.onDetailJobFailed("Failed to get job details: " + t.getMessage());
             }
         });
     }
 
     public interface DetailJobCallback {
-        void onDetailJobLoaded(Jobs job);
+        void onDetailJobLoaded(Job job);
         void onDetailJobFailed(String errorMessage);
     }
 

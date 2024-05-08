@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Company {
-    @SerializedName("company_id")
+    @SerializedName("id")
     private int id;
     @SerializedName("display_name")
     private String display_name;
