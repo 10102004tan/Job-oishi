@@ -2,64 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-<<<<<<< HEAD
-      <entry key="EditProfileActivity">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\DattoDev\.android\avd\Pixel_7a_API_28.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-07T07:43:09.706334100Z" />
-        </State>
-      </entry>
-      <entry key="JobCriteriaActivity">
-        <State />
-      </entry>
       <entry key="ProfileActivity">
         <State />
       </entry>
-      <entry key="RegisterMajorActivity">
-        <State />
-      </entry>
-      <entry key="app">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\DattoDev\.android\avd\Pixel_7a_API_28.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-09T07:55:59.753822100Z" />
-        </State>
-=======
-      <entry key="app">
-        <State />
->>>>>>> 5ded8e1b1e0e97b3bc4b5c9663121f4a58f1afee
-      </entry>
     </value>
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\LAPTOP MSI\.android\avd\Pixel_2_API_34.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2024-05-14T07:35:01.559712800Z" />
   </component>
 </project>

@@ -26,19 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobOishi"
         tools:targetApi="31">
-<<<<<<< HEAD
-        <activity
-            android:name=".Activities.MyPersonalPageActivity"
-            android:exported="true"/>
-          <activity
-                android:name=".Activities.SplashActivity"
-                android:exported="true">
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-                    <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
-          </activity>
-=======
        <activity
             android:name=".Activities.RegisterUserActivity"
             android:exported="false">
@@ -58,7 +45,6 @@
             android:name=".Activities.MyPersonalPageActivity"
             android:exported="true"
             tools:ignore="DuplicateActivity" />
->>>>>>> 5ded8e1b1e0e97b3bc4b5c9663121f4a58f1afee
         <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="false" />
@@ -73,7 +59,7 @@
             android:exported="false" />
         <activity
             android:name=".Activities.RegisterMajorActivity"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".Activities.HomeActivity"
             android:exported="false" />
