@@ -28,10 +28,10 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         Job job = jobs.get(position);
-        holder.binding.companyNameTxt.setText(job.getCompany_name());
-        holder.binding.jobTitleTxt.setText(job.getTitle());
-        holder.binding.sortAddressesTxt.setText(job.getSort_addresses());
-        Glide.with(context).load(job.getCompany_logo()).into(holder.binding.companyLogo);
+//        holder.binding.companyNameTxt.setText(job.getCompany_name());
+//        holder.binding.jobTitleTxt.setText(job.getTitle());
+//        holder.binding.sortAddressesTxt.setText(job.getSort_addresses());
+//        Glide.with(context).load(job.getCompany_logo()).into(holder.binding.companyLogo);
     }
 
     @Override

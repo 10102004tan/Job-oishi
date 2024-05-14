@@ -134,4 +134,6 @@
     <string name="every_day">Mỗi ngày</string>
     <string name="min">Tối thiểu</string>
     <string name="max">Tối đa</string>
+    <string name="btn_save">Lưu</string>
+    <string name="btn_choose_file">Upload CV của bạn</string>
 </resources>
