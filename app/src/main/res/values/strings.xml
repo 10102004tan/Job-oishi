@@ -137,7 +137,7 @@
     <string name="every_day">Mỗi ngày</string>
     <string name="min">Tối thiểu</string>
     <string name="max">Tối đa</string>
-
+    <string name="default_notification_channel_id">11111</string>
     //Google
     <string name="default_web_client_id">128933413556-8obd637npob2ts0t9mul19ttqtf01ahl.apps.googleusercontent.com</string>
 </resources>
