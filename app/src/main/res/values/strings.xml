@@ -142,7 +142,7 @@
     <string name="choose_gender_textview">Chọn giới tính</string>
     <string name="choose_edu_textview">Chọn học vấn</string>
     <string name="choose_birth_textview">Chọn ngày tháng năm sinh</string>
+    <string name="waiting_get_data">Dữ liệu của bạn đang được tải lên, vui lòng chờ trong giây lát</string>
     <string name="default_notification_channel_id">11111</string>
-    //Google
     <string name="default_web_client_id">128933413556-8obd637npob2ts0t9mul19ttqtf01ahl.apps.googleusercontent.com</string>
 </resources>

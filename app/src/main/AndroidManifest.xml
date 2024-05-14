@@ -47,13 +47,13 @@
             tools:ignore="DuplicateActivity" />
         <activity
             android:name=".Activities.EditProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="true" />
         <activity
             android:name=".Activities.ProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activities.AccountSettingActivity"
             android:exported="false" />
@@ -76,7 +76,9 @@
         <receiver
             android:name=".BroadcastReceiver.InternetBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="TODO"
+            tools:ignore="ExportedReceiver" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
