@@ -139,4 +139,5 @@
     <string name="choose_gender_textview">Chọn giới tính</string>
     <string name="choose_edu_textview">Chọn học vấn</string>
     <string name="choose_birth_textview">Chọn ngày tháng năm sinh</string>
+    <string name="waiting_get_data">Dữ liệu của bạn đang được tải lên, vui lòng chờ trong giây lát</string>
 </resources>

@@ -17,8 +17,6 @@
         <include
             android:id="@+id/include"
             layout="@layout/toolbar" />
-
-        
         <ScrollView
             
             android:id="@+id/scrollView2"
@@ -42,8 +40,13 @@
                     android:gravity="center"
                     android:orientation="vertical">
 
-                    <ImageButton
-                        android:id="@+id/imageButton"
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:scaleType="fitCenter"
+                        app:riv_corner_radius="30dip"
+                        app:riv_mutate_background="true"
+                        app:riv_tile_mode="repeat"
+                        app:riv_oval="true"
+                        android:id="@+id/user_avatar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="20dp"
@@ -56,10 +59,10 @@
                         android:id="@+id/update_avatar_user"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignEnd="@id/imageButton"
-                        android:layout_alignBottom="@id/imageButton"
+                        android:layout_alignEnd="@id/user_avatar"
+                        android:layout_alignBottom="@id/user_avatar"
                         android:contentDescription="@string/todo"
-                        android:src="@drawable/edit_3_svgrepo_com" />
+                        android:src="@drawable/edit_4_svgrepo_com" />
                 </RelativeLayout>
 
 
@@ -90,6 +93,8 @@
                         tools:ignore="LabelFor" />
 
                     <TextView
+                        android:visibility="gone"
+                        android:id="@+id/error_firstname_textview"
                         style="@style/Profile_Error_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -125,6 +130,8 @@
                         tools:ignore="LabelFor" />
 
                     <TextView
+                        android:visibility="gone"
+                        android:id="@+id/error_lastname_textview"
                         style="@style/Profile_Error_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

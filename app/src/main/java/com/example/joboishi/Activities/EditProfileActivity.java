@@ -3,7 +3,12 @@ package com.example.joboishi.Activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -16,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.activity.EdgeToEdge;
@@ -27,6 +33,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
@@ -51,10 +58,14 @@ import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.Views.TimePicker;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermissionActivity;
-import com.gun0912.tedpermission.normal.TedPermission;
+import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,6 +75,9 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -100,9 +114,13 @@ public class EditProfileActivity extends AppCompatActivity {
     private final String DEFAULT_EDU_STR = "Chọn trình độ học vấn của bạn";
     private final String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
     private final String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
-    private final int USER_ID = 7;
+    private final int USER_ID = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
+    private RoundedImageView userAvatar;
     private LoadingDialog loadingDialog;
+    private TextView errorFirstnameTextView;
+    private TextView errorLastnameTextView;
+
 
 
 
@@ -144,17 +162,76 @@ public class EditProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
 
         // Set default value for EditText
         // use to display country of user
+
+        // Get user avatar view
+        userAvatar = findViewById(R.id.user_avatar);
+
+        // Error firstname textview
+        errorFirstnameTextView = findViewById(R.id.error_firstname_textview);
+        // Error lastname textview
+        errorLastnameTextView = findViewById(R.id.error_lastname_textview);
+
+
+
+
+
+
+
         countryTextView = findViewById(R.id.selected_country_label);
         firstNameTextView = findViewById(R.id.firstname_textview);
         lastNameTextView = findViewById(R.id.lastname_textview);
+        // Handle when firstname text view change
+        firstNameTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()){
+                    errorFirstnameTextView.setVisibility(View.VISIBLE);
+                }else {
+                    errorFirstnameTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+        lastNameTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()){
+                    errorLastnameTextView.setVisibility(View.VISIBLE);
+                }else {
+                    errorLastnameTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+
 
         // Hard Nationality of user
         String countrySelectedValue = DEFAULT_COUNTRY_STR;
@@ -229,6 +306,7 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Call Choose user picture here
+                openImagePicker();
             }
         });
 
@@ -288,7 +366,6 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    Log.d("user_test", response.body().getEmail());
 
                     userData.setId(response.body().getId());
                     userData.setFirstname(response.body().getFirstname());
@@ -302,6 +379,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     userData.setCountry(response.body().getCountry());
                     userData.setCity(response.body().getCity());
                     userData.setProvince(response.body().getProvince());
+
+                    userAvatar = findViewById(R.id.user_avatar);
+                    Glide.with(getBaseContext())
+                            .load(userData.getPhotoUrl())
+                            .into(userAvatar);
 
                     firstNameTextView.setText(userData.getFirstname());
                     lastNameTextView.setText(userData.getLastname());
@@ -411,6 +493,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
     // Open Image Picker to choose picture
     private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     // Dialog country
@@ -594,6 +680,92 @@ public class EditProfileActivity extends AppCompatActivity {
                 Log.d("UPDATE_USER_ERROR", t.toString());
             }
         });
-
     }
+
+
+    // Resize image size
+    public Bitmap getResizedBitmapWithPadding(Bitmap image, int maxWidth, int maxHeight) {
+        float ratioBitmap = (float) image.getWidth() / (float) image.getHeight();
+        float ratioMax = (float) maxWidth / (float) maxHeight;
+
+        int finalWidth = maxWidth;
+        int finalHeight = maxHeight;
+        if (ratioMax > 1) {
+            finalWidth = (int) ((float)maxHeight * ratioBitmap);
+        } else {
+            finalHeight = (int) ((float)maxWidth / ratioBitmap);
+        }
+
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+
+        Bitmap outputBitmap = Bitmap.createBitmap(maxWidth, maxHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(outputBitmap);
+        canvas.drawColor(Color.TRANSPARENT);
+
+        int left = (maxWidth - finalWidth) / 2;
+        int top = (maxHeight - finalHeight) / 2;
+        canvas.drawBitmap(resizedBitmap, left, top, null);
+
+        return outputBitmap;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                Bitmap resizedBitmap = getResizedBitmapWithPadding(bitmap, 300, 300);
+                userAvatar.setImageBitmap(resizedBitmap);
+                uploadImage(resizedBitmap, String.valueOf(USER_ID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadImage(Bitmap bitmap, String userId) {
+        File file = bitmapToFile(bitmap, userId + "avatar.jpg");
+        if (file != null) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("photo_url", file.getName(), requestFile);
+
+            UserApi userApi = ApiClient.getUserAPI();
+            Call<UserApiResponse> call = userApi.updateAvatar(USER_ID, body);
+            call.enqueue(new Callback<UserApiResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                    Toast.makeText(EditProfileActivity.this, "Ảnh đại diện của bạn đã được cập nhật", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                    Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật ảnh", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+
+
+    private File bitmapToFile(Bitmap bitmap, String fileName) {
+        File filesDir = getApplicationContext().getFilesDir();
+        File imageFile = new File(filesDir, fileName);
+
+        OutputStream os;
+        try {
+            os = Files.newOutputStream(imageFile.toPath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return imageFile;
+    }
+
 }
