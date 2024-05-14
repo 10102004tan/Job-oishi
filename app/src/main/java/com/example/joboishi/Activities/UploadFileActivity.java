@@ -75,15 +75,6 @@ public class UploadFileActivity extends AppCompatActivity {
                             //Get PDF URi
                             Uri uri = data.getData();
                             mUri = uri;
-                            binding.txtUriFile.setText(Html.fromHtml(
-                                    "<big><b>PDF Uri</b><big><br>" + uri
-                            ));
-
-                            //get path pdf
-                            String path = uri.getPath();
-                            binding.txtPathFile.setText(Html.fromHtml(
-                                    "<big><b>PDF ath</b><big><br>" + path
-                            ));
                         }
                     }
                 }

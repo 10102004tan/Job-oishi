@@ -1,7 +1,5 @@
 package com.example.joboishi.Api;
 
-import com.example.joboishi.Models.data.Job;
-import com.example.joboishi.Models.Job;
 import com.example.joboishi.Models.JobBasic;
 
 import java.util.ArrayList;

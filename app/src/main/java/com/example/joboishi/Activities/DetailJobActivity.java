@@ -34,7 +34,7 @@ public class DetailJobActivity extends AppCompatActivity {
 
     private DetailJobLayoutBinding binding;
     private ArrayList<Job> jobs;
-    private Jobs jobDetail = new Jobs();
+    private Job jobDetail;
     private Intent intent;
     private String jobId;
     private DetailJobAPI detailJobAPI;
@@ -48,24 +48,11 @@ public class DetailJobActivity extends AppCompatActivity {
         // Show loading indicator initially
         showLoadingIndicator();
 
-//        initData();
-//        JobAdapter adapter = new JobAdapter(jobs);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        binding.relatedJobs.setLayoutManager(layoutManager);
-//        binding.relatedJobs.setAdapter(adapter);
-
         // Lợi ích recycler view
-
-        ArrayList list_benefits = new ArrayList();
-        list_benefits.add("Gio lam viec linh hoat");
-        list_benefits.add("Bao hien y te");
-        list_benefits.add("Nghi phep");
-        BenefitAdapter benefitAdapter = new BenefitAdapter(this,list_benefits);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         layoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
-        binding.benefitsList.setLayoutManager(layoutManager1);
-        binding.benefitsList.setAdapter(benefitAdapter);
+
+
 
         //Bat su kiem chuyen sanng chi tiet cong ty
         intent = new Intent(this, DetailCompanyActivity.class);
@@ -77,30 +64,37 @@ public class DetailJobActivity extends AppCompatActivity {
         });
 
         //Lay du lieu tu job api
-        jobId = "2032880";
+        jobId = "2032881";
         getDetailJob(jobId, new DetailJobCallback() {
             @Override
-            public void onDetailJobLoaded(Jobs job) {
+            public void onDetailJobLoaded(Job job) {
                 // Hide loading indicator
                 hideLoadingIndicator();
 
+                Log.d("test", job.getContent());
+
+                //Responsibilities
                 String longDescription = job.getResponsibilities();
                 SpannableStringBuilder ssb = processStringWithBullet(longDescription.trim());
                 binding.txtResponsibilities.setText(ssb);
 
+                //Requirement
                 SpannableStringBuilder requirement = processStringWithBullet(job.getRequirements().trim());
                 binding.txtRequirements.setText(requirement);
-
+                //Title job
                 binding.lblJobTitle.setText(job.getTitle());
+                //Logo company
                 Glide.with(DetailJobActivity.this)
-                        .load(job.getCompany_logo())
+                        .load(job.getCompany().getImage_logo())
                         .into(binding.imgCompanyLogo)
                 ;
-
-                binding.txtCompanyName.setText(job.getCompany_name());
+                //Company name
+                binding.txtCompanyName.setText(job.getCompany().getDisplay_name());
+                //Job content
                 binding.txtJobContent.setText(job.getContent());
 
 
+                //Skills
                 // Xóa tất cả các TextView hiện có từ LinearLayout
                 binding.skillsLayout.removeAllViews();
 
@@ -120,6 +114,14 @@ public class DetailJobActivity extends AppCompatActivity {
                     binding.skillsLayout.addView(textView); // Thêm TextView vào LinearLayout
                 }
 
+
+                //Benefits
+                if(job.getBenefit() != null) {
+                BenefitAdapter benefitAdapter = new BenefitAdapter(DetailJobActivity.this,job.getBenefit());
+                binding.benefitsList.setLayoutManager(layoutManager1);
+                binding.benefitsList.setAdapter(benefitAdapter);
+                }
+
             }
 
             @Override
@@ -130,16 +132,6 @@ public class DetailJobActivity extends AppCompatActivity {
 
     }
 
-//    private void initData(){
-//        this.jobs = new ArrayList<>();
-//        Job job = new Job("Back-end Developer", "Google", "California", new Company("FPT Software", "California", "google.com", "Quan 3, Thanh Pho Ho Chi Minh"));
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//        this.jobs.add(job);
-//
-//    }
 
     //Ham gọi API
     private void getDetailJob(String jobId, DetailJobCallback callback) {
@@ -150,28 +142,28 @@ public class DetailJobActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         detailJobAPI = retrofit.create(DetailJobAPI.class);
-        Call<Jobs> call = detailJobAPI.getJobDetail(jobId);
-        call.enqueue(new Callback<Jobs>() {
+        Call<Job> call = detailJobAPI.getJobDetail(jobId);
+        call.enqueue(new Callback<Job>() {
             @Override
-            public void onResponse(Call<Jobs> call, Response<Jobs> response) {
+            public void onResponse(Call<Job> call, Response<Job> response) {
                 if(response.isSuccessful()){
-                    Jobs detailJobs = response.body();
-                    assert detailJobs != null;
-                    callback.onDetailJobLoaded(detailJobs);
+                    Job detailJob = response.body();
+                    assert detailJob != null;
+                    callback.onDetailJobLoaded(detailJob);
                 } else {
                     callback.onDetailJobFailed("Failed to get job details");
                 }
             }
 
             @Override
-            public void onFailure(Call<Jobs> call, Throwable t) {
+            public void onFailure(Call<Job> call, Throwable t) {
                 callback.onDetailJobFailed("Failed to get job details: " + t.getMessage());
             }
         });
     }
 
     public interface DetailJobCallback {
-        void onDetailJobLoaded(Jobs job);
+        void onDetailJobLoaded(Job job);
         void onDetailJobFailed(String errorMessage);
     }
 

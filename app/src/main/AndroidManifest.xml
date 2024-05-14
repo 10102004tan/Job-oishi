@@ -26,15 +26,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+      </activity>
         <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="true" />
-        <activity
-            android:name=".Activities.MyPersonalPageActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".Activities.EditProfileActivity"
-            android:exported="false" />
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="true" />
@@ -49,13 +44,11 @@
             android:exported="false" />
         <activity
             android:name=".Activities.HomeActivity"
-            android:exported="true">
+            android:exported="true"/>
         <activity
             android:name=".Activities.DetailJobActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".Activities.MainActivity"
-            android:exported="true"/>
+            android:exported="true">
+        </activity>
         <activity
             android:name=".Activities.AddressActivity"
             android:exported="false" />
@@ -66,6 +59,15 @@
             android:name=".BroadcastReceiver.InternetBroadcastReceiver"
             android:enabled="true"
             android:exported="true"/>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.myapp.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

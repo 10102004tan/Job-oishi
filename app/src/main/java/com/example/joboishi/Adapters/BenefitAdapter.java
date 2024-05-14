@@ -8,16 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
+import com.example.joboishi.Models.data.Benefit;
 import com.example.joboishi.databinding.BenefitItemBinding;
 
 import java.util.ArrayList;
 
 public class BenefitAdapter extends RecyclerView.Adapter<BenefitAdapter.MyViewHolder> {
     private Activity context;
-    private ArrayList<String> list;
+    private ArrayList<Benefit> list;
 
     //Contractor
-    public BenefitAdapter(Activity context, ArrayList<String> list) {
+    public BenefitAdapter(Activity context, ArrayList<Benefit> list) {
         this.context = context;
         this.list = list;
     }
@@ -30,8 +31,8 @@ public class BenefitAdapter extends RecyclerView.Adapter<BenefitAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String item = list.get(position);
-        holder.binding.benefitsTitle.setText(item);
+        Benefit item = list.get(position);
+        holder.binding.benefitsTitle.setText(item.getValue());
     }
 
     @Override
