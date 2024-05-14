@@ -1,4 +1,7 @@
 <resources>
+    <string name="facebook_app_id">402644682604043</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
     <string name="app_name">Job oishi</string>
     <string name="ho_n_thi_n_h_s">HOÀN THIỆN HỒ SƠ</string>
     <string name="h_s_glints">Hồ sơ Glints</string>

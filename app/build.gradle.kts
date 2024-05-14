@@ -90,4 +90,11 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:19.2.0")
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.facebook.android:facebook-login:latest.release")
+    implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-database:20.3.1")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.facebook.android:facebook-android-sdk:latest.release")
+    implementation ("com.google.firebase:firebase-auth:23.0.0")
 }
