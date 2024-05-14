@@ -2,6 +2,7 @@
 
 plugins {
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -18,9 +19,25 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("config") {
+            keyAlias = "my_alias"  // key0 is the alias name of the key
+            keyPassword = "111111" // password is the password of the key
+            storeFile = file("C:\\Users\\Public\\Downloads\\my_keystore.jks") // key.jks is the path of the key
+            storePassword = "111111" // password is the password of the key
+        }
+    }
+
 
 
     buildTypes {
+
+        debug {
+            signingConfigs {
+                getByName("config")
+            }
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -28,6 +45,9 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -45,7 +65,6 @@ android {
             }
         }
     }
-
 }
 
 dependencies {
@@ -59,6 +78,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui:2.6.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -66,4 +86,15 @@ dependencies {
     implementation ("com.facebook.shimmer:shimmer:0.1.0@aar")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.airbnb.android:lottie:3.4.0")
+    implementation ("com.github.vedraj360:DesignerToast:0.1.3")
+    implementation("com.google.android.gms:play-services-auth:19.2.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.facebook.android:facebook-login:latest.release")
+    implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+    implementation("com.google.firebase:firebase-database:20.3.1")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation("com.facebook.android:facebook-android-sdk:latest.release")
+    implementation ("com.google.firebase:firebase-auth:23.0.0")
 }
