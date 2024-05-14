@@ -29,6 +29,9 @@ public class Job {
         this.sort_addresses = sort_addresses;
     }
 
+    public Job() {
+    }
+
     public int getId() {
         return id;
     }
