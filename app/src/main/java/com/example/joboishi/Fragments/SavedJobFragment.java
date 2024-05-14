@@ -116,7 +116,7 @@ public class SavedJobFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
-
+                Log.d("testttttt",t.getMessage());
             }
         });
     }

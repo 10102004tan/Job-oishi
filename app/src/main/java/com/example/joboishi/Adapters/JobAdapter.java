@@ -48,6 +48,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
         holder.binding.jobTitleTxt.setText(job.getTitle());
         holder.binding.sortAddressesTxt.setText(job.getSort_addresses());
         holder.binding.published.setText(job.getPublished());
+        holder.binding.bookmarkImage.setSelected(isBookmark);
         holder.binding.salaryTxt.setVisibility((job.isIs_salary_visible()) ? View.VISIBLE : View.GONE);
         Glide.with(context).load(job.getCompany_logo()).into(holder.binding.companyLogo);
     }
