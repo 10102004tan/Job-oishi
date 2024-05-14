@@ -380,9 +380,11 @@ public class EditProfileActivity extends AppCompatActivity {
                     userData.setCity(response.body().getCity());
                     userData.setProvince(response.body().getProvince());
 
-                    userAvatar = findViewById(R.id.user_avatar);
+                    Log.d("avatar", userData.getPhotoUrl());
+
                     Glide.with(getBaseContext())
                             .load(userData.getPhotoUrl())
+                            .error(R.drawable.avatar_thinking_svgrepo_com)
                             .into(userAvatar);
 
                     firstNameTextView.setText(userData.getFirstname());
