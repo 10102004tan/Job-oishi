@@ -14,7 +14,10 @@ import android.view.ViewGroup;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.BottomSheetDialog.FilterJobFragment;
-import com.example.joboishi.Models.data.Job;
+import com.example.joboishi.Models.Company;
+import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.JobBasic;
+import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentAppliedJobBinding;
 
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ import java.util.ArrayList;
 public class AppliedJobFragment extends Fragment {
 
     private FragmentAppliedJobBinding binding;
-    private ArrayList<Job> jobs;
+    private ArrayList<JobBasic> jobs;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
     @Override

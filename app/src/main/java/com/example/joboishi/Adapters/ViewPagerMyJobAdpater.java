@@ -37,4 +37,6 @@ public class ViewPagerMyJobAdpater extends FragmentStateAdapter {
     public int getItemCount() {
         return 2;
     }
+
+
 }

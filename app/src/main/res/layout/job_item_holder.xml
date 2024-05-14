@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/salaryTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="d 30-40 Tr"
@@ -63,34 +63,26 @@
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="@+id/imageView" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/companyNameTxt" />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/companyLogo"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginTop="10dp"
             android:scaleType="fitCenter"
             android:src="@drawable/mtp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+            app:layout_constraintTop_toBottomOf="@+id/companyNameTxt"
             app:riv_border_color="#eee"
             app:riv_border_width="1dip"
+            android:layout_marginTop="20dp"
             app:riv_corner_radius="99dip" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/published"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
-            android:text="FPT Software"
+            android:text="14 gio truoc"
             android:textColor="@color/grey"
             android:textSize="14dp"
             app:layout_constraintBottom_toBottomOf="@+id/companyLogo"
@@ -98,13 +90,13 @@
             app:layout_constraintTop_toTopOf="@+id/companyLogo" />
 
         <ImageView
-            android:id="@+id/imageView4"
+            android:id="@+id/bookmarkImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/bookmark_ic"
-            app:layout_constraintBottom_toBottomOf="@+id/textView4"
+            app:layout_constraintBottom_toBottomOf="@+id/companyLogo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView4" />
+            app:layout_constraintTop_toTopOf="@+id/companyLogo" />
 
         <TextView
             android:id="@+id/sortAddressesTxt"
@@ -115,9 +107,9 @@
             android:textColor="@color/grey"
             android:textSize="11dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-            app:layout_constraintEnd_toStartOf="@+id/imageView4"
-            app:layout_constraintTop_toTopOf="@+id/imageView4"
+            app:layout_constraintBottom_toBottomOf="@+id/bookmarkImage"
+            app:layout_constraintEnd_toStartOf="@+id/bookmarkImage"
+            app:layout_constraintTop_toTopOf="@+id/bookmarkImage"
             app:layout_constraintVertical_bias="0.6" />
 
 
