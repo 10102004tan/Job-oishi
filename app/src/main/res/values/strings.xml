@@ -134,4 +134,5 @@
     <string name="every_day">Mỗi ngày</string>
     <string name="min">Tối thiểu</string>
     <string name="max">Tối đa</string>
+    <string name="default_notification_channel_id">11111</string>
 </resources>

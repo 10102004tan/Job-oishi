@@ -47,6 +47,7 @@
           app:labelVisibilityMode="labeled"
           app:menu="@menu/navigation_bottom" />
 
+
    </androidx.cardview.widget.CardView>
 
 

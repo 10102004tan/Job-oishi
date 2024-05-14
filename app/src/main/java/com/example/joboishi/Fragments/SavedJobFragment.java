@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.joboishi.Activities.DetailJobActivity;
@@ -21,6 +23,7 @@ import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.Company;
 import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,9 +40,8 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SavedJobFragment extends Fragment {
-
     private FragmentSavedJobBinding binding;
-    private ArrayList<Job> jobList;
+    private ArrayList<JobBasic> jobList;
     private JobAdapter adapter;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
@@ -49,31 +51,37 @@ public class SavedJobFragment extends Fragment {
     private final  int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
-
     private IJobsService iJobsService;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSavedJobBinding.inflate(inflater, container, false);
         jobList = new ArrayList<>();
         binding.loading.setVisibility(View.VISIBLE);
         binding.loading.startShimmerAnimation();
-
-
-        //
         adapter = new JobAdapter(jobList,getContext());
-
-        /*Add event for job item*/
-
-
+        adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
+
+        //Add event for adapter
+       adapter.setiClickJob(new JobAdapter.IClickJob() {
+           @Override
+           public void onClickJob(int id) {
+
+           }
+
+           @Override
+           public void onClickBookmark(JobBasic job) {
+               jobList.remove(job);
+               adapter.updateData(jobList);
+
+               //processing post id job remove bookmark
+
+           }
+       });
+
         getJobsSaved();
-
-
-
-
-
         //Add event for swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -82,39 +90,39 @@ public class SavedJobFragment extends Fragment {
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
-                binding.swipeRefreshLayout.setRefreshing(false);
+                getJobsSaved();
+
             }
         });
         return binding.getRoot();
     }
 
-
-
     private void getJobsSaved(){
-        jobList.clear();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
-        Call<ArrayList<Job>> call = iJobsService.getListJobs();
-        call.enqueue(new Callback<ArrayList<Job>>() {
+        Call<ArrayList<JobBasic>> call = iJobsService.getAllJobsBookmarkById(0);
+        call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
-            public void onResponse(Call<ArrayList<Job>> call, Response<ArrayList<Job>> response) {
+            public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 if (response.isSuccessful()){
                     jobList = response.body();
                     binding.loading.setVisibility(View.GONE);
-                    binding.loading.stopShimmerAnimation();}
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.loading.stopShimmerAnimation();
+                    adapter.updateData(jobList);
+                }
             }
+
             @Override
-            public void onFailure(Call<ArrayList<Job>> call, Throwable t) {
-                Log.d("error",t.getMessage()+"");
+            public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
+
             }
         });
     }
-
     /*
     CREATE METHODS FOR INTERNET BROADCAST RECEIVER
     */
-
     private void registerInternetBroadcastReceiver() {
         internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
@@ -124,10 +132,7 @@ public class SavedJobFragment extends Fragment {
                 if (isFirst) {
                     binding.listJob.setVisibility(View.GONE);
                     binding.imageNoData.setVisibility(View.GONE);
-                    binding.loading.setVisibility(View.VISIBLE);
-                    binding.imageNoInternet.setVisibility(View.GONE);
-                    binding.loading.startShimmerAnimation();
-                    handlerNoInternet();
+                    binding.imageNoInternet.setVisibility(View.VISIBLE);
                     statusInternet = STATUS_NO_INTERNET;
                     isFirst = false;
                 }
@@ -152,26 +157,9 @@ public class SavedJobFragment extends Fragment {
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
     /*
     HANDLE NO INTERNET CONNECTION
     */
-    private void handlerNoInternet(){
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                binding.noData.setVisibility(View.VISIBLE);
-                binding.imageNoInternet.setVisibility(View.VISIBLE);
-                binding.loading.setVisibility(View.GONE);
-                binding.loading.stopShimmerAnimation();
-            }
-        }, 2000);
-    }
     @Override
     public void onDestroy() {
         super.onDestroy();
