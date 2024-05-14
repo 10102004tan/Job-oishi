@@ -18,15 +18,12 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
@@ -40,7 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 
-public class ChatActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     private static final int RC_SIGN_IN = 123;
     private GoogleSignInClient mGoogleSignInClient;
@@ -52,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.chat_glints);
+        setContentView(R.layout.login);
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
@@ -85,15 +82,9 @@ public class ChatActivity extends AppCompatActivity {
         facebook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LoginManager.getInstance().logInWithReadPermissions(ChatActivity.this, Arrays.asList("public_profile"));
+                LoginManager.getInstance().logInWithReadPermissions(LoginActivity.this, Arrays.asList("public_profile"));
             }
         });
-//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestIdToken(getString(R.string.default_web_client_id))
-//                .requestEmail()
-//                .build();
-//
-//        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
 
@@ -128,11 +119,11 @@ public class ChatActivity extends AppCompatActivity {
                                         String fullname = dataSnapshot.child("fullname").getValue(String.class);
 
                                         // Truyền fullname sang MainActivity
-                                        Intent intent = new Intent(ChatActivity.this, RegisterMajorActivity.class);
+                                        Intent intent = new Intent(LoginActivity.this, RegisterMajorActivity.class);
 //                                        intent.putExtra("userFullname", fullname);
                                         startActivity(intent);
                                     } else {
-                                        Toast.makeText(ChatActivity.this, "Error: ", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Error: ", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
@@ -148,7 +139,7 @@ public class ChatActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(ChatActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -188,6 +179,12 @@ public class ChatActivity extends AppCompatActivity {
             Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+
+
+    // Đ
 
 
 }
