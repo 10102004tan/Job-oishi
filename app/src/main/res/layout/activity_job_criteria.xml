@@ -33,29 +33,27 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:text="@string/desired_job" />
 
                 <TextView
-                    android:background="@drawable/border_radius_input_light"
-                    android:layout_marginTop="10dp"
-                    android:padding="16dp"
+                    style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job_des"
-                    style="@style/Profile_Normal_TextView"
-                    />
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border_radius_input_light"
+                    android:padding="16dp"
+                    android:text="@string/desired_job_des" />
 
                 <LinearLayout
                     android:id="@+id/btn_choose_job_pos"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border_radius_input"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="16dp"
                     tools:ignore="UseCompoundDrawables">
@@ -75,48 +73,43 @@
                 </LinearLayout>
 
                 <TextView
+                    style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="@string/chose_more_3_option"
-                    style="@style/Profile_Normal_TextView"
-                    />
+                    android:text="@string/chose_more_3_option" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/list_job_select"
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:layout_marginTop="20dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
                 <TextView
-                    android:layout_marginTop="30dp"
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job_place"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:layout_marginTop="30dp"
+                    android:text="@string/desired_job_place" />
 
                 <TextView
-                    android:background="@drawable/border_radius_input_light"
-                    android:layout_marginTop="10dp"
-                    android:padding="16dp"
+                    style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job_place_des"
-                    style="@style/Profile_Normal_TextView"
-                    />
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border_radius_input_light"
+                    android:padding="16dp"
+                    android:text="@string/desired_job_place_des" />
 
                 <LinearLayout
                     android:id="@+id/btn_choose_city_name"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border_radius_input"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="16dp"
                     tools:ignore="UseCompoundDrawables">
@@ -136,178 +129,150 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/chose_more_3_option"
                     style="@style/Profile_Normal_TextView"
-                    />
-
-                <LinearLayout
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <LinearLayout
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/HCM_city"
-                            style="@style/Profile_Normal_TextView"
-                            android:gravity="center"
-                            />
+                    android:layout_marginTop="20dp"
+                    android:text="@string/chose_more_3_option" />
 
-                        <ImageButton
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/close_tab_svgrepo_com_sm"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
-                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_city_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" />
 
                 <TextView
-                    android:layout_marginTop="30dp"
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/want_salary"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:layout_marginTop="30dp"
+                    android:text="@string/want_salary" />
 
                 <LinearLayout
                     android:id="@+id/btn_choose_salary"
-                    android:background="@drawable/input_outline_sm"
-                    android:layout_marginTop="10dp"
-                    android:padding="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/input_outline_sm"
                     android:gravity="center"
-                    >
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
                     <TextView
+                        style="@style/Profile_Normal_TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/currency_vnd"
-                        style="@style/Profile_Normal_TextView"
-                        android:textColor="@color/black"
-                        />
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/salary_text_view"
-                        android:layout_marginStart="10dp"
+                        style="@style/Profile_Normal_TextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="@string/_0_6_tr"
-                        style="@style/Profile_Normal_TextView"
-                        />
+                        android:text="@string/_0_6_tr" />
 
                     <ImageButton
-                        android:background="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/down_arrow_backup_2_svgrepo_com"
-                        android:contentDescription="@string/todo" />
+                        android:background="@color/white"
+                        android:contentDescription="@string/todo"
+                        android:src="@drawable/down_arrow_backup_2_svgrepo_com" />
                 </LinearLayout>
+
                 <TextView
-                    android:layout_marginTop="30dp"
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/chose_form_of_job"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:layout_marginTop="30dp"
+                    android:text="@string/chose_form_of_job" />
 
                 <LinearLayout
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
                     <LinearLayout
                         android:id="@+id/fulltime"
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
                         android:background="@drawable/input_outline"
+                        android:gravity="center"
+                        android:padding="16dp"
                         tools:ignore="UselessParent">
+
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/fulltime"
                             style="@style/Profile_Normal_TextView"
-                            />
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/fulltime" />
 
                         <ImageButton
                             android:id="@+id/fulltime_check_icon"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@color/white"
-                            android:contentDescription="@string/todo" />
+                            android:layout_marginStart="10dp"
+                            android:background="@color/white"
+                            android:contentDescription="@string/todo"
+                            android:src="@color/white" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_marginTop="10dp"
                         android:id="@+id/parttime"
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/input_outline"
+                        android:gravity="center"
+                        android:padding="16dp"
                         tools:ignore="UselessParent">
+
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/parttime"
                             style="@style/Profile_Normal_TextView"
-                            />
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/parttime" />
 
                         <ImageButton
                             android:id="@+id/parttime_check_icon"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@color/white"
-                            android:contentDescription="@string/todo" />
+                            android:layout_marginStart="10dp"
+                            android:background="@color/white"
+                            android:contentDescription="@string/todo"
+                            android:src="@color/white" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:layout_marginTop="10dp"
                         android:id="@+id/every_day"
-                        android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/input_outline"
+                        android:gravity="center"
+                        android:padding="16dp"
                         tools:ignore="UselessParent">
+
                         <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/every_day"
                             style="@style/Profile_Normal_TextView"
-                            />
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/every_day" />
 
                         <ImageButton
                             android:id="@+id/every_check_icon"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@color/white"
-                            android:contentDescription="@string/todo" />
+                            android:layout_marginStart="10dp"
+                            android:background="@color/white"
+                            android:contentDescription="@string/todo"
+                            android:src="@color/white" />
                     </LinearLayout>
                 </LinearLayout>
 

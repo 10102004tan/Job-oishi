@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.joboishi.Adapters.MajorChosenAdapter;
 import com.example.joboishi.Adapters.RegisterMajorAdapter;
+import com.example.joboishi.Adapters.SelectedJobAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
 import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.R;
@@ -31,9 +32,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RegisterMajorActivity extends AppCompatActivity{
     private RegisterMajorLayoutBinding registerMajorLayoutBinding;
     private ArrayList<JobSearch> majors = new ArrayList<>();
-    private final ArrayList<JobSearch> majorsChosen = new ArrayList<>();
+    private final ArrayList<String> majorsChosen = new ArrayList<>();
     private RegisterMajorAdapter registerMajorAdapter;
-    private MajorChosenAdapter majorChosenAdapter;
+    private SelectedJobAdapter majorChosenAdapter;
     private JobSearchAPI jobSearchAPI;
 
     @Override
@@ -44,11 +45,11 @@ public class RegisterMajorActivity extends AppCompatActivity{
 
         // Get data from intent, from Job criteria Activity
         Intent intent = getIntent();
-        ArrayList<JobSearch> majors = (ArrayList<JobSearch>) intent.getSerializableExtra("majors");
-        assert majors != null;
-        if (!majors.isEmpty()) {
+        ArrayList<String> major = (ArrayList<String>) intent.getSerializableExtra("majors");
+        assert major != null;
+        if (!major.isEmpty()) {
             majorsChosen.clear();
-            majorsChosen.addAll(majors);
+            majorsChosen.addAll(major);
         }
 
         EditText input = registerMajorLayoutBinding.inputMajor;
@@ -97,15 +98,15 @@ public class RegisterMajorActivity extends AppCompatActivity{
 
         getJobs(); // Gọi API để lấy danh sách công việc
 
-        majorChosenAdapter = new MajorChosenAdapter(this, majorsChosen);
+        majorChosenAdapter = new SelectedJobAdapter(this, majorsChosen);
 
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
         layoutManager2.setOrientation(RecyclerView.HORIZONTAL);
         registerMajorLayoutBinding.showListMajorsChosen.setLayoutManager(layoutManager2);
         registerMajorLayoutBinding.showListMajorsChosen.setAdapter(majorChosenAdapter);
-        majorChosenAdapter.setItemClickListener(new MajorChosenAdapter.ItemClickListener() {
+        majorChosenAdapter.setItemClickListener(new SelectedJobAdapter.ItemClickListener() {
             @Override
-            public void onItemClick(MajorChosenAdapter.MyViewHolder holder, int position) {
+            public void onItemClick(SelectedJobAdapter.MyViewHolder holder, int position) {
                 handleChosenMajorClick(position);
             }
         });
@@ -197,14 +198,14 @@ public class RegisterMajorActivity extends AppCompatActivity{
             JobSearch clickedMajor = majors.get(position);
             if (!clickedMajor.getChecked()) {
                 if (majorsChosen.size() < 5) {
-                    majorsChosen.add(clickedMajor);
+                    majorsChosen.add(clickedMajor.getTitle());
                     updateChosenCountTextView();
                 } else {
                     Toast.makeText(RegisterMajorActivity.this, "Bạn đã chọn tối đa 5 vị trí.", Toast.LENGTH_SHORT).show();
                     return;
                 }
             } else {
-                majorsChosen.remove(clickedMajor);
+                majorsChosen.remove(clickedMajor.getTitle());
                 updateChosenCountTextView();
             }
             clickedMajor.setChecked(!clickedMajor.getChecked());
@@ -214,15 +215,16 @@ public class RegisterMajorActivity extends AppCompatActivity{
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void handleChosenMajorClick(int position) {
-        JobSearch major = majorsChosen.get(position);
+        String major = majorsChosen.get(position);
         majorsChosen.remove(major);
 
         majorChosenAdapter.notifyDataSetChanged();
         updateChosenCountTextView();
         for (int i = 0; i < majors.size(); i++) {
             JobSearch originalMajor = majors.get(i);
-            if (originalMajor.equals(major)) {
+            if (originalMajor.getTitle().equals(major)) {
                 originalMajor.setChecked(false);
                 registerMajorAdapter.notifyItemChanged(i);
                 break;
@@ -248,7 +250,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
     private void handleMajorAutoCheck() {
         for (int position = 0; position < majors.size(); position++) {
             for (int check = 0; check < majorsChosen.size(); check++) {
-                if (majors.get(position).getTitle().equals(majorsChosen.get(check).getTitle())){
+                if (majors.get(position).getTitle().equals(majorsChosen.get(check))){
                     majors.get(position).setChecked(true);
                 }
             }
