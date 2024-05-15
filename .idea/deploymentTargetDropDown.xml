@@ -30,5 +30,20 @@
         </State>
       </entry>
     </value>
+<<<<<<< HEAD
+    <targetSelectedWithDropDown>
+      <Target>
+        <type value="QUICK_BOOT_TARGET" />
+        <deviceKey>
+          <Key>
+            <type value="VIRTUAL_DEVICE_PATH" />
+            <value value="C:\Users\LAPTOP MSI\.android\avd\Pixel_7_Pro_API_34.avd" />
+          </Key>
+        </deviceKey>
+      </Target>
+    </targetSelectedWithDropDown>
+    <timeTargetWasSelectedWithDropDown value="2024-05-15T06:12:04.021621700Z" />
+=======
+>>>>>>> 6a442c6fb9289425fc07bef3940e8089adcff8c6
   </component>
 </project>

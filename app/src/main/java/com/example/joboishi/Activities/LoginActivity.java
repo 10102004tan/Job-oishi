@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         LoginButton facebook = (LoginButton) findViewById(R.id.facebook);
         facebook.setReadPermissions("email", "public_profile");
 
-
         facebook.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -146,45 +145,6 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-
-    // Gọi khi người dùng nhấn nút Đăng nhập bằng Google
-    public void signIn(View view) {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    // Xử lý kết quả trả về từ quy trình đăng nhập
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-
-//        if (requestCode == RC_SIGN_IN) {
-//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-//            handleSignInResult(task);
-//        }
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            // Đăng nhập thành công, sử dụng account để lấy thông tin của người dùng
-            String displayName = account.getDisplayName();
-            String email = account.getEmail();
-            // Thực hiện các hoạt động cần thiết sau khi đăng nhập thành công
-            Toast.makeText(this, "Welcome, " + displayName, Toast.LENGTH_SHORT).show();
-        } catch (ApiException e) {
-            // Đăng nhập thất bại, xử lý các trường hợp thất bại tại đây
-            Log.w("GoogleSignIn", "đăng nhập thất bại");
-            Toast.makeText(this, "Sign in failed", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-
-
-
-    // Đ
 
 
 }
