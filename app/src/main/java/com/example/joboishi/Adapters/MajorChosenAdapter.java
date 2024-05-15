@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.databinding.ChosenItemBinding;
 import com.example.joboishi.Models.RegisterMajors;
+import com.example.joboishi.databinding.JobSelectItemLayoutBinding;
 
 import java.util.ArrayList;
 
 public class MajorChosenAdapter extends RecyclerView.Adapter<MajorChosenAdapter.MyViewHolder> {
 
     Activity context;
-    private ArrayList<JobSearch> registerMajorsChosen;
+    private final ArrayList<JobSearch> registerMajorsChosen;
     private ArrayList<JobSearch> majors;
 
     private ItemClickListener itemClickListener;
@@ -39,7 +40,7 @@ public class MajorChosenAdapter extends RecyclerView.Adapter<MajorChosenAdapter.
     @Override
     public MajorChosenAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        ChosenItemBinding binding = ChosenItemBinding.inflate(LayoutInflater.from(context), parent, false);
+        JobSelectItemLayoutBinding binding = JobSelectItemLayoutBinding.inflate(LayoutInflater.from(context), parent, false);
         return new MyViewHolder(binding);
     }
 
@@ -48,7 +49,7 @@ public class MajorChosenAdapter extends RecyclerView.Adapter<MajorChosenAdapter.
     public void onBindViewHolder(@NonNull MajorChosenAdapter.MyViewHolder holder, int position) {
         JobSearch major = registerMajorsChosen.get(position);
 
-        holder.majorsChosenItemBinding.jobChosen.setText(major.getTitle());
+        holder.majorsChosenItemBinding.jobTitle.setText(major.getTitle());
     }
 
     @Override
@@ -58,8 +59,8 @@ public class MajorChosenAdapter extends RecyclerView.Adapter<MajorChosenAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ChosenItemBinding majorsChosenItemBinding;
-        public MyViewHolder(@NonNull ChosenItemBinding binding) {
+        private final JobSelectItemLayoutBinding majorsChosenItemBinding;
+        public MyViewHolder(@NonNull JobSelectItemLayoutBinding binding) {
             super(binding.getRoot());
             majorsChosenItemBinding = binding;
             // Xử lý sự kiện click

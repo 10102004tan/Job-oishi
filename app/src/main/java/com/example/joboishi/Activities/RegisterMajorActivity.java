@@ -5,28 +5,23 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.joboishi.Adapters.MajorChosenAdapter;
 import com.example.joboishi.Adapters.RegisterMajorAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
 import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.R;
-
 import com.example.joboishi.databinding.RegisterMajorLayoutBinding;
-import com.vdx.designertoast.DesignerToast;
-
 import java.util.ArrayList;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,16 +29,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterMajorActivity extends AppCompatActivity{
-
     private RegisterMajorLayoutBinding registerMajorLayoutBinding;
     private ArrayList<JobSearch> majors = new ArrayList<>();
-    private ArrayList<JobSearch> majorsChosen = new ArrayList<>();
-
+    private final ArrayList<JobSearch> majorsChosen = new ArrayList<>();
     private RegisterMajorAdapter registerMajorAdapter;
     private MajorChosenAdapter majorChosenAdapter;
     private JobSearchAPI jobSearchAPI;
-    private RecyclerView recyclerView;
-    private EditText input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +42,16 @@ public class RegisterMajorActivity extends AppCompatActivity{
         registerMajorLayoutBinding = RegisterMajorLayoutBinding.inflate(getLayoutInflater());
         setContentView(registerMajorLayoutBinding.getRoot());
 
-        input = registerMajorLayoutBinding.inputMajor;
+        // Get data from intent, from Job criteria Activity
+        Intent intent = getIntent();
+        ArrayList<JobSearch> majors = (ArrayList<JobSearch>) intent.getSerializableExtra("majors");
+        assert majors != null;
+        if (!majors.isEmpty()) {
+            majorsChosen.clear();
+            majorsChosen.addAll(majors);
+        }
+
+        EditText input = registerMajorLayoutBinding.inputMajor;
 
         // Add TextWatcher to EditText
         input.addTextChangedListener(new TextWatcher() {
@@ -78,7 +78,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
                 .build();
         jobSearchAPI = retrofit.create(JobSearchAPI.class);
 
-        recyclerView = registerMajorLayoutBinding.showListMajor;
+        RecyclerView recyclerView = registerMajorLayoutBinding.showListMajor;
 
         // Khởi tạo adapter và thiết lập itemClickListener
         registerMajorAdapter = new RegisterMajorAdapter(this, majors);
@@ -94,6 +94,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
         registerMajorLayoutBinding.showListMajor.setLayoutManager(layoutManager);
         registerMajorLayoutBinding.showListMajor.setAdapter(registerMajorAdapter);
 
+
         getJobs(); // Gọi API để lấy danh sách công việc
 
         majorChosenAdapter = new MajorChosenAdapter(this, majorsChosen);
@@ -102,7 +103,6 @@ public class RegisterMajorActivity extends AppCompatActivity{
         layoutManager2.setOrientation(RecyclerView.HORIZONTAL);
         registerMajorLayoutBinding.showListMajorsChosen.setLayoutManager(layoutManager2);
         registerMajorLayoutBinding.showListMajorsChosen.setAdapter(majorChosenAdapter);
-
         majorChosenAdapter.setItemClickListener(new MajorChosenAdapter.ItemClickListener() {
             @Override
             public void onItemClick(MajorChosenAdapter.MyViewHolder holder, int position) {
@@ -115,9 +115,22 @@ public class RegisterMajorActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if (hasMajorsChosen()) {
+                    // Handle mul screen here
+
+                    /*
                     Intent intent = new Intent(RegisterMajorActivity.this, AddressActivity.class);
                     intent.putExtra("majorsChosen", majorsChosen);
                     startActivity(intent);
+                     */
+
+
+                    //
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("majorsChosen", majorsChosen);
+
+                    // Đặt kết quả trả về và kết thúc Activity B
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
                 }
             }
         });
@@ -165,6 +178,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
                 if (response.isSuccessful()) {
                     majors = response.body();
                     registerMajorAdapter.updateData(majors); // Cập nhật dữ liệu cho adapter
+                    handleMajorAutoCheck();
                 } else {
                     Log.d("testaaa", "onResponse: Unsuccessful response");
                 }
@@ -177,6 +191,7 @@ public class RegisterMajorActivity extends AppCompatActivity{
         });
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void handleMajorClick(int position) {
         if (position != RecyclerView.NO_POSITION) {
             JobSearch clickedMajor = majors.get(position);
@@ -229,4 +244,17 @@ public class RegisterMajorActivity extends AppCompatActivity{
         registerMajorAdapter.updateData(filteredList);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private void handleMajorAutoCheck() {
+        for (int position = 0; position < majors.size(); position++) {
+            for (int check = 0; check < majorsChosen.size(); check++) {
+                if (majors.get(position).getTitle().equals(majorsChosen.get(check).getTitle())){
+                    majors.get(position).setChecked(true);
+                }
+            }
+        }
+        registerMajorAdapter.updateData(majors);
+        registerMajorAdapter.notifyDataSetChanged();
+        majorChosenAdapter.notifyDataSetChanged();
+    }
 }

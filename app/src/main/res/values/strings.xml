@@ -86,6 +86,7 @@
     <string name="profile_toolbar_title">Hồ sơ</string>
     <string name="edit_profile_toolbar_title">Chỉnh sửa hồ sơ</string>
     <string name="job_criteria_toolbar_title">Tiêu chí công việc</string>
+    <string name="job_major_toolbar_title">Công việc mong muốn</string>
     <string name="btn_save_label">Lưu</string>
     <string name="label_input_name">Tên</string>
     <string name="your_name_label">Tên của bạn</string>

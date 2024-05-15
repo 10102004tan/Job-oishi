@@ -39,13 +39,11 @@ public class DetailCompanyActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-
 //        initData();
 //        JobAdapter adapter = new JobAdapter(jobs);
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 //        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        binding.jobsOfCompany.setLayoutManager(layoutManager);
-//
 //        binding.jobsOfCompany.setAdapter(adapter);
 
         company_id = getIntent().getIntExtra("COMPANY_ID", -1) + "";

@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.databinding.JobItemHolderBinding;
 import java.util.ArrayList;
