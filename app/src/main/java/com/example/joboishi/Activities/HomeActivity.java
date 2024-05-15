@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private ProfileFragment profileFragment;
     private MyJobFragment myJobFragment;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
+
 
 
     @Override
@@ -45,34 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         binding = HomeLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //register permission
-        // Request permission
-        requestPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (isGranted) {
-                        // Quyền được cấp, gửi thông báo
-                    } else {
-                        // Quyền bị từ chối, xử lý tương ứng (ví dụ: thông báo cho người dùng)
-                    }
-                });
 
-        askNotificationPermission();
-
-        //register
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Lấy mã thông báo FCM thất bại", task.getException());
-                            return;
-                        }
-                        String token = task.getResult();
-                        Log.d("tannguyen1", "Mã thông báo FCM: " + token);
-                        // Lưu trữ mã thông báo vào cơ sở dữ liệu hoặc chia sẻ với máy chủ của bạn
-                    }
-                });
 
         homeFragment = new HomeFragment();
         profileFragment = new ProfileFragment();
@@ -111,24 +84,8 @@ public class HomeActivity extends AppCompatActivity {
             } else {
                 transaction.add(R.id.fragmentHomeLayout, fragment);
             }
-
             transaction.commit();
             activeFragment = fragment;
-        }
-    }
-
-    // Declare the launcher at the top of your Activity/Fragment:
-    private void askNotificationPermission() {
-        // Chỉ cần thiết cho API level >= 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                // Quyền đã được cấp
-            } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
-                // Giải thích cho người dùng lý do cần quyền (nếu cần)
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            }
         }
     }
 }

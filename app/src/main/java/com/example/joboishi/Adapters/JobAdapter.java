@@ -1,6 +1,7 @@
 package com.example.joboishi.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     private IClickJob iClickJob;
     private boolean isBookmark = false;
+    private OnLoadMoreListener onLoadMoreListener;
+    private boolean isLoadMore = false;
+    private boolean isLoading = false;
 
     public void setBookmark(boolean bookmark) {
         isBookmark = bookmark;
@@ -43,6 +47,13 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         JobBasic job = jobs.get(position);
+
+        if (position == jobs.size() - 2 && !isLoading){
+            isLoading = true;
+            if (onLoadMoreListener != null){
+                onLoadMoreListener.onLoadMore();
+            }
+        }
         holder.job = job;
         holder.binding.companyNameTxt.setText(job.getCompany_name());
         holder.binding.jobTitleTxt.setText(job.getTitle());
@@ -66,9 +77,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
             this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   if (iClickJob != null){
-                       iClickJob.onClickJob(job.getId());
-                   }
+                    if (iClickJob != null){
+                        iClickJob.onClickJob(job.getId());
+                    }
                 }
             });
             this.binding.bookmarkImage.setOnClickListener(new View.OnClickListener() {
@@ -83,13 +94,22 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     }
 
     public void updateData(ArrayList<JobBasic> jobs){
-       this.jobs.clear();
-       this.jobs.addAll(jobs);
-       notifyDataSetChanged();
+        this.jobs.clear();
+        this.jobs.addAll(jobs);
+        notifyDataSetChanged();
     }
 
     public interface IClickJob{
         void onClickJob(int id);
         void onClickBookmark(JobBasic job);
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
     }
 }
