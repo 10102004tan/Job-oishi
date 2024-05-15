@@ -29,13 +29,14 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
     }
 
     public void updateData(ArrayList<JobSearch> newMajors) {
-        this.majors = newMajors;
+        majors = newMajors;
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // Sử dụng MajorsItemBinding để inflate layout và tạo instance cho ViewHolder
         MajorsItemBinding binding = MajorsItemBinding.inflate(LayoutInflater.from(context), parent, false);
         return new MyViewHolder(binding);
     }
@@ -61,15 +62,12 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
             super(binding.getRoot());
             majorsItemBinding = binding;
 
+            // Gán sự kiện click cho CardView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (itemClickListener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            itemClickListener.onItemClick(MyViewHolder.this, position);
-                        }
-                    }
+                    int position = getAdapterPosition();
+                    itemClickListener.onItemClick(MyViewHolder.this, position);
                 }
             });
         }

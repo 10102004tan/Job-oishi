@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,12 +43,33 @@ public class RegisterMajorActivity extends AppCompatActivity{
     private MajorChosenAdapter majorChosenAdapter;
     private JobSearchAPI jobSearchAPI;
     private RecyclerView recyclerView;
+    private EditText input;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         registerMajorLayoutBinding = RegisterMajorLayoutBinding.inflate(getLayoutInflater());
         setContentView(registerMajorLayoutBinding.getRoot());
+
+        input = registerMajorLayoutBinding.inputMajor;
+
+        // Add TextWatcher to EditText
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // Do nothing
+            }
+        });
 
         // Khởi tạo Retrofit và JobSearchAPI
         Retrofit retrofit = new Retrofit.Builder()
@@ -95,13 +119,13 @@ public class RegisterMajorActivity extends AppCompatActivity{
                     intent.putExtra("majorsChosen", majorsChosen);
                     startActivity(intent);
                 }
-//                DesignerToast.defaultToast(RegisterMajorActivity.this, majorsChosen.size()+"", Gravity.CENTER, Toast.LENGTH_SHORT);
             }
         });
 
         updateChosenCountTextView();
         updateButtonBackground();
     }
+
 
     private boolean hasMajorsChosen() {
         return majorsChosen != null && !majorsChosen.isEmpty();
@@ -191,4 +215,18 @@ public class RegisterMajorActivity extends AppCompatActivity{
         }
         updateButtonBackground();
     }
+
+    // Lọc
+    private void filter(String text) {
+        ArrayList<JobSearch> filteredList = new ArrayList<>();
+
+        for (JobSearch item : majors) {
+            if (item.getTitle().toLowerCase().contains(text.toLowerCase())) {
+                filteredList.add(item);
+            }
+        }
+
+        registerMajorAdapter.updateData(filteredList);
+    }
+
 }
