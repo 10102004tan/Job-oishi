@@ -91,5 +91,5 @@ dependencies {
     implementation ("com.github.vedraj360:DesignerToast:0.1.3")
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
-    implementation ("com.github.Dimezis:BlurView:version-2.0.3")
+    implementation ("com.github.Spikeysanju:MotionToast:1.4")
 }
