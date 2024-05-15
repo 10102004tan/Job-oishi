@@ -28,6 +28,8 @@ public class Company {
     @SerializedName("nationalities")
     private ArrayList<Nationality> nationalities;
 
+    //Constructor
+
     public Company(int id, String display_name, String image_logo, String description, String website, String tagline, String company_size, ArrayList<Address> address, int num_job_openings, ArrayList<Benefit> benefits, ArrayList<Nationality> nationalities) {
         this.id = id;
         this.display_name = display_name;
@@ -41,6 +43,8 @@ public class Company {
         this.benefits = benefits;
         this.nationalities = nationalities;
     }
+
+    //Properties
 
     public int getId() {
         return id;
