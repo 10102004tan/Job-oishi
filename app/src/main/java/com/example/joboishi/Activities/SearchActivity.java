@@ -39,7 +39,12 @@ public class SearchActivity extends AppCompatActivity {
         listRecentSearch = binding.listRecentSearches;
         ImageButton btnBack = binding.btnToolbarBack;
         AppCompatButton btnDelRecentSearches = binding.btnDelRecentSearches;
-        btnBack.setOnClickListener(view -> Log.d("test", "onClick: "));
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finishAffinity();
+            }
+        });
 
         EditText inputSearch = binding.inputMajor;
         inputSearch.setImeOptions(EditorInfo.IME_ACTION_DONE);
