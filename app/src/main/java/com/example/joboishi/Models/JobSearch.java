@@ -2,9 +2,11 @@ package com.example.joboishi.Models;
 
 import android.os.Parcelable;
 
+import com.example.joboishi.Models.data.Benefit;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class JobSearch implements Serializable {
@@ -26,14 +28,19 @@ public class JobSearch implements Serializable {
     private String sort_addresses;
     @SerializedName("published")
     private String published;
-
+    @SerializedName("benefits")
+    private ArrayList<Benefit> benefits;
     private Boolean isChecked = false;
 
-    public JobSearch(int id, String title, String company_name, Boolean isChecked) {
+    public JobSearch(int id, String title, String company_id, String company_name, String company_logo, String sort_addresses, String published, ArrayList<Benefit> benefits, Boolean isChecked) {
         this.id = id;
         this.title = title;
         this.company_id = company_id;
         this.company_name = company_name;
+        this.company_logo = company_logo;
+        this.sort_addresses = sort_addresses;
+        this.published = published;
+        this.benefits = benefits;
         this.isChecked = isChecked;
     }
 

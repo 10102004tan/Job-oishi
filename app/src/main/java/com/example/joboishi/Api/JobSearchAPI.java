@@ -18,10 +18,18 @@ public interface JobSearchAPI {
             @Query("page_size") int pageSize
     );
 
+    @GET("api/jobs/searchrm")
+    Call<ArrayList<JobSearch>> getListSearchRmJob(
+            @Query("q") String keyword,
+            @Query("page") int page,
+            @Query("page_size") int pageSize
+    );
+
+    // Lấy bỏ sang Chọn ngành nghề
     @GET("api/jobs")
     Call<ArrayList<JobSearch>> getListJobs();
 
-    @GET("api/jobs2")
+    @GET("api/jobs")
     Call<ArrayList<JobSearch>> getListSearchJobAll(
             @Query("page") int page,
             @Query("page_size") int pageSize

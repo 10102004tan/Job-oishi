@@ -1,6 +1,7 @@
 package com.example.joboishi.Fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,8 +22,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.joboishi.Activities.HomeActivity;
+import com.example.joboishi.Activities.SearchActivity;
+import com.example.joboishi.Activities.SearchResultActivity;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
+
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentHomeBinding;
@@ -32,6 +37,7 @@ import com.google.gson.Gson;
 import com.vdx.designertoast.DesignerToast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -47,13 +53,13 @@ public class HomeFragment extends Fragment {
     private JobAdapter adapter;
     private ArrayList<JobBasic> jobList;
     private FragmentHomeBinding binding;
-
+    private SelectFilterJob selectFilterJob =  new SelectFilterJob();
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
+    private ArrayList<String> filterJob;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
@@ -65,6 +71,36 @@ public class HomeFragment extends Fragment {
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
         getJobs();
+
+        //Get event for button sheet
+
+        binding.btnShowType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+                selectFilterJob.setTitleFilter("Công việc ưu thích");
+                filterJob = new ArrayList<>(Arrays.asList("Android Developer", "Frontend Developer", "Backend Developer"));
+                selectFilterJob.setList(filterJob);
+            }
+        });
+
+        binding.btnLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+                selectFilterJob.setTitleFilter("Đia điểm");
+                filterJob = new ArrayList<>(Arrays.asList("Thành Phố Hồ Chí Minh"));
+                selectFilterJob.setList(filterJob);
+            }
+        });
+
+        binding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         //refresh
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -109,8 +145,16 @@ public class HomeFragment extends Fragment {
             }
         });
         return binding.getRoot();
+
+
     }
 
+    //Button sheet here
+    private void showDialog() {
+        myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
+        myBottomSheetDialogFragment.setFragment(selectFilterJob);
+        myBottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
+    }
 
     private void getJobs() {
         Call<ArrayList<JobBasic>> call = iJobsService.getListJobs();
