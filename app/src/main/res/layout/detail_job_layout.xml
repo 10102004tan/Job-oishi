@@ -5,11 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
+    android:gravity="center"
     android:orientation="vertical">
 
+    <!-- Add a ProgressBar aligned to the center of the parent -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
     <ScrollView
+        android:id="@+id/layout_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,6 +46,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/lbl_job_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
@@ -178,6 +190,7 @@
                     </LinearLayout>
 
                     <ImageView
+                        android:id="@+id/img_company_logo"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_weight="2"
@@ -186,7 +199,28 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/line_color" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nội dung"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="10dp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txt_job_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="20dp"
                     android:background="@color/line_color" />
@@ -272,7 +306,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Online 2 ngay truoc"
-                        android:textSize="10dp"
+                        android:textSize="12dp"
                         app:layout_constraintBottom_toBottomOf="@+id/avatar_hr"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -309,6 +343,7 @@
                     android:textStyle="bold" />
 
                 <LinearLayout
+                    android:id="@+id/skills_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="10dp"
@@ -366,6 +401,20 @@
                     android:text="Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance."
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="10dp"
+                    android:text="Requirements"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_requirements"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -373,125 +422,50 @@
                     android:layout_marginBottom="20dp"
                     android:background="@color/line_color" />
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/get_benefits"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Phúc lợi công việc"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="10dp"
-                    android:textStyle="bold" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    >
+                    android:orientation="vertical"
+                    android:visibility="gone">
                     <LinearLayout
+                        android:id="@+id/get_benefits_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="8"
+                            android:layout_height="wrap_content"
+                            android:text="Phúc lợi công việc"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="10dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/show_all_benefit"
+                            android:layout_width="0dp"
+                            android:layout_weight="2"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blue"
+                            android:clickable="true"
+                            android:text="Xem tất cả"/>
+                        "
+
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/benefits_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
+                        >
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
+                    </androidx.recyclerview.widget.RecyclerView>
+                </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
 
-                    </LinearLayout>
-                </HorizontalScrollView>
             </LinearLayout>
 
         <LinearLayout
@@ -512,6 +486,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_shield"
                 android:text="KHÔNG cung cấp thông tin ngân hàng hoặc thẻ tín dụng khi ứng tuyển. Nhà tuyển dụng KHÔNG bao giờ yêu cầu chi phí ứng tuyển hoặc chi phí đào tạo"/>
 
         </LinearLayout>
@@ -531,13 +506,15 @@
                 android:layout_marginBottom="5dp"
                 android:textStyle="bold" />
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/btn_detail"
                 android:layout_width="match_parent"
-                android:layout_height="70dp">
+                android:layout_height="70dp"
+                android:clickable="true">
 
                 <ImageView
                     android:id="@+id/avatar_company"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:src="@drawable/logo_tech_farm"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/guideline3"
@@ -549,6 +526,7 @@
                     android:layout_width="345dp"
                     android:layout_height="wrap_content"
                     android:text="HR DISION Tech"
+                    android:textSize="15sp"
                     app:layout_constraintBottom_toTopOf="@+id/txt_detail"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -556,12 +534,23 @@
                     app:layout_constraintTop_toTopOf="@+id/avatar_company"
                     app:layout_constraintVertical_bias="0.5" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="319dp"
+                    android:src="@drawable/ic_click_detail"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/avatar_company"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/blue" />
+
                 <TextView
                     android:id="@+id/txt_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Computer Software • 11-15 nhân viên"
-                    android:textSize="12dp"
+                    android:textSize="13dp"
                     app:layout_constraintBottom_toBottomOf="@+id/avatar_company"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -578,6 +567,26 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical"
+            android:padding="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Viêc làm tương tự"
+                android:textSize="16sp"
+                android:layout_marginBottom="20dp"
+                android:textStyle="bold" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/related_jobs"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"/>
         </LinearLayout>
 
         </LinearLayout>

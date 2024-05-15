@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"
+        android:text="Hồ sơ ứng tuyển (CV)"
+        />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_upload"
+        android:layout_width="match_parent"
+        android:layout_height="154dp"
+        android:background="@drawable/btn_upload"
+        android:textColor="@color/blue"
+        android:text="@string/btn_choose_file" />
+
+        <TextView
+            android:id="@+id/lbl_description"
+            android:layout_marginTop="30dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:text="CV sẽ được tự động gửi cho nhà tuyể dụng khi bạn ứng tuyển lần tiếp theo. Để thay đổi, hãy upload CV mới trong mục Profile nhé."/>
+
+        <TextView
+            android:id="@+id/lbl_require"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="14dp"
+            android:text="(Định dạng PDF, dung lượng tối đa 5MB"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="bottom"
+        android:layout_marginBottom="30dp">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_push"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_outline"
+            android:textColor="@color/blue"
+            android:text="@string/btn_save" />
+    </LinearLayout>
+
+</LinearLayout>
