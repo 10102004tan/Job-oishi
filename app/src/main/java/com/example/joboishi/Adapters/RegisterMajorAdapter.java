@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.databinding.MajorsItemBinding;
-import com.example.joboishi.Models.RegisterMajors;
 
 import java.util.ArrayList;
 
 public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdapter.MyViewHolder> {
     private Activity context;
-    private ArrayList<RegisterMajors> majors = new ArrayList<>();
+    private ArrayList<JobSearch> majors = new ArrayList<>();
 
     private ItemClickListener itemClickListener;
 
@@ -23,28 +23,30 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
         this.itemClickListener = itemClickListener;
     }
 
-    public RegisterMajorAdapter(Activity context, ArrayList<RegisterMajors> majors) {
+    public RegisterMajorAdapter(Activity context, ArrayList<JobSearch> majors) {
         this.context = context;
         this.majors = majors;
+    }
 
+    public void updateData(ArrayList<JobSearch> newMajors) {
+        this.majors = newMajors;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Sử dụng MajorsItemBinding để inflate layout và tạo instance cho ViewHolder
         MajorsItemBinding binding = MajorsItemBinding.inflate(LayoutInflater.from(context), parent, false);
         return new MyViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        RegisterMajors major = majors.get(position);
+        JobSearch major = majors.get(position);
 
-        holder.majorsItemBinding.job.setText(major.getName_job());
-        holder.majorsItemBinding.company.setText(major.getName_cpn());
+        holder.majorsItemBinding.job.setText(major.getTitle());
+        holder.majorsItemBinding.company.setText(major.getCompany_name());
         holder.majorsItemBinding.customCheckbox.setChecked(major.getChecked());
-
     }
 
     @Override
@@ -59,22 +61,21 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
             super(binding.getRoot());
             majorsItemBinding = binding;
 
-            // Gán sự kiện click cho CardView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = getAdapterPosition();
-                    itemClickListener.onItemClick(MyViewHolder.this, position);
+                    if (itemClickListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            itemClickListener.onItemClick(MyViewHolder.this, position);
+                        }
+                    }
                 }
-
             });
         }
-
     }
 
     public interface ItemClickListener {
-        public void onItemClick(MyViewHolder holder, int position);
-
+        void onItemClick(MyViewHolder holder, int position);
     }
-
 }

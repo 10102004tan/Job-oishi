@@ -1,8 +1,13 @@
 package com.example.joboishi.abstracts;
 
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.joboishi.Activities.SearchResultActivity;
 
 public abstract class PaginationScrollListener extends RecyclerView.OnScrollListener {
 
@@ -21,6 +26,7 @@ public abstract class PaginationScrollListener extends RecyclerView.OnScrollList
         // Số lượng hiển thị trên 1 page
         int totalItemCount = linearLayoutManager.getItemCount();
         int firstVisibleItemPos = linearLayoutManager.findFirstVisibleItemPosition();
+        Log.d("onScrolled", visibleItemCount + " " + totalItemCount + " " + firstVisibleItemPos);
 
         if (isLoading() || isLastPage()) {
             return;

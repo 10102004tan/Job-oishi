@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "989425370632",
+    "project_id": "job-oishi",
+    "storage_bucket": "job-oishi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:989425370632:android:04cf79f6502e36c0d633bd",
+        "android_client_info": {
+          "package_name": "com.example.joboishi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCozkAsg9sDSwHsuUGCOlpKeIqjovUzoa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

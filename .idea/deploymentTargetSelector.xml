@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-08T16:40:55.069679500Z">
+        <DropdownSelection timestamp="2024-05-14T16:42:32.674850800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=3a085d25" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\ChienDoo\.android\avd\Pixel_6a_API_34.avd" />
             </handle>
           </Target>
         </DropdownSelection>
@@ -16,12 +16,9 @@
       <SelectionState runConfigName="SettingActivity">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="HomeActivity">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="SearchActivity">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-05-13T09:48:51.704936700Z">
+        <DropdownSelection timestamp="2024-05-14T18:52:46.269659300Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\ChienDoo\.android\avd\Pixel_6a_API_34.avd" />
@@ -43,6 +40,9 @@
           </Target>
         </DropdownSelection>
         <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="RegisterUserActivity">
+        <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
   </component>

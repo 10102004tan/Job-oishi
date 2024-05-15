@@ -1,6 +1,7 @@
 package com.example.joboishi.Api;
 
 import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.JobSearch;
 
 import java.util.ArrayList;
 
@@ -12,8 +13,17 @@ public interface JobSearchAPI {
     public static String BASE_URL = "http://10.0.2.2:3001";
 
     @GET("api/jobs/search")
-    Call<ArrayList<Job>> getListSearchJob(
+    Call<ArrayList<JobSearch>> getListSearchJob(
             @Query("q") String keyword,
+            @Query("page") int page,
+            @Query("page_size") int pageSize
+    );
+
+    @GET("api/jobs")
+    Call<ArrayList<JobSearch>> getListJobs();
+
+    @GET("api/jobs2")
+    Call<ArrayList<JobSearch>> getListSearchJobAll(
             @Query("page") int page,
             @Query("page_size") int pageSize
     );

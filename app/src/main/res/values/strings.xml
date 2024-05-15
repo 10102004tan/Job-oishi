@@ -1,4 +1,7 @@
 <resources>
+    <string name="facebook_app_id">402644682604043</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
     <string name="app_name">Job oishi</string>
     <string name="ho_n_thi_n_h_s">HOÀN THIỆN HỒ SƠ</string>
     <string name="h_s_glints">Hồ sơ Glints</string>
@@ -134,4 +137,7 @@
     <string name="every_day">Mỗi ngày</string>
     <string name="min">Tối thiểu</string>
     <string name="max">Tối đa</string>
+    <string name="default_notification_channel_id">11111</string>
+    //Google
+    <string name="default_web_client_id">128933413556-8obd637npob2ts0t9mul19ttqtf01ahl.apps.googleusercontent.com</string>
 </resources>
