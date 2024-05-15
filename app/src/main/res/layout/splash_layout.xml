@@ -7,16 +7,77 @@
     tools:context=".Activities.SplashActivity">
 
     <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
         android:layout_width="300dp"
         android:layout_height="300dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:lottie_rawRes="@raw/splash"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-         />
+        app:lottie_rawRes="@raw/splash" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contributors"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:weightSum="5"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+       >
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/contributer_tan"
+            app:riv_corner_radius="100dp" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/contributer_chien"
+            app:riv_corner_radius="100dp" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/contributer_dat"
+            app:riv_corner_radius="100dp" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/contributer_hoang"
+            app:riv_corner_radius="100dp" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/contributer_chau"
+            app:riv_corner_radius="100dp" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
