@@ -26,6 +26,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
     private final SelectSalaryFragment salaryFragment = new SelectSalaryFragment();
 
 
+
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {

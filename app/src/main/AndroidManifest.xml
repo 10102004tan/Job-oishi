@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -23,14 +32,16 @@
         </activity>
       <activity
             android:name=".Activities.LoginEmailActivity"
-            android:exported="false" />
+            android:exported="true" >
+          <intent-filter>
+              <action android:name="android.intent.action.MAIN" />
+              <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+      </activity>
       <activity
             android:name=".Activities.SplashActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".Activities.MyPersonalPageActivity"
@@ -38,13 +49,13 @@
             tools:ignore="DuplicateActivity" />
         <activity
             android:name=".Activities.EditProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="true" />
         <activity
             android:name=".Activities.ProfileActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activities.AccountSettingActivity"
             android:exported="false" />
@@ -67,7 +78,9 @@
         <receiver
             android:name=".BroadcastReceiver.InternetBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"
+            android:permission="TODO"
+            tools:ignore="ExportedReceiver" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
