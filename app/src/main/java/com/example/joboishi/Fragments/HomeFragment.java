@@ -34,6 +34,8 @@ import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentHomeBinding;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
 import com.example.joboishi.databinding.HomeLayoutBinding;
+import com.github.angads25.toggle.interfaces.OnToggledListener;
+import com.github.angads25.toggle.model.ToggleableView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -73,12 +75,11 @@ public class HomeFragment extends Fragment {
 
         sharedPreferences = requireActivity().getPreferences(Context.MODE_PRIVATE);
         boolean isNotificationEnabled = sharedPreferences.getBoolean(PREF_NOTIFICATION_ENABLED, false); // Mặc định là false
-        binding.switchNotification.setChecked(isNotificationEnabled);
         //processing switch notification
-        binding.switchNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        binding.switchNotification.setOnToggledListener(new OnToggledListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onSwitched(ToggleableView toggleableView, boolean isOn) {
+                if (isOn) {
                     askNotificationPermission();
                 } else {
                     disableNotifications();

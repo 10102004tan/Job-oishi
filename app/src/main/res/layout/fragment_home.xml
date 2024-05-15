@@ -101,14 +101,22 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <Switch
-                    android:id="@+id/switch_notification"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Thông báo"
+                    android:layout_centerVertical="true"
+                    android:textSize="16sp"
+                    android:text="Thông báo"/>
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/switch_notification"
                     android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    tools:ignore="UseSwitchCompatOrMaterialXml" />
+                    android:layout_centerVertical="true"
+
+                    />
+
             </RelativeLayout>
 
         </LinearLayout>

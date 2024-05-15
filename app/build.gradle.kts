@@ -91,4 +91,5 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.github.Spikeysanju:MotionToast:1.4")
+    implementation ("com.github.angads25:toggle:1.1.0")
 }

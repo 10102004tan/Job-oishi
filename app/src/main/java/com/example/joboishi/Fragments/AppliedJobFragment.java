@@ -33,11 +33,13 @@ public class AppliedJobFragment extends Fragment {
     private ArrayList<JobBasic> jobs;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
+    FilterJobBSDFragment filterJobBottomSheet;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAppliedJobBinding.inflate(inflater, container, false);
         jobs = new ArrayList<>();
+        filterJobBottomSheet = FilterJobBSDFragment.newInstance();
 
         if (jobs.size() != 0) {
             binding.listJob.setVisibility(View.VISIBLE);
@@ -57,9 +59,7 @@ public class AppliedJobFragment extends Fragment {
         binding.btnFiter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
-               dialogFragment.setFragment(new FilterJobFragment());
-               dialogFragment.show(getActivity().getSupportFragmentManager(), dialogFragment.getTag());
+                filterJobBottomSheet.show(getActivity().getSupportFragmentManager(), filterJobBottomSheet.getTag());
             }
         });
 
