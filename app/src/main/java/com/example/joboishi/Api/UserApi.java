@@ -22,7 +22,7 @@ public interface UserApi {
     @POST("{id}")
     Call<UserApiResponse> updateAvatar(@Path("id") int userId ,@Part MultipartBody.Part photo_url);
 
-    @POST()
-    Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest registerUser);
+    @POST("/api/user")
+    Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest request);
 }
 

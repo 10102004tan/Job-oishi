@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="32"
         tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
@@ -26,23 +29,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JobOishi"
         tools:targetApi="31">
-       <activity
+        <activity
             android:name=".Activities.RegisterUserActivity"
-            android:exported="false">
-        </activity>
-      <activity
+            android:exported="true" />
+        <activity
             android:name=".Activities.LoginEmailActivity"
-            android:exported="true" >
-          <intent-filter>
-              <action android:name="android.intent.action.MAIN" />
-              <category android:name="android.intent.category.LAUNCHER" />
-          </intent-filter>
-      </activity>
-      <activity
+            android:exported="false" />
+        <activity
             android:name=".Activities.SplashActivity"
             android:exported="true">
-
-        </activity>
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+      </activity>
         <activity
             android:name=".Activities.MyPersonalPageActivity"
             android:exported="true"
@@ -57,6 +57,9 @@
             android:name=".Activities.ProfileActivity"
             android:exported="true" />
         <activity
+            android:name=".Activities.JobCriteriaActivity"
+            android:exported="true" />
+        <activity
             android:name=".Activities.AccountSettingActivity"
             android:exported="false" />
         <activity
@@ -67,7 +70,7 @@
             android:exported="false" />
         <activity
             android:name=".Activities.DetailJobActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".Activities.AddressActivity"
             android:exported="false" />
@@ -98,8 +101,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -110,15 +115,17 @@
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/job_ic" />
-            <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-                 notification message. See README(https://goo.gl/6BKBk7) for more. -->
+            <!--
+                 Set color used with incoming notification messages. This is used when no color is set for the incoming
+                 notification message. See README(https://goo.gl/6BKBk7) for more.
+            -->
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/black" />
-
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="@string/default_notification_channel_id" />
+
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
