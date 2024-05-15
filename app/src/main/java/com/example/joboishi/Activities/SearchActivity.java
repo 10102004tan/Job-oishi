@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.joboishi.databinding.SearchLayoutBinding;
+import com.vdx.designertoast.DesignerToast;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -42,7 +44,7 @@ public class SearchActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finishAffinity();
+                finish();
             }
         });
 
@@ -73,7 +75,9 @@ public class SearchActivity extends AppCompatActivity {
         btnDelRecentSearches.setOnClickListener(view -> {
             clearSearchHistory();
             loadSearchHistory(); // Tải lại lịch sử tìm kiếm sau khi xóa
-            Toast.makeText(SearchActivity.this, "Lịch sử tìm kiếm đã được xóa", Toast.LENGTH_SHORT).show();
+
+            DesignerToast.Success(SearchActivity.this, "Lịch sử tìm kiếm đã được xóa", Gravity.BOTTOM, Toast.LENGTH_SHORT);
+
         });
 
         // Thiết lập sự kiện cho các item trong ListView

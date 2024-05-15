@@ -21,7 +21,7 @@
         android:layout_height="154dp"
         android:background="@drawable/btn_upload"
         android:textColor="@color/blue"
-        android:text="@string/btn_choose_file" />
+        android:text="Chọn File" />
 
         <TextView
             android:id="@+id/lbl_description"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_outline"
             android:textColor="@color/blue"
-            android:text="@string/btn_save" />
+            android:text="Lưu" />
     </LinearLayout>
 
 </LinearLayout>
