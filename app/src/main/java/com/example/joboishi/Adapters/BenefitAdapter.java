@@ -32,7 +32,15 @@ public class BenefitAdapter extends RecyclerView.Adapter<BenefitAdapter.MyViewHo
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Benefit item = list.get(position);
-        holder.binding.benefitsTitle.setText(item.getValue());
+        String title = item.getValue();
+        if (title.length() > 20) {
+            int endIndex = title.lastIndexOf(" ", 20);
+            if(endIndex != -1) {
+                endIndex = 20;
+            }
+            title = title.substring(0, endIndex) + "...";
+        }
+        holder.binding.benefitsTitle.setText(title);
     }
 
     @Override

@@ -50,6 +50,10 @@
             android:exported="true">
         </activity>
         <activity
+        android:name=".Activities.DetailCompanyActivity"
+        android:exported="true">
+    </activity>
+        <activity
             android:name=".Activities.AddressActivity"
             android:exported="false" />
         <activity

@@ -63,7 +63,7 @@
                             app:layout_constraintVertical_bias="0.5" />
 
                         <TextView
-                            android:id="@+id/txt_company_name"
+                            android:id="@+id/lbl_company_name"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="Cong ty co phan cong nghe Techfram"
@@ -86,7 +86,7 @@
                             app:layout_constraintVertical_bias="0.5" />
 
                         <TextView
-                            android:id="@+id/txt_quantity_people"
+                            android:id="@+id/lbl_quantity_people"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="11 - 50 người"
@@ -109,7 +109,7 @@
                             app:tint="@color/black" />
 
                         <TextView
-                            android:id="@+id/txt_location"
+                            android:id="@+id/lbl_location"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="Quận 2, TP.Hồ Chí Minh"
@@ -132,7 +132,7 @@
                             app:tint="@color/black" />
 
                         <TextView
-                            android:id="@+id/field"
+                            android:id="@+id/lbl_field"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:text="Computer Games"
@@ -183,9 +183,26 @@
 
                 <androidx.cardview.widget.CardView style="@style/CardStyle">
 
-                    <TextView
-                        style="@style/TextViewTitle"
-                        android:text="Về CÔNG TY CỔ PHẦN CÔNG NGHỆ TEACHFRAM" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:id="@+id/lbl_about_company"
+                            style="@style/TextViewTitle"
+                            android:text="" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            android:id="@+id/lbl_desctiption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
@@ -199,24 +216,42 @@
                         android:text="Offce Adress" />
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
+                        android:layout_height="1dp"
                         android:layout_marginBottom="10dp"
                         android:background="@color/line_color" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Quan 2, TP Ho Chi Minh"/>
+                        <TextView
+                            android:id="@+id/lbl_addresses"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
 
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView style="@style/CardStyle">
+                <androidx.cardview.widget.CardView
+                    style="@style/CardStyle">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
                     <TextView
                         style="@style/TextViewTitle"
-                        android:text="Social media" />
+                        android:text="Website" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@color/line_color" />
+
+                    <TextView
+                        android:id="@+id/lbl_website"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/blue" />
+                    </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
 

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.BenefitAdapter;
@@ -53,25 +54,22 @@ public class DetailJobActivity extends AppCompatActivity {
         layoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
 
 
-
-        //Bat su kiem chuyen sanng chi tiet cong ty
-        intent = new Intent(this, DetailCompanyActivity.class);
-        binding.btnDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(intent);
-            }
-        });
-
         //Lay du lieu tu job api
-        jobId = "2032881";
+//        jobId = "2032881";
+        jobId = getIntent().getIntExtra("JOB_ID", -1) + "";
+        if (jobId.equals("-1")) {
+            // Không tìm thấy JOB_ID, xử lý lỗi
+            Toast.makeText(this, "Job ID not found!", Toast.LENGTH_SHORT).show();
+            finish(); // Kết thúc Activity nếu không có ID hợp lệ
+            return;
+        }
         getDetailJob(jobId, new DetailJobCallback() {
             @Override
             public void onDetailJobLoaded(Job job) {
                 // Hide loading indicator
                 hideLoadingIndicator();
 
-                Log.d("test", job.getContent());
+//                Log.d("test", job);
 
                 //Responsibilities
                 String longDescription = job.getResponsibilities();
@@ -116,11 +114,29 @@ public class DetailJobActivity extends AppCompatActivity {
 
 
                 //Benefits
-                if(job.getBenefit() != null) {
+                if(job.getBenefit() != null && job.getBenefit().size() > 0) {
+                    binding.getBenefits.setVisibility(View.VISIBLE);
+                    binding.getBenefitsTitle.setVisibility(View.VISIBLE);
                 BenefitAdapter benefitAdapter = new BenefitAdapter(DetailJobActivity.this,job.getBenefit());
                 binding.benefitsList.setLayoutManager(layoutManager1);
                 binding.benefitsList.setAdapter(benefitAdapter);
                 }
+                else {
+                    binding.getBenefits.setVisibility(View.GONE);
+                    binding.getBenefitsTitle.setVisibility(View.GONE);
+                }
+
+                //Get Detail Company's Job
+                //Bat su kiem chuyen sanng chi tiet cong ty
+                intent = new Intent(DetailJobActivity.this, DetailCompanyActivity.class);
+                binding.btnDetail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.d("test", job.getCompany().getId() + "");
+                        intent.putExtra("COMPANY_ID", job.getCompany().getId());
+                        startActivity(intent);
+                    }
+                });
 
             }
 
@@ -136,7 +152,7 @@ public class DetailJobActivity extends AppCompatActivity {
     //Ham gọi API
     private void getDetailJob(String jobId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
-        Log.d("test", DetailJobAPI.BASE_URL);
+//        Log.d("test", DetailJobAPI.BASE_URL);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailJobAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

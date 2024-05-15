@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 public class Company {
-    @SerializedName("company_id")
+    @SerializedName("id")
     private int id;
     @SerializedName("display_name")
     private String display_name;
@@ -19,7 +19,7 @@ public class Company {
     private String tagline;
     @SerializedName("company_size")
     private String company_size;
-    @SerializedName("address")
+    @SerializedName("addresses")
     private ArrayList<Address> address;
     @SerializedName("num_job_openings")
     private int num_job_openings;

@@ -3,6 +3,7 @@ package com.example.joboishi.Fragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.example.joboishi.Activities.DetailJobActivity;
 import com.example.joboishi.Activities.HomeActivity;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
@@ -86,7 +88,10 @@ public class HomeFragment extends Fragment {
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
             public void onClickJob(int id) {
-
+                //Truyền Dữ liệu sang DetailJobActivity
+                Intent intent = new Intent(getActivity(), DetailJobActivity.class);
+                intent.putExtra("JOB_ID", id);
+                startActivity(intent);
             }
 
             @Override
