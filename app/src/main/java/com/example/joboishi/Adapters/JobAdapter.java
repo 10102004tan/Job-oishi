@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Models.Job;
+import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.databinding.JobItemHolderBinding;
 import java.util.ArrayList;
@@ -65,9 +65,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
             this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   if (iClickJob != null){
-                       iClickJob.onClickJob(job.getId());
-                   }
+                    if (iClickJob != null){
+                        iClickJob.onClickJob(job.getId());
+                    }
                 }
             });
             this.binding.bookmarkImage.setOnClickListener(new View.OnClickListener() {
@@ -82,9 +82,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     }
 
     public void updateData(ArrayList<JobBasic> jobs){
-       this.jobs.clear();
-       this.jobs.addAll(jobs);
-       notifyDataSetChanged();
+        this.jobs.clear();
+        this.jobs.addAll(jobs);
+        notifyDataSetChanged();
     }
 
     public interface IClickJob{

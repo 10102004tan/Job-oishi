@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
-import com.example.joboishi.Models.Job;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentHomeBinding;
@@ -91,6 +90,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onResponse(@NonNull Call<JobBasic> call, @NonNull Response<JobBasic> response) {
                         if (response.isSuccessful()) {
+
                             DesignerToast.Success(getContext(), "Lưu trữ thành công", Gravity.CENTER, Toast.LENGTH_SHORT);
                             Gson gson = new Gson();
                             String json = gson.toJson(response.body());
