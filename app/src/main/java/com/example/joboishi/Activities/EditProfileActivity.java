@@ -752,7 +752,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
 
-
     private File bitmapToFile(Bitmap bitmap, String fileName) {
         File filesDir = getApplicationContext().getFilesDir();
         File imageFile = new File(filesDir, fileName);
