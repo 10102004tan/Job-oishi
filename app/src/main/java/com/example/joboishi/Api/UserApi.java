@@ -21,5 +21,8 @@ public interface UserApi {
     @Multipart
     @POST("{id}")
     Call<UserApiResponse> updateAvatar(@Path("id") int userId ,@Part MultipartBody.Part photo_url);
+
+    @POST("/api/user")
+    Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest request);
 }
 
