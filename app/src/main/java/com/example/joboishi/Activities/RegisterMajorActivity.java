@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,22 @@ public class RegisterMajorActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         registerMajorLayoutBinding = RegisterMajorLayoutBinding.inflate(getLayoutInflater());
         setContentView(registerMajorLayoutBinding.getRoot());
+
+
+        // Toolbar action
+        // Change toolbar title
+        TextView textTitle = findViewById(R.id.toolbar_text_title);
+        textTitle.setText(R.string.job_major_toolbar_title);
+
+        // Button back in toolbar
+        ImageButton btnBack = findViewById(R.id.btn_toolbar_back);
+        btnBack.setImageResource(R.drawable.close_1511_svgrepo_com);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 
         RegisterMajors majors1 = new RegisterMajors("Kỹ sư trí tuệ nhân tạo", "AI Engineer", true);
@@ -132,12 +149,20 @@ public class RegisterMajorActivity extends AppCompatActivity{
             public void onClick(View v) {
                 // Kiểm tra xem có danh sách majors nào được chọn hay không
                 if (hasMajorsChosen()) {
+
+                    // Switch case mul screen
+                    /*
                     // Tạo Intent để chuyển đến NextActivity và đính kèm danh sách majors đã chọn
                     Intent intent = new Intent(RegisterMajorActivity.this, AddressActivity.class);
                     intent.putExtra("majorsChosen", majorsChosen);
                     // Chuyển đến NextActivity
                     startActivity(intent);
+                    */
 
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("key", "value"); // "key" là tên và "value" là giá trị bạn muốn truyền
+                    setResult(RESULT_OK, resultIntent);
+                    finish(); // Kết thúc Activity B
                 }
             }
         });

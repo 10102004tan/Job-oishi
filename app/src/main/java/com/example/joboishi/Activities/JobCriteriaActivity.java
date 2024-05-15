@@ -3,6 +3,7 @@ package com.example.joboishi.Activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -25,7 +26,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private final SelectSalaryFragment salaryFragment = new SelectSalaryFragment();
 
-
+    private final int REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE = 8080;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -48,7 +49,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // Note: Handle later
             }
         });
 
@@ -71,5 +72,38 @@ public class JobCriteriaActivity extends AppCompatActivity {
             }
         });
 
+        // Go to add job position screen
+        LinearLayout buttonGotoAddJobPosition = findViewById(R.id.btn_choose_job_pos);
+        buttonGotoAddJobPosition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(JobCriteriaActivity.this, RegisterMajorActivity.class);
+                startActivityForResult(intent, REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE);
+            }
+        });
+
+        // Go to add city screen
+        LinearLayout buttonGotoAddCity = findViewById(R.id.btn_choose_city_name);
+        buttonGotoAddCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(JobCriteriaActivity.this, AddressActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+//                String value = data.get("majorsChosen");
+//                assert value != null;
+//                Log.d("majorsChosen", value);
+            }
+        }
     }
 }
