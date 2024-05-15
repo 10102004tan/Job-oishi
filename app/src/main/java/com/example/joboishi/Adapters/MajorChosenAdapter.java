@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.databinding.ChosenItemBinding;
 import com.example.joboishi.Models.RegisterMajors;
 
@@ -16,12 +17,12 @@ import java.util.ArrayList;
 public class MajorChosenAdapter extends RecyclerView.Adapter<MajorChosenAdapter.MyViewHolder> {
 
     Activity context;
-    private ArrayList<RegisterMajors> registerMajorsChosen;
-    private ArrayList<RegisterMajors> majors;
+    private ArrayList<JobSearch> registerMajorsChosen;
+    private ArrayList<JobSearch> majors;
 
     private ItemClickListener itemClickListener;
 
-    public MajorChosenAdapter(Activity context, ArrayList<RegisterMajors> registerMajorsChosen) {
+    public MajorChosenAdapter(Activity context, ArrayList<JobSearch> registerMajorsChosen) {
         this.context = context;
         if (registerMajorsChosen == null) {
             this.registerMajorsChosen = new ArrayList<>();
@@ -45,9 +46,9 @@ public class MajorChosenAdapter extends RecyclerView.Adapter<MajorChosenAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull MajorChosenAdapter.MyViewHolder holder, int position) {
-        RegisterMajors major = registerMajorsChosen.get(position);
+        JobSearch major = registerMajorsChosen.get(position);
 
-        holder.majorsChosenItemBinding.jobChosen.setText(major.getName_job());
+        holder.majorsChosenItemBinding.jobChosen.setText(major.getTitle());
     }
 
     @Override
