@@ -3,12 +3,21 @@ package com.example.joboishi.Activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.UserApi;
+import com.example.joboishi.Api.UserApiResponse;
+import com.example.joboishi.Api.UserLoginEmailRequest;
 import com.example.joboishi.R;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
@@ -38,8 +47,22 @@ public class RegisterUserActivity extends AppCompatActivity {
                 } else if (!password.equals(confirmPassword)) {
                     Toast.makeText(RegisterUserActivity.this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
                 } else {
+
+                    UserLoginEmailRequest request = new UserLoginEmailRequest(firstname, lastname, email, password);
                     // Thực hiện đăng ký tài khoản (gửi dữ liệu lên server)
-                    Toast.makeText(RegisterUserActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                    UserApi userApi = ApiClient.getUserAPI();
+                    Call<UserApiResponse> callUser = userApi.registerUser(request);
+                    callUser.enqueue(new Callback<UserApiResponse>() {
+                        @Override
+                        public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
+                            
+                        }
+
+                        @Override
+                        public void onFailure(Call<UserApiResponse> call, Throwable t) {
+                            Log.d("respone", t.toString());
+                        }
+                    });
                 }
             }
         });

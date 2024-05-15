@@ -21,8 +21,7 @@ import com.example.joboishi.Activities.DetailJobActivity;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
-import com.example.joboishi.Models.Company;
-import com.example.joboishi.Models.Job;
+
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
 import com.google.gson.Gson;

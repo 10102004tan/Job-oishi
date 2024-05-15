@@ -3,6 +3,7 @@
   <component name="deploymentTargetDropDown">
     <value>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <entry key="MainActivity">
         <State />
       </entry>
@@ -10,20 +11,14 @@
 =======
       <entry key="app">
 >>>>>>> 6f1e8277f5848244076e50c749c7883ea622a6df
+=======
+      <entry key="JobCriteriaActivity">
+        <State />
+      </entry>
+      <entry key="RegisterUserActivity">
+>>>>>>> 73962b67bf0b3b6056466019909a8905aad6105f
         <State />
       </entry>
     </value>
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\LAPTOP MSI\.android\avd\Pixel_2_API_34.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2024-05-14T07:35:01.559712800Z" />
   </component>
 </project>

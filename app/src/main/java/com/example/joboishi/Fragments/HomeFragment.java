@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
-import com.example.joboishi.Models.Job;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentHomeBinding;

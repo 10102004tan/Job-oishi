@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Adapters.JobSearchAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
-import com.example.joboishi.Models.Job;
+
 import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.R;
 import com.example.joboishi.abstracts.PaginationScrollListener;
