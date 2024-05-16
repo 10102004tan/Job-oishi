@@ -253,6 +253,7 @@ public class DetailJobActivity extends AppCompatActivity {
     private void getDetailJob(String jobId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
 //        Log.d("test", DetailJobAPI.BASE_URL);
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailJobAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
