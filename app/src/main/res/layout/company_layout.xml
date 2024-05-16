@@ -7,6 +7,8 @@
     android:background="@color/bg_color"
     android:orientation="vertical">
 
+    <!-- ScroollView -->
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

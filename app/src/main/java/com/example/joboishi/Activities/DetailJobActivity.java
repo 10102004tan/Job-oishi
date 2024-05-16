@@ -207,7 +207,7 @@ public class DetailJobActivity extends AppCompatActivity {
                     }
                 });
 
-                //Applied Job Event
+                //Applied Job Event From Serve
                 if (job.isIs_edit()) {
                     binding.btnApplied.setEnabled(true);
                 }
