@@ -6,12 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:padding="16dp"
     tools:context=".Activities.ProfileActivity">
 
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
 
             android:layout_width="match_parent"
@@ -25,7 +27,6 @@
                 android:id="@+id/main"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:padding="16dp"
                 app:layout_constraintBottom_toTopOf="@+id/guideline"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -44,26 +45,26 @@
                         android:orientation="vertical">
 
                         <com.makeramen.roundedimageview.RoundedImageView
-                            android:scaleType="fitCenter"
-                            app:riv_corner_radius="30dip"
-                            app:riv_mutate_background="true"
-                            app:riv_tile_mode="repeat"
-                            app:riv_oval="true"
                             android:id="@+id/user_avatar"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
                             android:background="@drawable/blue_circle_bg"
                             android:contentDescription="@string/todo"
-                            android:src="@drawable/avatar_thinking_svgrepo_com" />
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/avatar_thinking_svgrepo_com"
+                            app:riv_corner_radius="30dip"
+                            app:riv_mutate_background="true"
+                            app:riv_oval="true"
+                            app:riv_tile_mode="repeat" />
 
                         <ImageView
-                            android:clickable="true"
                             android:id="@+id/update_avatar_user"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignEnd="@id/user_avatar"
                             android:layout_alignBottom="@id/user_avatar"
+                            android:clickable="true"
                             android:contentDescription="@string/todo"
                             android:src="@drawable/edit_4_svgrepo_com" />
                     </RelativeLayout>
@@ -96,13 +97,13 @@
                             tools:ignore="LabelFor" />
 
                         <TextView
-                            android:visibility="gone"
                             android:id="@+id/error_firstname_textview"
                             style="@style/Profile_Error_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="@string/valid_input_label" />
+                            android:text="@string/valid_input_label"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -133,13 +134,13 @@
                             tools:ignore="LabelFor" />
 
                         <TextView
-                            android:visibility="gone"
                             android:id="@+id/error_lastname_textview"
                             style="@style/Profile_Error_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="@string/valid_input_label" />
+                            android:text="@string/valid_input_label"
+                            android:visibility="gone" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -438,14 +439,12 @@
                 app:layout_constraintGuide_percent="0.9" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:layout_width="match_parent"
+                android:id="@+id/btn_update_user"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:background="@drawable/border_radius_btn"
                 android:text="@string/btn_save_label"
                 android:textColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/main" />
@@ -457,12 +456,11 @@
             android:id="@+id/image"
             android:layout_width="300dp"
             android:layout_height="300dp"
+            android:layout_centerInParent="true"
             android:visibility="gone"
-            app:lottie_rawRes="@raw/a404"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            android:layout_centerInParent="true"
-            />
+            app:lottie_rawRes="@raw/a404" />
     </RelativeLayout>
 
 
