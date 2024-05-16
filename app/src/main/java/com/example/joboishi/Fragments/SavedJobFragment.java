@@ -52,7 +52,7 @@ import www.sanju.motiontoast.MotionToastStyle;
 
 public class SavedJobFragment extends Fragment {
     private FragmentSavedJobBinding binding;
-    private ArrayList<JobBasic> jobList;
+    private ArrayList<JobBasic> jobs;
     private JobAdapter adapter;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
@@ -71,30 +71,30 @@ public class SavedJobFragment extends Fragment {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
-        jobList = new ArrayList<>();
-        adapter = new JobAdapter(jobList,getContext());
+        jobs = new ArrayList<>();
+        adapter = new JobAdapter(jobs,getContext());
         adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
         //Add event for adapter
-       adapter.setiClickJob(new JobAdapter.IClickJob() {
-           @Override
-           public void onClickJob(int id) {
+        adapter.setiClickJob(new JobAdapter.IClickJob() {
+            @Override
+            public void onClickJob(int id) {
 
-           }
+            }
 
-           @Override
-           public void onClickBookmark(JobBasic job) {
-               //processing post id job remove bookmark
+            @Override
+            public void onClickBookmark(JobBasic job) {
+                //processing post id job remove bookmark
                 Call<ResponseBody> call = iJobsService.destroyJobOnBookmark(job.getId(),1);
-               jobList.remove(job);
-               adapter.updateData(jobList);
-               MotionToast.Companion.createToast(getActivity(), "😍",
-                       "Gỡ thành công",
-                       MotionToastStyle.SUCCESS,
-                       MotionToast.GRAVITY_BOTTOM,
-                       MotionToast.LONG_DURATION,
-                       ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+                jobs.remove(job);
+                adapter.updateData(jobs);
+                MotionToast.Companion.createToast(getActivity(), "😍",
+                        "Gỡ thành công",
+                        MotionToastStyle.SUCCESS,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -112,8 +112,8 @@ public class SavedJobFragment extends Fragment {
                                 ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
                     }
                 });
-           }
-       });
+            }
+        });
 
         //Add event for swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -140,24 +140,21 @@ public class SavedJobFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 if (response.isSuccessful()){
-                    jobList = response.body();
-                    binding.loading.setVisibility(View.GONE);
+                    jobs = response.body();
                     binding.swipeRefreshLayout.setRefreshing(false);
-                    binding.loading.stopShimmerAnimation();
-                    if(jobList.size() == 0){
+                    if(jobs.size() == 0){
+                        binding.image.setVisibility(View.VISIBLE);
+                        binding.image.setAnimation(R.raw.no_data);
+                        binding.image.playAnimation();
                         binding.listJob.setVisibility(View.GONE);
-                        binding.noData.setVisibility(View.VISIBLE);
-                        binding.imageNoData.setVisibility(View.VISIBLE);
                     }
                     else{
                         binding.listJob.setVisibility(View.VISIBLE);
-                        binding.noData.setVisibility(View.GONE);
-                        binding.imageNoData.setVisibility(View.GONE);
+                        binding.image.setVisibility(View.GONE);
                     }
-                    adapter.updateData(jobList);
+                    adapter.updateData(jobs);
                 }
             }
-
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                 binding.swipeRefreshLayout.setRefreshing(false);
@@ -174,11 +171,9 @@ public class SavedJobFragment extends Fragment {
             public void noInternet() {
                 statusPreInternet = STATUS_NO_INTERNET;
                 if (isFirst) {
-                    binding.loading.setVisibility(View.GONE);
-                    binding.listJob.setVisibility(View.GONE);
-                    binding.imageNoData.setVisibility(View.GONE);
-                    binding.noData.setVisibility(View.VISIBLE);
-                    binding.imageNoInternet.setVisibility(View.VISIBLE);
+                    binding.image.setVisibility(View.VISIBLE);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
                     statusInternet = STATUS_NO_INTERNET;
                     binding.swipeRefreshLayout.setRefreshing(false);
                     isFirst = false;
@@ -193,25 +188,19 @@ public class SavedJobFragment extends Fragment {
 
             @Override
             public void lowInternet() {
-                binding.noData.setVisibility(View.VISIBLE);
-                binding.imageNoInternet.setVisibility(View.VISIBLE);
-                binding.imageNoData.setVisibility(View.GONE);
-
+                binding.image.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void goodInternet() {
                 statusPreInternet = STATUS_GOOD_INTERNET;
                 if (isFirst) {
-                    binding.noData.setVisibility(View.VISIBLE);
-                    binding.loading.startShimmerAnimation();
-                    binding.listJob.setVisibility(View.VISIBLE);
-                    binding.imageNoInternet.setVisibility(View.GONE);
                     statusInternet = STATUS_GOOD_INTERNET;
-                    getJobsSaved();
                     isFirst = false;
                 }
                 else{
+                    binding.image.setVisibility(View.GONE);
+                    binding.listJob.setVisibility(View.VISIBLE);
                     MotionToast.Companion.createToast(getActivity(), "😍",
                             "Kết nối mạng đã được khôi phục",
                             MotionToastStyle.SUCCESS,
@@ -221,6 +210,7 @@ public class SavedJobFragment extends Fragment {
                 }
             }
         };
+
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }

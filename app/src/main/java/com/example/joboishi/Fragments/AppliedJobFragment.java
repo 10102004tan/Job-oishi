@@ -151,8 +151,11 @@ public class AppliedJobFragment extends Fragment {
         getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
+        if (internetBroadcastReceiver != null) {
+            getActivity().unregisterReceiver(internetBroadcastReceiver);
+        }
     }
 
 
