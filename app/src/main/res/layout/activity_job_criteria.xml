@@ -80,84 +80,15 @@
                     style="@style/Profile_Normal_TextView"
                     />
 
-                <LinearLayout
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_job_select"
                     android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     >
-                    <LinearLayout
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/backend_developer"
-                            style="@style/Profile_Normal_TextView"
-                            android:gravity="center"
-                            />
 
-                        <ImageButton
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/close_tab_svgrepo_com_sm"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/backend_developer"
-                            style="@style/Profile_Normal_TextView"
-                            android:gravity="center"
-                            />
-
-                        <ImageButton
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/close_tab_svgrepo_com_sm"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/backend_developer"
-                            style="@style/Profile_Normal_TextView"
-                            android:gravity="center"
-                            />
-
-                        <ImageButton
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/close_tab_svgrepo_com_sm"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
-                </LinearLayout>
+                </androidx.recyclerview.widget.RecyclerView>
 
                 <TextView
                     android:layout_marginTop="30dp"

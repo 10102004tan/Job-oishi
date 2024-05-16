@@ -1,30 +1,21 @@
 {
   "project_info": {
-    "project_number": "128933413556",
-    "project_id": "sacred-plasma-422315-b9",
-    "storage_bucket": "sacred-plasma-422315-b9.appspot.com"
+    "project_number": "262603217173",
+    "project_id": "job-oichi",
+    "storage_bucket": "job-oichi.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:128933413556:android:3b86264750b440c6284de1",
+        "mobilesdk_app_id": "1:262603217173:android:a60f7b1ca9dc224793b11c",
         "android_client_info": {
           "package_name": "com.example.joboishi"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "128933413556-8obd637npob2ts0t9mul19ttqtf01ahl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.joboishi",
-            "certificate_hash": "b4c720461f982cfa8587ecac8153a18e9bfc0fca"
-          }
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCw0cTNR0uVRFmVMDxMC5eGYFVyN2dBAzM"
+          "current_key": "AIzaSyA9LTt9t_2WUiOh5Cku9tz2Up7kW68OTiM"
         }
       ],
       "services": {

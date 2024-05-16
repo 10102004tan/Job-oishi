@@ -27,37 +27,23 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
-import android.widget.Toast;
 
+import com.example.joboishi.Activities.DetailJobActivity;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
-import com.example.joboishi.Models.Job;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentHomeBinding;
-import com.example.joboishi.databinding.FragmentSavedJobBinding;
-import com.example.joboishi.databinding.HomeLayoutBinding;
 import com.github.angads25.toggle.interfaces.OnToggledListener;
 import com.github.angads25.toggle.model.ToggleableView;
-import com.github.angads25.toggle.widget.LabeledSwitch;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
-import com.vdx.designertoast.DesignerToast;
-
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -65,14 +51,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
-
 public class HomeFragment extends Fragment {
     private IJobsService iJobsService;
     private JobAdapter adapter;
     private ArrayList<JobBasic> jobList;
     private FragmentHomeBinding binding;
-   private boolean isNotification = false;
-   private IHomeFragment iHomeFragment;
+    private boolean isNotification = false;
+    private IHomeFragment iHomeFragment;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
     private boolean isFirst = true;
@@ -150,7 +135,9 @@ public class HomeFragment extends Fragment {
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
             public void onClickJob(int id) {
-
+                Intent intent = new Intent(getActivity(), DetailJobActivity.class);
+                intent.putExtra("JOB_ID", id);
+                startActivity(intent);
             }
 
             @Override

@@ -182,7 +182,7 @@ public class EditProfileActivity extends AppCompatActivity {
         genderFragment.setGenderTextView(genderTextView);
         genderFragment.setGenderData(genderData);
         genderFragment.setGenderSelectedValue(genderSelectedValue);
-        
+
         eduTextView = findViewById(R.id.selected_edu);
         eduTextView.setText(eduSelectedValue);
         eduFragment.setEduTextView(eduTextView);

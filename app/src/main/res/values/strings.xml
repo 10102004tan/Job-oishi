@@ -1,4 +1,7 @@
 <resources>
+    <string name="facebook_app_id">402644682604043</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
     <string name="app_name">Job oishi</string>
     <string name="ho_n_thi_n_h_s">HOÀN THIỆN HỒ SƠ</string>
     <string name="h_s_glints">Hồ sơ Glints</string>
@@ -83,6 +86,7 @@
     <string name="profile_toolbar_title">Hồ sơ</string>
     <string name="edit_profile_toolbar_title">Chỉnh sửa hồ sơ</string>
     <string name="job_criteria_toolbar_title">Tiêu chí công việc</string>
+    <string name="job_major_toolbar_title">Công việc mong muốn</string>
     <string name="btn_save_label">Lưu</string>
     <string name="label_input_name">Tên</string>
     <string name="your_name_label">Tên của bạn</string>
@@ -134,7 +138,12 @@
     <string name="every_day">Mỗi ngày</string>
     <string name="min">Tối thiểu</string>
     <string name="max">Tối đa</string>
+    <string name="choose_contry_textview">Chọn quốc gia</string>
+    <string name="choose_city_textview">Chọn thành phố</string>
+    <string name="choose_gender_textview">Chọn giới tính</string>
+    <string name="choose_edu_textview">Chọn học vấn</string>
+    <string name="choose_birth_textview">Chọn ngày tháng năm sinh</string>
+    <string name="waiting_get_data">Dữ liệu của bạn đang được tải lên, vui lòng chờ trong giây lát</string>
     <string name="default_notification_channel_id">11111</string>
-    //Google
     <string name="default_web_client_id">128933413556-8obd637npob2ts0t9mul19ttqtf01ahl.apps.googleusercontent.com</string>
 </resources>

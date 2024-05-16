@@ -1,586 +1,619 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_color"
-    android:orientation="vertical">
+   >
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            app:lottie_rawRes="@raw/a404"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_centerInParent="true"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <!-- Add a ProgressBar aligned to the center of the parent -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
 
-            <LinearLayout
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/main"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:padding="10dp">
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="8"
-                        android:orientation="vertical">
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="8"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/lbl_job_title"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="Intermediate Backend Developer (Golang)"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="187dp">
+
+                                    <ImageView
+                                        android:id="@+id/ic_company"
+                                        android:layout_width="47dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:src="@drawable/verify_bg"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_money"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintVertical_bias="0.5"
+                                        />
+
+                                    <TextView
+                                        android:id="@+id/txt_company_name"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:text="Cong ty co phan cong nghe Techfram"
+                                        android:textAllCaps="true"
+                                        android:textColor="#0CABEC"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_company"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_company"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_money"
+                                        android:layout_width="47dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:src="@drawable/ic_money"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_location"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_company"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <TextView
+                                        android:id="@+id/txt_salary"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:text="Công ty bảo mật thông tin này"
+                                        android:textStyle="bold"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_money"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_money"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_location"
+                                        android:layout_width="47dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:src="@drawable/ic_location"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_at"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_money"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <TextView
+                                        android:id="@+id/txt_location"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:text="Quận 2, TP.Hồ Chí Minh"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_location"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_location"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_at"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:src="@drawable/ic_job_bag"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_file_cv"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_location"
+                                        app:layout_constraintVertical_bias="0.5"
+                                        app:tint="@color/blue" />
+
+                                    <TextView
+                                        android:id="@+id/txt_job_bag"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:text="Làm tại công ty"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_at"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintHorizontal_bias="0.0"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_at"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_file_cv"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:src="@drawable/ic_cv_file"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_at"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <TextView
+                                        android:id="@+id/txt_cv_file"
+                                        android:layout_width="0dp"
+                                        android:layout_height="16dp"
+                                        android:text="Không yêu cầu CV"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_file_cv"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_file_cv"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <androidx.constraintlayout.widget.Guideline
+                                        android:id="@+id/guideline"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        app:layout_constraintGuide_percent="0.15" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/img_company_logo"
+                                android:layout_width="0dp"
+                                android:layout_height="100dp"
+                                android:layout_weight="2"
+                                android:src="@drawable/logo_tech_farm" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:text="Intermediate Backend Developer (Golang)"
-                            android:textSize="18sp"
+                            android:text="Nội dung"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="10dp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/txt_job_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Yêu cầu công viêc"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="1 - 3 năm kinh nghiệm" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="Cử nhân" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Cập nhật 17 phút trước"
+                            android:textColor="#25917B"
+                            android:textSize="12sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Tin đăng này được quản lý bởi"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="187dp">
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp">
 
                             <ImageView
-                                android:id="@+id/ic_company"
-                                android:layout_width="47dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/verify_bg"
-                                app:layout_constraintBottom_toTopOf="@+id/ic_money"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                android:id="@+id/avatar_hr"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/logo_tech_farm"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline2"
                                 app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:layout_constraintVertical_bias="0.5"
-                                />
+                                app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
-                                android:id="@+id/txt_company_name"
-                                android:layout_width="0dp"
+                                android:id="@+id/manager_job"
+                                android:layout_width="345dp"
                                 android:layout_height="wrap_content"
-                                android:text="Cong ty co phan cong nghe Techfram"
-                                android:textAllCaps="true"
-                                android:textColor="#0CABEC"
-                                app:layout_constraintBottom_toBottomOf="@+id/ic_company"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
-                                app:layout_constraintTop_toTopOf="@+id/ic_company"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <ImageView
-                                android:id="@+id/ic_money"
-                                android:layout_width="47dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_money"
-                                app:layout_constraintBottom_toTopOf="@+id/ic_location"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/ic_company"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <TextView
-                                android:id="@+id/txt_salary"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:text="Công ty bảo mật thông tin này"
-                                android:textStyle="bold"
-                                app:layout_constraintBottom_toBottomOf="@+id/ic_money"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
-                                app:layout_constraintTop_toTopOf="@+id/ic_money"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <ImageView
-                                android:id="@+id/ic_location"
-                                android:layout_width="47dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_location"
-                                app:layout_constraintBottom_toTopOf="@+id/ic_at"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/ic_money"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <TextView
-                                android:id="@+id/txt_location"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:text="Quận 2, TP.Hồ Chí Minh"
-                                app:layout_constraintBottom_toBottomOf="@+id/ic_location"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
-                                app:layout_constraintTop_toTopOf="@+id/ic_location"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <ImageView
-                                android:id="@+id/ic_at"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_job_bag"
-                                app:layout_constraintBottom_toTopOf="@+id/ic_file_cv"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/ic_location"
-                                app:layout_constraintVertical_bias="0.5"
-                                app:tint="@color/blue" />
-
-                            <TextView
-                                android:id="@+id/txt_job_bag"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:text="Làm tại công ty"
-                                app:layout_constraintBottom_toBottomOf="@+id/ic_at"
+                                android:text="HR DISION Tech"
+                                app:layout_constraintBottom_toTopOf="@+id/companyNameTxt"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
-                                app:layout_constraintTop_toTopOf="@+id/ic_at"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <ImageView
-                                android:id="@+id/ic_file_cv"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:src="@drawable/ic_cv_file"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/ic_at"
+                                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                                app:layout_constraintTop_toTopOf="@+id/avatar_hr"
                                 app:layout_constraintVertical_bias="0.5" />
 
                             <TextView
-                                android:id="@+id/txt_cv_file"
-                                android:layout_width="0dp"
-                                android:layout_height="16dp"
-                                android:text="Không yêu cầu CV"
-                                app:layout_constraintBottom_toBottomOf="@+id/ic_file_cv"
+                                android:id="@+id/companyNameTxt"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Online 2 ngay truoc"
+                                android:textSize="12dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/avatar_hr"
                                 app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="@+id/guideline"
-                                app:layout_constraintTop_toTopOf="@+id/ic_file_cv"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="@+id/guideline2"
+                                app:layout_constraintTop_toBottomOf="@+id/manager_job"
                                 app:layout_constraintVertical_bias="0.5" />
 
                             <androidx.constraintlayout.widget.Guideline
-                                android:id="@+id/guideline"
+                                android:id="@+id/guideline2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                app:layout_constraintGuide_percent="0.15" />
+                                app:layout_constraintGuide_percent="0.12" />
+
+
                         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                     </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="2"
-                        android:src="@drawable/logo_tech_farm" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/line_color" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Yêu cầu công viêc"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/text_badge"
-                        android:text="1 - 3 năm kinh nghiệm" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/text_badge"
-                        android:text="Cử nhân" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Cập nhật 17 phút trước"
-                    android:textColor="#25917B"
-                    android:textSize="12sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/line_color" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Tin đăng này được quản lý bởi"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp">
-
-                    <ImageView
-                        android:id="@+id/avatar_hr"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/logo_tech_farm"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/manager_job"
-                        android:layout_width="345dp"
-                        android:layout_height="wrap_content"
-                        android:text="HR DISION Tech"
-                        app:layout_constraintBottom_toTopOf="@+id/companyNameTxt"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/guideline2"
-                        app:layout_constraintTop_toTopOf="@+id/avatar_hr"
-                        app:layout_constraintVertical_bias="0.5" />
-
-                    <TextView
-                        android:id="@+id/companyNameTxt"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Online 2 ngay truoc"
-                        android:textSize="10dp"
-                        app:layout_constraintBottom_toBottomOf="@+id/avatar_hr"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="@+id/guideline2"
-                        app:layout_constraintTop_toBottomOf="@+id/manager_job"
-                        app:layout_constraintVertical_bias="0.5" />
-
-                    <androidx.constraintlayout.widget.Guideline
-                        android:id="@+id/guideline2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        app:layout_constraintGuide_percent="0.12" />
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:padding="10dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Kỹ năng yêu cầu"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/text_badge"
-                        android:text="Lập trình API" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/text_badge"
-                        android:text="PostgreQSL" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/text_badge"
-                        android:text="Lập trình Back-End Web" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/line_color" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Mô tả công việc"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="10dp"
-                    android:text="Resiponsiblilities"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_responsibilities"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance."
-                    android:textSize="14sp" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/line_color" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Phúc lợi công việc"
-                    android:textSize="16sp"
-                    android:layout_marginBottom="10dp"
-                    android:textStyle="bold" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    >
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:orientation="horizontal">
-                        <LinearLayout
-                            android:layout_width="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
+                            android:text="Kỹ năng yêu cầu"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:id="@+id/skills_layout"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
+                            android:layout_marginVertical="10dp"
+                            android:orientation="horizontal">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="Lập trình API" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="PostgreQSL" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="Lập trình Back-End Web" />
+
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:text="Mô tả công việc"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:text="Resiponsiblilities"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_responsibilities"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:text="Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance."
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:orientation="vertical">
-                            <ImageView
-                                android:layout_width="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:text="Requirements"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_requirements"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <LinearLayout
+                            android:id="@+id/get_benefits"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+                            <LinearLayout
+                                android:id="@+id/get_benefits_title"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/circle_bg"
-                                android:src="@drawable/ic_health_insurance"/>
-                            <TextView
-                                android:layout_width="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_weight="8"
+                                    android:layout_height="wrap_content"
+                                    android:text="Phúc lợi công việc"
+                                    android:textSize="16sp"
+                                    android:layout_marginBottom="10dp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/show_all_benefit"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="2"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blue"
+                                    android:clickable="true"
+                                    android:text="Xem tất cả"/>
+                                "
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/benefits_list"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Bảo hiển y tế"/>
+                                android:layout_marginBottom="10dp"
+                                >
+
+                            </androidx.recyclerview.widget.RecyclerView>
                         </LinearLayout>
+
 
                     </LinearLayout>
-                </HorizontalScrollView>
-            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Bí kíp xin việc An toàn"
-                android:textSize="16sp"
-                android:layout_marginBottom="5dp"
-                android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Bí kíp xin việc An toàn"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="5dp"
+                            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="KHÔNG cung cấp thông tin ngân hàng hoặc thẻ tín dụng khi ứng tuyển. Nhà tuyển dụng KHÔNG bao giờ yêu cầu chi phí ứng tuyển hoặc chi phí đào tạo"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_shield"
+                            android:text="KHÔNG cung cấp thông tin ngân hàng hoặc thẻ tín dụng khi ứng tuyển. Nhà tuyển dụng KHÔNG bao giờ yêu cầu chi phí ứng tuyển hoặc chi phí đào tạo"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Thông tin công ty"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="5dp"
+                            android:textStyle="bold" />
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/btn_detail"
+                            android:layout_width="match_parent"
+                            android:layout_height="70dp"
+                            android:clickable="true">
+
+                            <ImageView
+                                android:id="@+id/avatar_company"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:src="@drawable/logo_tech_farm"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/company_name"
+                                android:layout_width="345dp"
+                                android:layout_height="wrap_content"
+                                android:text="HR DISION Tech"
+                                android:textSize="15sp"
+                                app:layout_constraintBottom_toTopOf="@+id/txt_detail"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="@+id/guideline3"
+                                app:layout_constraintTop_toTopOf="@+id/avatar_company"
+                                app:layout_constraintVertical_bias="0.5" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="319dp"
+                                android:src="@drawable/ic_click_detail"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toEndOf="@+id/avatar_company"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:tint="@color/blue" />
+
+                            <TextView
+                                android:id="@+id/txt_detail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Computer Software • 11-15 nhân viên"
+                                android:textSize="13dp"
+                                app:layout_constraintBottom_toBottomOf="@+id/avatar_company"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="@+id/guideline3"
+                                app:layout_constraintTop_toBottomOf="@+id/company_name"
+                                app:layout_constraintVertical_bias="0.5" />
+
+                            <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintGuide_percent="0.12" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="vertical"
+                        android:padding="10dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Viêc làm tương tự"
+                            android:textSize="16sp"
+                            android:layout_marginBottom="20dp"
+                            android:textStyle="bold" />
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/related_jobs"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
 
         </LinearLayout>
+    </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="10dp">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Thông tin công ty"
-                android:textSize="16sp"
-                android:layout_marginBottom="5dp"
-                android:textStyle="bold" />
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp">
-
-                <ImageView
-                    android:id="@+id/avatar_company"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/logo_tech_farm"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/company_name"
-                    android:layout_width="345dp"
-                    android:layout_height="wrap_content"
-                    android:text="HR DISION Tech"
-                    app:layout_constraintBottom_toTopOf="@+id/txt_detail"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/guideline3"
-                    app:layout_constraintTop_toTopOf="@+id/avatar_company"
-                    app:layout_constraintVertical_bias="0.5" />
-
-                <TextView
-                    android:id="@+id/txt_detail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Computer Software • 11-15 nhân viên"
-                    android:textSize="12dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/avatar_company"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/guideline3"
-                    app:layout_constraintTop_toBottomOf="@+id/company_name"
-                    app:layout_constraintVertical_bias="0.5" />
-
-                <androidx.constraintlayout.widget.Guideline
-                    android:id="@+id/guideline3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintGuide_percent="0.12" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
-
-</LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

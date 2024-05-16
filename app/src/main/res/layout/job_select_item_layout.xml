@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:layout_marginEnd="10dp"
+    android:background="@drawable/input_outline">
+    <TextView
+        android:id="@+id/job_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backend_developer"
+        style="@style/Profile_Normal_TextView"
+        android:gravity="center"
+        />
+
+    <ImageView
+        android:clickable="true"
+        android:id="@+id/btn_delete_job"
+        android:layout_marginStart="10dp"
+        android:background="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/close_tab_svgrepo_com_sm"
+        android:contentDescription="@string/todo" />
+</LinearLayout>
