@@ -12,12 +12,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
-
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -34,14 +31,15 @@ import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
 import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
+import com.bumptech.glide.Glide;
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.CountryApi;
 import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApi;
 import com.example.joboishi.Api.ProvinceApiResponse;
+import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
-import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.SelectBirthFragment;
 import com.example.joboishi.Fragments.SelectCityFragment;
 import com.example.joboishi.Fragments.SelectCountryFragment;
@@ -61,6 +59,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
+import com.example.joboishi.ViewModels.LoadingDialog;
+import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,6 +80,7 @@ import www.sanju.motiontoast.MotionToastStyle;
 public class EditProfileActivity extends AppCompatActivity {
 
 
+    private static final int PICK_IMAGE_REQUEST = 1;
     private final ArrayList<CountryApiResponse> countryData = new ArrayList<>(); // storage list country in the world
     private final ArrayList<ProvinceApiResponse> provinceData = new ArrayList<>(); // storage list province of VN
     private final ArrayList<String> genderData = new ArrayList<>(Arrays.asList("Nam", "Nữ", "Khác")); // List gender data
@@ -104,6 +112,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
+    private final UserApiResponse userData = new UserApiResponse();
     private final ArrayList<CountryApiResponse> tempCountry = new ArrayList<>();
     private final ArrayList<ProvinceApiResponse> tempCity = new ArrayList<>();
 
@@ -115,13 +124,26 @@ public class EditProfileActivity extends AppCompatActivity {
     private final SelectExperienceFragment experienceFragment = new SelectExperienceFragment();
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
-    private final  int STATUS_NO_INTERNET = 0;
-    private final  int STATUS_LOW_INTERNET = 1;
-    private final  int STATUS_GOOD_INTERNET = 2;
+    private final int STATUS_NO_INTERNET = 0;
+    private final int STATUS_LOW_INTERNET = 1;
+    private final int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
     private ActivityEditProfileBinding binding;
+    private final String DEFAULT_COUNTRY_STR = "Chọn quốc gia";
+    private final String DEFAULT_CITY_STR = "Chọn thành phố";
+    private final String DEFAULT_BIRTH_STR = "Chọn ngày tháng năm sinh của bạn";
+    private final String DEFAULT_EDU_STR = "Chọn trình độ học vấn của bạn";
+    private final String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
+    private final String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
+    private final int USER_ID = 1;
+    private TextView firstNameTextView;
+    private TextView lastNameTextView;
+    private RoundedImageView userAvatar;
+    private LoadingDialog loadingDialog;
+    private TextView errorFirstnameTextView;
+    private TextView errorLastnameTextView;
 
     // Func to check if a string contains char
     // Ex: "Vietnam" will contains "vi" , "am" , "nam" , "iet"
@@ -148,6 +170,10 @@ public class EditProfileActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Show dialog loading when fetching data
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.show();
+
 
         // Change toolbar title
         TextView textTitle = findViewById(R.id.toolbar_text_title);
@@ -166,6 +192,67 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // Set default value for EditText
         countryTextView = findViewById(R.id.selected_country_label);
+        // use to display country of user
+
+        // Get user avatar view
+        userAvatar = findViewById(R.id.user_avatar);
+
+        // Error firstname textview
+        errorFirstnameTextView = findViewById(R.id.error_firstname_textview);
+        // Error lastname textview
+        errorLastnameTextView = findViewById(R.id.error_lastname_textview);
+
+
+        countryTextView = findViewById(R.id.selected_country_label);
+        firstNameTextView = findViewById(R.id.firstname_textview);
+        lastNameTextView = findViewById(R.id.lastname_textview);
+        // Handle when firstname text view change
+        firstNameTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    errorFirstnameTextView.setVisibility(View.VISIBLE);
+                } else {
+                    errorFirstnameTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+        lastNameTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().isEmpty()) {
+                    errorLastnameTextView.setVisibility(View.VISIBLE);
+                } else {
+                    errorLastnameTextView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+
+        // Hard Nationality of user
+        String countrySelectedValue = DEFAULT_COUNTRY_STR;
         countryTextView.setText(countrySelectedValue);
         countryFragment.setCountryTextView(countryTextView);
         countryFragment.setCountrySelectedValue(countrySelectedValue);
@@ -207,17 +294,16 @@ public class EditProfileActivity extends AppCompatActivity {
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet){
+                if (statusPreInternet != statusInternet) {
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
-                if (statusInternet == STATUS_NO_INTERNET){
+                if (statusInternet == STATUS_NO_INTERNET) {
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
         });
-
 
 
         // Get province data from api
@@ -265,6 +351,86 @@ public class EditProfileActivity extends AppCompatActivity {
                 Log.d("COUNTRY_API_ERROR", t.toString());
             }
         });
+
+        // Get user data from api
+        UserApi userApi = ApiClient.getUserAPI();
+        Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
+        callUser.enqueue(new Callback<UserApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+
+                    userData.setId(response.body().getId());
+                    userData.setFirstname(response.body().getFirstname());
+                    userData.setLastname(response.body().getLastname());
+                    userData.setEducation(response.body().getEducation());
+                    userData.setBirth(response.body().getBirth());
+                    userData.setGender(response.body().getGender());
+                    userData.setPhotoUrl(response.body().getPhotoUrl());
+                    userData.setTimeStartingWork(response.body().getTimeStartingWork());
+                    userData.setEmail(response.body().getEmail());
+                    userData.setCountry(response.body().getCountry());
+                    userData.setCity(response.body().getCity());
+                    userData.setProvince(response.body().getProvince());
+
+                    Log.d("avatar", userData.getPhotoUrl());
+
+                    Glide.with(getBaseContext())
+                            .load(userData.getPhotoUrl())
+                            .error(R.drawable.avatar_thinking_svgrepo_com)
+                            .into(userAvatar);
+
+                    firstNameTextView.setText(userData.getFirstname());
+                    lastNameTextView.setText(userData.getLastname());
+
+                    if (userData.getCountry() != null) {
+                        countryFragment.setCountrySelectedValue(userData.getCountry());
+                        countryTextView.setText(userData.getCountry());
+                    }
+
+                    if (userData.getCity() != null) {
+                        cityFragment.setCitySelectedValue(userData.getCity());
+                        cityTextView.setText(userData.getCity());
+                    }
+
+                    if (userData.getGender() != null) {
+                        genderFragment.setGenderSelectedValue(userData.getGender());
+                        genderTextView.setText(userData.getGender());
+                    }
+
+                    if (userData.getEducation() != null) {
+                        eduFragment.setEduSelectedValue(userData.getEducation());
+                        eduTextView.setText(userData.getEducation());
+                    }
+
+                    if (userData.getBirth() != null) {
+                        birthFragment.setBirthDate(userData.getBirth());
+                        birthDayTextView.setText(userData.getBirth());
+                    }
+
+                    if (userData.getTimeStartingWork() == null) {
+                        experienceFragment.setHaveExperience(false);
+                    } else {
+                        experienceTextView.setText(userData.getTimeStartingWork());
+                        experienceFragment.setHaveExperience(true);
+                        experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
+                    }
+
+                    // Dismiss dialog when api call done
+                    loadingDialog.cancel();
+                } else {
+                    Log.d("User_Data_Error", "ERROR");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                Log.d("User_Data_Error", t.toString());
+            }
+        });
+
 
         // Show bottom sheet dialog to choose country
         LinearLayout btnShowCountryBottomSheet = findViewById(R.id.btn_country_spinner);
@@ -327,7 +493,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showCountryDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(countryFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
 
     }
 
@@ -336,7 +502,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showCityDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(cityFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog gender
@@ -344,7 +510,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showGenderDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(genderFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog education
@@ -352,7 +518,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showEduDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(eduFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog experience
@@ -360,7 +526,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showExperienceDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(experienceFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog birth
@@ -368,9 +534,10 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showBirthDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(birthFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
 
     }
+
 
     private void registerInternetBroadcastReceiver() {
         internetBroadcastReceiver = new InternetBroadcastReceiver();
@@ -422,5 +589,137 @@ public class EditProfileActivity extends AppCompatActivity {
         };
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+    }
+
+    // Update user information
+    public void updateUserInfo() {
+
+        String firstName = firstNameTextView.getText().toString();
+        String lastName = lastNameTextView.getText().toString();
+        String country = countryTextView.getText().toString();
+        String city = cityTextView.getText().toString();
+        String birth = birthDayTextView.getText().toString();
+        String gender = genderTextView.getText().toString();
+        String edu = eduTextView.getText().toString();
+        String timeStartingWork = experienceTextView.getText().toString();
+
+        if (country.equals(DEFAULT_COUNTRY_STR)) {
+            country = null;
+        }
+
+        if (city.equals(DEFAULT_CITY_STR)) {
+            city = null;
+        }
+
+        if (birth.equals(DEFAULT_BIRTH_STR)) {
+            birth = null;
+        }
+
+        if (gender.equals(DEFAULT_GENDER_STR)) {
+            gender = null;
+        }
+
+        if (edu.equals(DEFAULT_EDU_STR)) {
+            edu = null;
+        }
+
+        if (timeStartingWork.equals(DEFAULT_NO_EXPERIENCE_STR)) {
+            timeStartingWork = null;
+        }
+
+        UserRequest userUpdateRequest = new UserRequest();
+        userUpdateRequest.setId(userData.getId());
+        userUpdateRequest.setFirst_name(firstName);
+        userUpdateRequest.setLast_name(lastName);
+        userUpdateRequest.setEducation(edu);
+        userUpdateRequest.setBirth(birth);
+        userUpdateRequest.setGender(gender);
+        userUpdateRequest.setPhoto_url(userData.getPhotoUrl()); // Note: handler later
+        userUpdateRequest.setTime_starting_work(timeStartingWork);
+        userUpdateRequest.setEmail(userData.getEmail());
+        userUpdateRequest.setCountry(country);
+        userUpdateRequest.setCity(city);
+        userUpdateRequest.setProvince(userData.getProvince()); // Note: handler later
+
+
+        UserApi userApi = ApiClient.getUserAPI();
+        Call<UserApiResponse> call = userApi.updateUserInfo(USER_ID, userUpdateRequest);
+        call.enqueue(new Callback<UserApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+
+                    userData.setId(response.body().getId());
+                    userData.setFirstname(response.body().getFirstname());
+                    userData.setLastname(response.body().getLastname());
+                    userData.setEducation(response.body().getEducation());
+                    userData.setBirth(response.body().getBirth());
+                    userData.setGender(response.body().getGender());
+                    userData.setPhotoUrl(response.body().getPhotoUrl());
+                    userData.setTimeStartingWork(response.body().getTimeStartingWork());
+                    userData.setEmail(response.body().getEmail());
+                    userData.setCountry(response.body().getCountry());
+                    userData.setCity(response.body().getCity());
+                    userData.setProvince(response.body().getProvince());
+
+                    firstNameTextView.setText(userData.getFirstname());
+                    lastNameTextView.setText(userData.getLastname());
+
+                    if (userData.getCountry() == null) {
+                        countryTextView.setText(R.string.choose_contry_textview);
+                    } else {
+                        countryTextView.setText(userData.getCountry());
+                    }
+
+                    if (userData.getCity() == null) {
+                        cityTextView.setText(R.string.choose_city_textview);
+                    } else {
+                        cityTextView.setText(userData.getCity());
+                    }
+
+                    if (userData.getGender() == null) {
+                        genderTextView.setText(R.string.choose_gender_textview);
+                    } else {
+                        genderTextView.setText(userData.getGender());
+                    }
+
+                    if (userData.getEducation() == null) {
+                        eduTextView.setText(R.string.choose_edu_textview);
+                    } else {
+                        eduTextView.setText(userData.getEducation());
+                    }
+
+                    if (userData.getBirth() == null) {
+                        birthDayTextView.setText(R.string.choose_birth_textview);
+                    } else {
+                        birthDayTextView.setText(userData.getBirth());
+                    }
+
+                    if (userData.getTimeStartingWork() == null) {
+                        experienceTextView.setText(R.string.not_experience);
+                        experienceFragment.setHaveExperience(false);
+                    } else {
+                        experienceTextView.setText(userData.getTimeStartingWork());
+                        experienceFragment.setHaveExperience(true);
+                        experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
+                    }
+
+
+                    firstNameTextView.setText(userData.getFirstname());
+                    firstNameTextView.setText(userData.getFirstname());
+
+                    finish();
+
+                } else {
+                    Log.d("UPDATE_USER_ERROR", "ERROR");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                Log.d("UPDATE_USER_ERROR", t.toString());
+            }
+        });
     }
 }
