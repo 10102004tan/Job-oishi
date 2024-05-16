@@ -1,6 +1,8 @@
 package com.example.joboishi.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -8,8 +10,13 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joboishi.Adapters.ImageDescCompanyAdapter;
 import com.example.joboishi.Api.CompanyByJobAPI;
 import com.example.joboishi.Models.data.Address;
 import com.example.joboishi.Models.data.Company;
@@ -17,6 +24,8 @@ import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.CompanyLayoutBinding;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -38,19 +47,31 @@ public class DetailCompanyActivity extends AppCompatActivity {
         binding = CompanyLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Change toolbar title
+        TextView textTitle = findViewById(R.id.toolbar_text_title);
+        textTitle.setText("Company");
+
+        // Button back in toolbar
+        ImageButton btnBack = findViewById(R.id.btn_toolbar_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 //        initData();
 //        JobAdapter adapter = new JobAdapter(jobs);
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 //        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        binding.jobsOfCompany.setLayoutManager(layoutManager);
+//
 //        binding.jobsOfCompany.setAdapter(adapter);
 
         company_id = getIntent().getIntExtra("COMPANY_ID", -1) + "";
         getDetailCompany(company_id,  new DetailCompanyCallBack() {
             @Override
             public void onGetCompanyLoaded(Company company) {
-                Log.d("test", "This is company: " + company.getDisplay_name());
                 //Company name
                 binding.lblCompanyName.setText(company.getDisplay_name());
                 //Company Address
@@ -83,9 +104,34 @@ public class DetailCompanyActivity extends AppCompatActivity {
                 //Get website
                 binding.lblWebsite.setText(company.getWebsite());
 
+
+                //Get Galaries image
+                if(company.getImage_galleries() != null && company.getImage_galleries().size() > 0) {
+                    binding.imageGalleriesItem.setVisibility(View.VISIBLE);
+                    ImageDescCompanyAdapter adapter = new ImageDescCompanyAdapter(company.getImage_galleries(), DetailCompanyActivity.this);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(DetailCompanyActivity.this);
+                    layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    binding.gralariesImage.setLayoutManager(layoutManager);
+                    binding.gralariesImage.setAdapter(adapter);
+                }
+                else {
+                    binding.imageGalleriesItem.setVisibility(View.GONE);
+                }
+
+
             }
         });
     }
+
+
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        if (item.getItemId() == android.R.id.home) {
+//            onBackPressed(); // Xử lý sự kiện khi nhấn nút quay lại
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     //Get Company
     private void getDetailCompany(String company_id, DetailCompanyCallBack callBack) {
@@ -142,6 +188,7 @@ public class DetailCompanyActivity extends AppCompatActivity {
         }
         return ssb;
     }
+
 
 
 }

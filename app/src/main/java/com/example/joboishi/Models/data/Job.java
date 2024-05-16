@@ -31,7 +31,7 @@ public class Job {
     @SerializedName("salary_value")
     private String salary_value;
     @SerializedName("is_salary_visible")
-    private String is_salary_visible;
+    private boolean is_salary_visible;
     @SerializedName("benefits")
     private ArrayList<Benefit> benefit;
     @SerializedName("is_edit")
@@ -44,7 +44,7 @@ public class Job {
 //    private Date update_at;
 
 
-    public Job(String id, String title, String content, String responsibilities, String requirements, Company company, ArrayList<String> skills, String experience, String job_type_str, String job_level, ArrayList<String> recruitment_process, String salary_value, String is_salary_visible, ArrayList<Benefit> benefit, boolean is_edit, boolean is_applied) {
+    public Job(String id, String title, String content, String responsibilities, String requirements, Company company, ArrayList<String> skills, String experience, String job_type_str, String job_level, ArrayList<String> recruitment_process, String salary_value, boolean is_salary_visible, ArrayList<Benefit> benefit, boolean is_edit, boolean is_applied) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -159,11 +159,11 @@ public class Job {
         this.salary_value = salary_value;
     }
 
-    public String getIs_salary_visible() {
+    public boolean getIs_salary_visible() {
         return is_salary_visible;
     }
 
-    public void setIs_salary_visible(String is_salary_visible) {
+    public void setIs_salary_visible(boolean is_salary_visible) {
         this.is_salary_visible = is_salary_visible;
     }
 

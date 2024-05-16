@@ -23,14 +23,15 @@ public class Company {
     private ArrayList<Address> address;
     @SerializedName("num_job_openings")
     private int num_job_openings;
+    @SerializedName("image_galleries")
+    private ArrayList<String> image_galleries;
     @SerializedName("benefits")
     private ArrayList<Benefit> benefits;
     @SerializedName("nationalities")
     private ArrayList<Nationality> nationalities;
 
     //Constructor
-
-    public Company(int id, String display_name, String image_logo, String description, String website, String tagline, String company_size, ArrayList<Address> address, int num_job_openings, ArrayList<Benefit> benefits, ArrayList<Nationality> nationalities) {
+    public Company(int id, String display_name, String image_logo, String description, String website, String tagline, String company_size, ArrayList<Address> address, int num_job_openings, ArrayList<String> image_galleries, ArrayList<Benefit> benefits, ArrayList<Nationality> nationalities) {
         this.id = id;
         this.display_name = display_name;
         this.image_logo = image_logo;
@@ -40,11 +41,22 @@ public class Company {
         this.company_size = company_size;
         this.address = address;
         this.num_job_openings = num_job_openings;
+        this.image_galleries = image_galleries;
         this.benefits = benefits;
         this.nationalities = nationalities;
     }
 
+
     //Properties
+
+
+    public ArrayList<String> getImage_galleries() {
+        return image_galleries;
+    }
+
+    public void setImage_galleries(ArrayList<String> image_galleries) {
+        this.image_galleries = image_galleries;
+    }
 
     public int getId() {
         return id;

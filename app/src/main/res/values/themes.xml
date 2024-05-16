@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.JobOishi" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item> <!--custom animation style-->
     </style>
     <style name="Theme.JobOishi" parent="Base.Theme.JobOishi" >
 
