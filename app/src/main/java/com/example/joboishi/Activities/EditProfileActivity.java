@@ -4,17 +4,24 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,14 +29,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.joboishi.Api.CountryApiResponse;
-import com.example.joboishi.Api.ProvinceApiResponse;
-import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
-import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.CountryApi;
@@ -48,30 +49,28 @@ import com.example.joboishi.Fragments.SelectEducationFragment;
 import com.example.joboishi.Fragments.SelectExperienceFragment;
 import com.example.joboishi.Fragments.SelectGenderFragment;
 import com.example.joboishi.R;
-import com.example.joboishi.Views.TimePicker;
+import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.ActivityEditProfileBinding;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
-import com.example.joboishi.ViewModels.LoadingDialog;
-import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,51 +86,21 @@ public class EditProfileActivity extends AppCompatActivity {
     private final ArrayList<String> genderData = new ArrayList<>(Arrays.asList("Nam", "Nữ", "Khác")); // List gender data
     private final ArrayList<String> EDUCATIONS = new ArrayList<>(Arrays.asList("Tiểu học", "Trung Học Cơ Sở", "Trung Học Phổ Thông", "Bảng Liên Kết", "Cao Đẳng", "Cử Nhân", "Thạc Sĩ", "Tiến Sĩ")); // List edu data
     private final ArrayList<String> EXPERIENCES = new ArrayList<>(Arrays.asList("Tôi đã có kinh nghiệm", "Tôi chưa có kinh nghiệm")); // List experience data
-    private String experienceStartedDateValue = "04/2022"; // Begin employment time
-
-
-    private String experienceSelectedValue = "Tôi đã có kinh nghiệm"; // Hard experience of user
-    private String eduSelectedValue = "Cao Đẳng"; // Hard edu of user
-    private String countrySelectedValue = "Vietnam"; // Hard Nationality of user
-    private String citySelectedValue = "Thành phố Hồ Chí Minh"; // Hard City of user
-    private String genderSelectedValue = "Nam"; // Hard gender of user
-    private TextView countryTextView; // use to display country of user
-    private TextView cityTextView; // use to display city of user
-    private TextView genderTextView; // use to display gender of user
-    private TextView eduTextView; // use to display edu of user
-    private TextView experienceTextView; // use to display experience of user
-    private TextView birthDayTextView; // use to display birth date of user
-    private String tempExperience = "";
-    private boolean isHaveExperience = true; // experience of user
     private final Date currentDate = new Date();
     private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     private final String formattedDate = sdf.format(currentDate);
-    private int dayOfBirth;
-    private int monthOfBirth;
-    private int yearOfBirth;
-    private String birthDate = "24/04/2004"; // birth date of user
-
-
-    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private final UserApiResponse userData = new UserApiResponse();
     private final ArrayList<CountryApiResponse> tempCountry = new ArrayList<>();
     private final ArrayList<ProvinceApiResponse> tempCity = new ArrayList<>();
-
     private final SelectCountryFragment countryFragment = new SelectCountryFragment();
     private final SelectCityFragment cityFragment = new SelectCityFragment();
     private final SelectBirthFragment birthFragment = new SelectBirthFragment();
     private final SelectGenderFragment genderFragment = new SelectGenderFragment();
     private final SelectEducationFragment eduFragment = new SelectEducationFragment();
     private final SelectExperienceFragment experienceFragment = new SelectExperienceFragment();
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
     private final int STATUS_NO_INTERNET = 0;
     private final int STATUS_LOW_INTERNET = 1;
     private final int STATUS_GOOD_INTERNET = 2;
-    private int statusInternet = -1;
-    private int statusPreInternet = -1;
-    private boolean isFirst = true;
-    private ActivityEditProfileBinding binding;
     private final String DEFAULT_COUNTRY_STR = "Chọn quốc gia";
     private final String DEFAULT_CITY_STR = "Chọn thành phố";
     private final String DEFAULT_BIRTH_STR = "Chọn ngày tháng năm sinh của bạn";
@@ -139,6 +108,31 @@ public class EditProfileActivity extends AppCompatActivity {
     private final String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
     private final String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
     private final int USER_ID = 1;
+    private final String experienceStartedDateValue = "04/2022"; // Begin employment time
+    private final String experienceSelectedValue = "Tôi đã có kinh nghiệm"; // Hard experience of user
+    private final String eduSelectedValue = "Cao Đẳng"; // Hard edu of user
+    private final String countrySelectedValue = "Vietnam"; // Hard Nationality of user
+    private final String citySelectedValue = "Thành phố Hồ Chí Minh"; // Hard City of user
+    private final String genderSelectedValue = "Nam"; // Hard gender of user
+    private final String tempExperience = "";
+    private final boolean isHaveExperience = true; // experience of user
+    private final String birthDate = "24/04/2004"; // birth date of user
+    private TextView countryTextView; // use to display country of user
+    private TextView cityTextView; // use to display city of user
+    private TextView genderTextView; // use to display gender of user
+    private TextView eduTextView; // use to display edu of user
+    private TextView experienceTextView; // use to display experience of user
+    private TextView birthDayTextView; // use to display birth date of user
+    private int dayOfBirth;
+    private int monthOfBirth;
+    private int yearOfBirth;
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
+    private InternetBroadcastReceiver internetBroadcastReceiver;
+    private IntentFilter intentFilter;
+    private int statusInternet = -1;
+    private int statusPreInternet = -1;
+    private boolean isFirst = true;
+    private ActivityEditProfileBinding binding;
     private TextView firstNameTextView;
     private TextView lastNameTextView;
     private RoundedImageView userAvatar;
@@ -306,6 +300,24 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+        // Update user
+        Button btnUpdateUser = findViewById(R.id.btn_update_user);
+        btnUpdateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserInfo();
+            }
+        });
+
+        // Update avatar user
+        ImageView btnUpdateAvatarUser = findViewById(R.id.update_avatar_user);
+        btnUpdateAvatarUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Call Choose user picture here
+                openImagePicker();
+            }
+        });
 
         // Get province data from api
         ProvinceApi provinceApi = ApiClient.getProvinceAPI();
@@ -575,8 +587,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 if (isFirst) {
                     statusInternet = STATUS_GOOD_INTERNET;
                     isFirst = false;
-                }
-                else{
+                } else {
                     binding.image.setVisibility(View.GONE);
                     binding.main.setVisibility(View.VISIBLE);
                     MotionToast.Companion.createToast(EditProfileActivity.this, "😍",
@@ -723,4 +734,97 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+    // Resize image size
+    public Bitmap getResizedBitmapWithPadding(Bitmap image, int maxWidth, int maxHeight) {
+        float ratioBitmap = (float) image.getWidth() / (float) image.getHeight();
+        float ratioMax = (float) maxWidth / (float) maxHeight;
+
+        int finalWidth = maxWidth;
+        int finalHeight = maxHeight;
+        if (ratioMax > 1) {
+            finalWidth = (int) ((float) maxHeight * ratioBitmap);
+        } else {
+            finalHeight = (int) ((float) maxWidth / ratioBitmap);
+        }
+
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
+
+        Bitmap outputBitmap = Bitmap.createBitmap(maxWidth, maxHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(outputBitmap);
+        canvas.drawColor(Color.TRANSPARENT);
+
+        int left = (maxWidth - finalWidth) / 2;
+        int top = (maxHeight - finalHeight) / 2;
+        canvas.drawBitmap(resizedBitmap, left, top, null);
+
+        return outputBitmap;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                Bitmap resizedBitmap = getResizedBitmapWithPadding(bitmap, 300, 300);
+                userAvatar.setImageBitmap(resizedBitmap);
+                uploadImage(resizedBitmap, String.valueOf(USER_ID));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadImage(Bitmap bitmap, String userId) {
+        File file = bitmapToFile(bitmap, userId + "avatar.jpg");
+        if (file != null) {
+            RequestBody requestFile = RequestBody.create(MediaType.parse("image/*"), file);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("photo_url", file.getName(), requestFile);
+
+            UserApi userApi = ApiClient.getUserAPI();
+            Call<UserApiResponse> call = userApi.updateAvatar(USER_ID, body);
+            call.enqueue(new Callback<UserApiResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                    Toast.makeText(EditProfileActivity.this, "Ảnh đại diện của bạn đã được cập nhật", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                    Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật ảnh", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        }
+    }
+
+
+    private File bitmapToFile(Bitmap bitmap, String fileName) {
+        File filesDir = getApplicationContext().getFilesDir();
+        File imageFile = new File(filesDir, fileName);
+
+        OutputStream os;
+        try {
+            os = Files.newOutputStream(imageFile.toPath());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return imageFile;
+    }
+
+    // Open Image Picker to choose picture
+    private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
 }
