@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
-import com.example.joboishi.Api.UserLoginEmailRequest;
+import com.example.joboishi.Api.UserRegisterEmailRequest;
 import com.example.joboishi.R;
 
 import retrofit2.Call;
@@ -48,7 +48,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                     Toast.makeText(RegisterUserActivity.this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    UserLoginEmailRequest request = new UserLoginEmailRequest(firstname, lastname, email, password);
+                    UserRegisterEmailRequest request = new UserRegisterEmailRequest(firstname, lastname, email, password);
                     // Thực hiện đăng ký tài khoản (gửi dữ liệu lên server)
                     UserApi userApi = ApiClient.getUserAPI();
                     Call<UserApiResponse> callUser = userApi.registerUser(request);
@@ -56,6 +56,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
                             Log.d("respone", response.toString());
+                            //Toast.makeText(RegisterUserActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override

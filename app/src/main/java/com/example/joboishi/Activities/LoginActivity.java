@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.d("TAG", "signInWithCredential:success");
                             user = mAuth.getCurrentUser();
                             assert user != null;
                             String currentUserUID = user.getUid();

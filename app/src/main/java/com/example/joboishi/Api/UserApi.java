@@ -1,7 +1,5 @@
 package com.example.joboishi.Api;
 
-import java.util.ArrayList;
-
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -22,7 +20,9 @@ public interface UserApi {
     @POST("{id}")
     Call<UserApiResponse> updateAvatar(@Path("id") int userId ,@Part MultipartBody.Part photo_url);
 
-    @POST()
-    Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest registerUser);
+    @POST("/api/user")
+    Call<UserApiResponse> registerUser(@Body UserRegisterEmailRequest request);
+    @POST("/api/user/login")
+    Call<UserApiResponse> loginUser(@Body UserLoginEmailRequest request);
 }
 
