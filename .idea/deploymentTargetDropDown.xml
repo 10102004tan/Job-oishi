@@ -13,12 +13,12 @@
               <deviceKey>
                 <Key>
                   <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\DattoDev\.android\avd\Pixel_7a_API_28.avd" />
+                  <value value="C:\Users\DattoDev\.android\avd\Pixel_6_API_34.avd" />
                 </Key>
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-16T14:07:26.327191600Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-05-16T16:11:10.245060300Z" />
         </State>
       </entry>
       <entry key="app">
