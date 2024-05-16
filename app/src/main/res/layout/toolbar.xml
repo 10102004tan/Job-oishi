@@ -37,7 +37,6 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             tools:ignore="RelativeOverlap,RtlSymmetry" />
-
     </RelativeLayout>
 
 </androidx.appcompat.widget.Toolbar>
