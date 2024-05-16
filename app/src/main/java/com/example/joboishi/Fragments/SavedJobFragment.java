@@ -30,6 +30,10 @@ import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
+import com.thecode.aestheticdialogs.OnDialogClickListener;
 import com.vdx.designertoast.DesignerToast;
 
 import java.util.ArrayList;
@@ -66,16 +70,12 @@ public class SavedJobFragment extends Fragment {
         binding = FragmentSavedJobBinding.inflate(inflater, container, false);
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
-
         iJobsService = retrofit.create(IJobsService.class);
         jobList = new ArrayList<>();
-        binding.loading.setVisibility(View.VISIBLE);
-        binding.loading.startShimmerAnimation();
         adapter = new JobAdapter(jobList,getContext());
         adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
-
         //Add event for adapter
        adapter.setiClickJob(new JobAdapter.IClickJob() {
            @Override
@@ -115,7 +115,6 @@ public class SavedJobFragment extends Fragment {
            }
        });
 
-        getJobsSaved();
         //Add event for swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -125,6 +124,9 @@ public class SavedJobFragment extends Fragment {
                     isFirst = true;
                 }
                 getJobsSaved();
+                if (statusInternet == STATUS_NO_INTERNET){
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
 
             }
         });
@@ -142,13 +144,23 @@ public class SavedJobFragment extends Fragment {
                     binding.loading.setVisibility(View.GONE);
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.loading.stopShimmerAnimation();
+                    if(jobList.size() == 0){
+                        binding.listJob.setVisibility(View.GONE);
+                        binding.noData.setVisibility(View.VISIBLE);
+                        binding.imageNoData.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        binding.listJob.setVisibility(View.VISIBLE);
+                        binding.noData.setVisibility(View.GONE);
+                        binding.imageNoData.setVisibility(View.GONE);
+                    }
                     adapter.updateData(jobList);
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
-                Log.d("testttttt",t.getMessage());
+                binding.swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
@@ -162,27 +174,50 @@ public class SavedJobFragment extends Fragment {
             public void noInternet() {
                 statusPreInternet = STATUS_NO_INTERNET;
                 if (isFirst) {
+                    binding.loading.setVisibility(View.GONE);
                     binding.listJob.setVisibility(View.GONE);
                     binding.imageNoData.setVisibility(View.GONE);
+                    binding.noData.setVisibility(View.VISIBLE);
                     binding.imageNoInternet.setVisibility(View.VISIBLE);
                     statusInternet = STATUS_NO_INTERNET;
+                    binding.swipeRefreshLayout.setRefreshing(false);
                     isFirst = false;
+                    new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
+                            .setTitle("Không có kết nối mạng")
+                            .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                            .setCancelable(false)
+                            .setGravity(Gravity.BOTTOM).show();
+                    ;
                 }
             }
 
             @Override
             public void lowInternet() {
+                binding.noData.setVisibility(View.VISIBLE);
+                binding.imageNoInternet.setVisibility(View.VISIBLE);
+                binding.imageNoData.setVisibility(View.GONE);
+
             }
 
             @Override
             public void goodInternet() {
                 statusPreInternet = STATUS_GOOD_INTERNET;
                 if (isFirst) {
+                    binding.noData.setVisibility(View.VISIBLE);
+                    binding.loading.startShimmerAnimation();
                     binding.listJob.setVisibility(View.VISIBLE);
                     binding.imageNoInternet.setVisibility(View.GONE);
                     statusInternet = STATUS_GOOD_INTERNET;
                     getJobsSaved();
                     isFirst = false;
+                }
+                else{
+                    MotionToast.Companion.createToast(getActivity(), "😍",
+                            "Kết nối mạng đã được khôi phục",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
                 }
             }
         };

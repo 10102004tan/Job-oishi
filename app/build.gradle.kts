@@ -92,4 +92,5 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.github.Spikeysanju:MotionToast:1.4")
     implementation ("com.github.angads25:toggle:1.1.0")
+    implementation ("com.github.gabriel-TheCode:AestheticDialogs:1.3.8")
 }

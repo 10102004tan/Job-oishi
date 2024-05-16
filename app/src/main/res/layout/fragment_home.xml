@@ -127,12 +127,24 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="@+id/guideline4">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listJob"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="15dp"
+                />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/imageNoInternet"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                app:lottie_rawRes="@raw/a404"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                android:layout_marginTop="40dp"
+                android:visibility="gone"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
 
