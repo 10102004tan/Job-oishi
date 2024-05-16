@@ -27,6 +27,10 @@ public class SelectSalaryFragment extends BottomSheetDialogFragment {
 
     private TextView salaryTextView;
 
+    public static MyBottomSheetDialogFragment newInstance() {
+        return new MyBottomSheetDialogFragment();
+    }
+
     public int getMinSalarySelected() {
         return minSalarySelected;
     }
@@ -51,28 +55,27 @@ public class SelectSalaryFragment extends BottomSheetDialogFragment {
         this.salaryTextView = salaryTextView;
     }
 
-
     public Fragment getFragment() {
         return fragment;
     }
+
     public void setFragment(Fragment fragment) {
         this.fragment = fragment;
     }
-    public static MyBottomSheetDialogFragment newInstance() {
-        return new MyBottomSheetDialogFragment();
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.bottom_sheet_salary_layout, container, false);
     }
+
     @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        if (fragment != null){
+        if (fragment != null) {
             fragment = getFragment();
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.fragment,fragment).commit();
+            fragmentTransaction.replace(R.id.fragment, fragment).commit();
         }
 
         // Set salary selected of user to view
@@ -96,14 +99,13 @@ public class SelectSalaryFragment extends BottomSheetDialogFragment {
                 minSalarySelected = minPicker.getValue();
                 maxSalarySelected = maxPicker.getValue();
                 if (minSalarySelected > maxSalarySelected) {
-                    maxSalarySelected = minSalarySelected +  1;
+                    maxSalarySelected = minSalarySelected + 1;
                 }
 
                 salaryTextView.setText(minSalarySelected + " - " + maxSalarySelected + " Tr");
                 onCloseDialog();
             }
         });
-
 
         // Close dialog
         ImageButton btnClose = view.findViewById(R.id.btn_close_salary_dialog);
@@ -115,7 +117,8 @@ public class SelectSalaryFragment extends BottomSheetDialogFragment {
             }
         });
     }
-    public void  onCloseDialog() {
+
+    public void onCloseDialog() {
         MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
         if (bottomSheetFragment != null) {
             bottomSheetFragment.dismiss();

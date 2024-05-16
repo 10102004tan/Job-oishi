@@ -1,6 +1,5 @@
 package com.example.joboishi.Activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -12,17 +11,13 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -30,14 +25,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Api.CountryApiResponse;
-import com.example.joboishi.Api.ProvinceApiResponse;
-import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
-import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.CountryApi;
 import com.example.joboishi.Api.CountryApiResponse;
@@ -47,7 +36,6 @@ import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserRequest;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
-import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.SelectBirthFragment;
 import com.example.joboishi.Fragments.SelectCityFragment;
 import com.example.joboishi.Fragments.SelectCountryFragment;
@@ -56,22 +44,14 @@ import com.example.joboishi.Fragments.SelectExperienceFragment;
 import com.example.joboishi.Fragments.SelectGenderFragment;
 import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.LoadingDialog;
-import com.example.joboishi.Views.TimePicker;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -85,21 +65,13 @@ import retrofit2.Response;
 public class EditProfileActivity extends AppCompatActivity {
 
 
+    private static final int PICK_IMAGE_REQUEST = 1;
     private final ArrayList<CountryApiResponse> countryData = new ArrayList<>(); // storage list country in the world
     private final ArrayList<ProvinceApiResponse> provinceData = new ArrayList<>(); // storage list province of VN
     private final ArrayList<String> genderData = new ArrayList<>(Arrays.asList("Nam", "Nữ", "Khác")); // List gender data
     private final ArrayList<String> EDUCATIONS = new ArrayList<>(Arrays.asList("Tiểu học", "Trung Học Cơ Sở", "Trung Học Phổ Thông", "Bảng Liên Kết", "Cao Đẳng", "Cử Nhân", "Thạc Sĩ", "Tiến Sĩ")); // List edu data
     private final ArrayList<String> EXPERIENCES = new ArrayList<>(Arrays.asList("Tôi đã có kinh nghiệm", "Tôi chưa có kinh nghiệm")); // List experience data
     private final UserApiResponse userData = new UserApiResponse();
-    private TextView birthDayTextView;
-    private TextView cityTextView;
-    private TextView eduTextView;
-    private TextView experienceTextView;
-    private TextView countryTextView;
-    private TextView genderTextView;
-    private TextView firstNameTextView;
-    private TextView lastNameTextView;
-    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private final ArrayList<CountryApiResponse> tempCountry = new ArrayList<>();
     private final ArrayList<ProvinceApiResponse> tempCity = new ArrayList<>();
     private final SelectCountryFragment countryFragment = new SelectCountryFragment();
@@ -115,17 +87,19 @@ public class EditProfileActivity extends AppCompatActivity {
     private final String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
     private final String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
     private final int USER_ID = 1;
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private TextView birthDayTextView;
+    private TextView cityTextView;
+    private TextView eduTextView;
+    private TextView experienceTextView;
+    private TextView countryTextView;
+    private TextView genderTextView;
+    private TextView firstNameTextView;
+    private TextView lastNameTextView;
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private RoundedImageView userAvatar;
     private LoadingDialog loadingDialog;
     private TextView errorFirstnameTextView;
     private TextView errorLastnameTextView;
-
-
-
-
-
-
 
     // Func to check if a string contains char
     // Ex: "Vietnam" will contains "vi" , "am" , "nam" , "iet"
@@ -150,7 +124,6 @@ public class EditProfileActivity extends AppCompatActivity {
         // Show dialog loading when fetching data
         loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
-
 
 
         // Change toolbar title
@@ -178,11 +151,6 @@ public class EditProfileActivity extends AppCompatActivity {
         errorLastnameTextView = findViewById(R.id.error_lastname_textview);
 
 
-
-
-
-
-
         countryTextView = findViewById(R.id.selected_country_label);
         firstNameTextView = findViewById(R.id.firstname_textview);
         lastNameTextView = findViewById(R.id.lastname_textview);
@@ -200,9 +168,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()){
+                if (s.toString().isEmpty()) {
                     errorFirstnameTextView.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     errorFirstnameTextView.setVisibility(View.GONE);
                 }
             }
@@ -222,15 +190,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()){
+                if (s.toString().isEmpty()) {
                     errorLastnameTextView.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     errorLastnameTextView.setVisibility(View.GONE);
                 }
             }
         });
-
-
 
 
         // Hard Nationality of user
@@ -390,34 +356,34 @@ public class EditProfileActivity extends AppCompatActivity {
                     firstNameTextView.setText(userData.getFirstname());
                     lastNameTextView.setText(userData.getLastname());
 
-                    if (userData.getCountry() != null){
+                    if (userData.getCountry() != null) {
                         countryFragment.setCountrySelectedValue(userData.getCountry());
                         countryTextView.setText(userData.getCountry());
                     }
 
-                    if (userData.getCity() != null){
+                    if (userData.getCity() != null) {
                         cityFragment.setCitySelectedValue(userData.getCity());
                         cityTextView.setText(userData.getCity());
                     }
 
-                    if (userData.getGender() != null){
+                    if (userData.getGender() != null) {
                         genderFragment.setGenderSelectedValue(userData.getGender());
                         genderTextView.setText(userData.getGender());
                     }
 
-                    if (userData.getEducation() != null){
+                    if (userData.getEducation() != null) {
                         eduFragment.setEduSelectedValue(userData.getEducation());
                         eduTextView.setText(userData.getEducation());
                     }
 
-                    if (userData.getBirth() != null){
+                    if (userData.getBirth() != null) {
                         birthFragment.setBirthDate(userData.getBirth());
                         birthDayTextView.setText(userData.getBirth());
                     }
 
-                    if (userData.getTimeStartingWork() == null){
+                    if (userData.getTimeStartingWork() == null) {
                         experienceFragment.setHaveExperience(false);
-                    }else {
+                    } else {
                         experienceTextView.setText(userData.getTimeStartingWork());
                         experienceFragment.setHaveExperience(true);
                         experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
@@ -425,7 +391,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     // Dismiss dialog when api call done
                     loadingDialog.cancel();
-                }else {
+                } else {
                     Log.d("User_Data_Error", "ERROR");
                 }
             }
@@ -506,7 +472,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showCountryDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(countryFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
 
     }
 
@@ -515,7 +481,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showCityDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(cityFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog gender
@@ -523,7 +489,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showGenderDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(genderFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog education
@@ -531,7 +497,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showEduDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(eduFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog experience
@@ -539,7 +505,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showExperienceDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(experienceFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog birth
@@ -547,7 +513,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showBirthDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(birthFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
 
     }
 
@@ -602,7 +568,6 @@ public class EditProfileActivity extends AppCompatActivity {
         userUpdateRequest.setProvince(userData.getProvince()); // Note: handler later
 
 
-
         UserApi userApi = ApiClient.getUserAPI();
         Call<UserApiResponse> call = userApi.updateUserInfo(USER_ID, userUpdateRequest);
         call.enqueue(new Callback<UserApiResponse>() {
@@ -627,40 +592,40 @@ public class EditProfileActivity extends AppCompatActivity {
                     firstNameTextView.setText(userData.getFirstname());
                     lastNameTextView.setText(userData.getLastname());
 
-                    if (userData.getCountry() == null){
+                    if (userData.getCountry() == null) {
                         countryTextView.setText(R.string.choose_contry_textview);
-                    }else {
+                    } else {
                         countryTextView.setText(userData.getCountry());
                     }
 
-                    if (userData.getCity() == null){
+                    if (userData.getCity() == null) {
                         cityTextView.setText(R.string.choose_city_textview);
-                    }else {
+                    } else {
                         cityTextView.setText(userData.getCity());
                     }
 
-                    if (userData.getGender() == null){
+                    if (userData.getGender() == null) {
                         genderTextView.setText(R.string.choose_gender_textview);
-                    }else {
+                    } else {
                         genderTextView.setText(userData.getGender());
                     }
 
-                    if (userData.getEducation() == null){
+                    if (userData.getEducation() == null) {
                         eduTextView.setText(R.string.choose_edu_textview);
-                    }else {
+                    } else {
                         eduTextView.setText(userData.getEducation());
                     }
 
-                    if (userData.getBirth() == null){
+                    if (userData.getBirth() == null) {
                         birthDayTextView.setText(R.string.choose_birth_textview);
-                    }else {
+                    } else {
                         birthDayTextView.setText(userData.getBirth());
                     }
 
-                    if (userData.getTimeStartingWork() == null){
+                    if (userData.getTimeStartingWork() == null) {
                         experienceTextView.setText(R.string.not_experience);
                         experienceFragment.setHaveExperience(false);
-                    }else {
+                    } else {
                         experienceTextView.setText(userData.getTimeStartingWork());
                         experienceFragment.setHaveExperience(true);
                         experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
@@ -672,7 +637,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     finish();
 
-                }else {
+                } else {
                     Log.d("UPDATE_USER_ERROR", "ERROR");
                 }
             }
@@ -693,9 +658,9 @@ public class EditProfileActivity extends AppCompatActivity {
         int finalWidth = maxWidth;
         int finalHeight = maxHeight;
         if (ratioMax > 1) {
-            finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            finalWidth = (int) ((float) maxHeight * ratioBitmap);
         } else {
-            finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            finalHeight = (int) ((float) maxWidth / ratioBitmap);
         }
 
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
