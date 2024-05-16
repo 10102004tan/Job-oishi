@@ -112,17 +112,6 @@ public class HomeFragment extends Fragment {
         //end processing switch notification
 
 
-        //register
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-                        String token = task.getResult();
-                    }
-                });
 
         //Start init
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
@@ -225,7 +214,6 @@ public class HomeFragment extends Fragment {
         adapter.setOnLoadMoreListener(new JobAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-
                 //create handler to delay 1s
                 binding.listJob.postDelayed(new Runnable() {
                     @Override
