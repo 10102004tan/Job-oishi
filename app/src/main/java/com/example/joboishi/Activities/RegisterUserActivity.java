@@ -55,7 +55,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                     callUser.enqueue(new Callback<UserApiResponse>() {
                         @Override
                         public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
-                            
+
                         }
 
                         @Override
