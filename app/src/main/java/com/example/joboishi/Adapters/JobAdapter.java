@@ -1,16 +1,11 @@
 package com.example.joboishi.Adapters;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.databinding.JobItemHolderBinding;
 import java.util.ArrayList;
@@ -20,6 +15,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     private IClickJob iClickJob;
     private boolean isBookmark = false;
+    private OnLoadMoreListener onLoadMoreListener;
+    private boolean isLoadMore = false;
+    private boolean isLoading = false;
 
     public void setBookmark(boolean bookmark) {
         isBookmark = bookmark;
@@ -43,11 +41,19 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         JobBasic job = jobs.get(position);
+
+        if (position == jobs.size() - 2 && !isLoading){
+            isLoading = true;
+            if (onLoadMoreListener != null){
+                onLoadMoreListener.onLoadMore();
+            }
+        }
         holder.job = job;
         holder.binding.companyNameTxt.setText(job.getCompany_name());
         holder.binding.jobTitleTxt.setText(job.getTitle());
         holder.binding.sortAddressesTxt.setText(job.getSort_addresses());
         holder.binding.published.setText(job.getPublished());
+        holder.binding.bookmarkImage.setSelected(isBookmark);
         holder.binding.salaryTxt.setVisibility((job.isIs_salary_visible()) ? View.VISIBLE : View.GONE);
         Glide.with(context).load(job.getCompany_logo()).into(holder.binding.companyLogo);
     }
@@ -90,5 +96,14 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     public interface IClickJob{
         void onClickJob(int id);
         void onClickBookmark(JobBasic job);
+    }
+
+    public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
+        this.onLoadMoreListener = onLoadMoreListener;
+    }
+
+
+    public interface OnLoadMoreListener {
+        void onLoadMore();
     }
 }

@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".Activities.JobCriteriaActivity">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <include
             android:id="@+id/include"
             layout="@layout/toolbar" />
 
-        <ScrollView
-            android:id="@+id/scrollView2"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="16dp"
@@ -33,29 +31,27 @@
                 android:orientation="vertical">
 
                 <TextView
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:text="@string/desired_job" />
 
                 <TextView
-                    android:background="@drawable/border_radius_input_light"
-                    android:layout_marginTop="10dp"
-                    android:padding="16dp"
+                    style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job_des"
-                    style="@style/Profile_Normal_TextView"
-                    />
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border_radius_input_light"
+                    android:padding="16dp"
+                    android:text="@string/desired_job_des" />
 
                 <LinearLayout
                     android:id="@+id/btn_choose_job_pos"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border_radius_input"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="16dp"
                     tools:ignore="UseCompoundDrawables">
@@ -75,48 +71,43 @@
                 </LinearLayout>
 
                 <TextView
+                    style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="@string/chose_more_3_option"
-                    style="@style/Profile_Normal_TextView"
-                    />
+                    android:text="@string/chose_more_3_option" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/list_job_select"
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
+                    android:layout_marginTop="20dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
                 <TextView
-                    android:layout_marginTop="30dp"
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job_place"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:layout_marginTop="30dp"
+                    android:text="@string/desired_job_place" />
 
                 <TextView
-                    android:background="@drawable/border_radius_input_light"
-                    android:layout_marginTop="10dp"
-                    android:padding="16dp"
+                    style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/desired_job_place_des"
-                    style="@style/Profile_Normal_TextView"
-                    />
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/border_radius_input_light"
+                    android:padding="16dp"
+                    android:text="@string/desired_job_place_des" />
 
                 <LinearLayout
                     android:id="@+id/btn_choose_city_name"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/border_radius_input"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="16dp"
                     tools:ignore="UseCompoundDrawables">
@@ -136,183 +127,124 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/chose_more_3_option"
                     style="@style/Profile_Normal_TextView"
-                    />
-
-                <LinearLayout
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <LinearLayout
-                        android:gravity="center"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/HCM_city"
-                            style="@style/Profile_Normal_TextView"
-                            android:gravity="center"
-                            />
+                    android:layout_marginTop="20dp"
+                    android:text="@string/chose_more_3_option" />
 
-                        <ImageButton
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/close_tab_svgrepo_com_sm"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
-                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list_city_selected"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp" />
 
                 <TextView
-                    android:layout_marginTop="30dp"
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/want_salary"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:layout_marginTop="30dp"
+                    android:text="@string/want_salary" />
 
                 <LinearLayout
                     android:id="@+id/btn_choose_salary"
-                    android:background="@drawable/input_outline_sm"
-                    android:layout_marginTop="10dp"
-                    android:padding="16dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/input_outline_sm"
                     android:gravity="center"
-                    >
+                    android:orientation="horizontal"
+                    android:padding="16dp">
 
                     <TextView
+                        style="@style/Profile_Normal_TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/currency_vnd"
-                        style="@style/Profile_Normal_TextView"
-                        android:textColor="@color/black"
-                        />
+                        android:textColor="@color/black" />
 
                     <TextView
                         android:id="@+id/salary_text_view"
-                        android:layout_marginStart="10dp"
+                        style="@style/Profile_Normal_TextView"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
                         android:layout_weight="1"
-                        android:text="@string/_0_6_tr"
-                        style="@style/Profile_Normal_TextView"
-                        />
+                        android:text="@string/_0_6_tr" />
 
                     <ImageButton
-                        android:background="@color/white"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/down_arrow_backup_2_svgrepo_com"
-                        android:contentDescription="@string/todo" />
+                        android:background="@color/white"
+                        android:contentDescription="@string/todo"
+                        android:src="@drawable/down_arrow_backup_2_svgrepo_com" />
                 </LinearLayout>
+
                 <TextView
-                    android:layout_marginTop="30dp"
+                    style="@style/Profile_Title_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/chose_form_of_job"
-                    style="@style/Profile_Title_TextView"
-                    />
+                    android:layout_marginTop="30dp"
+                    android:text="@string/chose_form_of_job" />
 
                 <LinearLayout
-                    android:layout_marginTop="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    >
-                    <LinearLayout
-                        android:id="@+id/fulltime"
-                        android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_work_form"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/Profile_Title_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/fulltime"
-                            style="@style/Profile_Normal_TextView"
-                            />
+                        android:layout_marginTop="30dp"
+                        android:text="@string/place_working" />
 
-                        <ImageButton
-                            android:id="@+id/fulltime_check_icon"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@color/white"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
                     <LinearLayout
-                        android:layout_marginTop="10dp"
-                        android:id="@+id/parttime"
-                        android:gravity="center"
+                        android:id="@+id/place_working"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
-                        tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/parttime"
-                            style="@style/Profile_Normal_TextView"
-                            />
-
-                        <ImageButton
-                            android:id="@+id/parttime_check_icon"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@color/white"
-                            android:contentDescription="@string/todo" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_marginTop="10dp"
-                        android:id="@+id/every_day"
                         android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="16dp"
-                        android:background="@drawable/input_outline"
+                        android:paddingBottom="20dp"
                         tools:ignore="UselessParent">
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
-                            android:layout_height="wrap_content"
-                            android:text="@string/every_day"
-                            style="@style/Profile_Normal_TextView"
-                            />
 
-                        <ImageButton
-                            android:id="@+id/every_check_icon"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/check_is_remote"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@color/white"
-                            android:contentDescription="@string/todo" />
+                            app:buttonTint="@color/checkbox_color" />
+
+                        <TextView
+                            style="@style/Profile_Normal_TextView"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/can_remote" />
                     </LinearLayout>
+
+
                 </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/a404" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -333,8 +265,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/main" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -32,13 +32,14 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="8">
+                    android:layout_weight="8"
+                    tools:ignore="NestedWeights">
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_like_job"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
-                        android:drawableRight="@drawable/ic_arrow_down"
+                        android:drawableEnd="@drawable/ic_arrow_down"
                         android:text="Developer"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -97,6 +98,28 @@
                 </LinearLayout>
             </LinearLayout>
 
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="16sp"
+                    android:text="Thông báo"/>
+                <com.github.angads25.toggle.widget.LabeledSwitch
+                    android:id="@+id/switch_notification"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+
+                    />
+
+            </RelativeLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -105,12 +128,24 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            android:orientation="vertical"
             app:layout_constraintTop_toTopOf="@+id/guideline4">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listJob"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="15dp"
+                />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/imageNoInternet"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                app:lottie_rawRes="@raw/a404"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                android:layout_marginTop="40dp"
+                android:visibility="gone"
+                android:layout_gravity="center"
                 />
         </LinearLayout>
 
@@ -121,7 +156,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.2" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

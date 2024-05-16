@@ -29,8 +29,8 @@ public class MyJobFragment extends Fragment {
         /*
         *ADD ITEM ON TABLAYOUT
         */
-        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Da ung tuyen"));
-        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Viec da luu"));
+        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Đã ứng tuyển"));
+        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Việc đã lưu"));
         /*ADD LISTENER FOR tablayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
