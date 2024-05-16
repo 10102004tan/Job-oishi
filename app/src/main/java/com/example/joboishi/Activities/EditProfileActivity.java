@@ -1,11 +1,14 @@
 package com.example.joboishi.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -19,11 +22,13 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApiResponse;
@@ -34,6 +39,7 @@ import com.example.joboishi.Api.CountryApi;
 import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApi;
 import com.example.joboishi.Api.ProvinceApiResponse;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.SelectBirthFragment;
@@ -44,7 +50,11 @@ import com.example.joboishi.Fragments.SelectExperienceFragment;
 import com.example.joboishi.Fragments.SelectGenderFragment;
 import com.example.joboishi.R;
 import com.example.joboishi.Views.TimePicker;
+import com.example.joboishi.databinding.ActivityEditProfileBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +67,8 @@ import java.util.regex.Pattern;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class EditProfileActivity extends AppCompatActivity {
 
@@ -101,7 +113,15 @@ public class EditProfileActivity extends AppCompatActivity {
     private final SelectGenderFragment genderFragment = new SelectGenderFragment();
     private final SelectEducationFragment eduFragment = new SelectEducationFragment();
     private final SelectExperienceFragment experienceFragment = new SelectExperienceFragment();
-
+    private InternetBroadcastReceiver internetBroadcastReceiver;
+    private IntentFilter intentFilter;
+    private final  int STATUS_NO_INTERNET = 0;
+    private final  int STATUS_LOW_INTERNET = 1;
+    private final  int STATUS_GOOD_INTERNET = 2;
+    private int statusInternet = -1;
+    private int statusPreInternet = -1;
+    private boolean isFirst = true;
+    private ActivityEditProfileBinding binding;
 
     // Func to check if a string contains char
     // Ex: "Vietnam" will contains "vi" , "am" , "nam" , "iet"
@@ -116,7 +136,12 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(com.example.joboishi.R.layout.activity_edit_profile);
+        binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
+
+        //register broadcast receiver
+        registerInternetBroadcastReceiver();
+
+        setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -178,6 +203,20 @@ public class EditProfileActivity extends AppCompatActivity {
         birthFragment.setBirthDayTextView(birthDayTextView);
 
 
+        //lister swipe refresh layout
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (statusPreInternet != statusInternet){
+                    registerInternetBroadcastReceiver();
+                    isFirst = true;
+                }
+                if (statusInternet == STATUS_NO_INTERNET){
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
 
 
@@ -331,5 +370,57 @@ public class EditProfileActivity extends AppCompatActivity {
         myBottomSheetDialogFragment.setFragment(birthFragment);
         myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
 
+    }
+
+    private void registerInternetBroadcastReceiver() {
+        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
+            @Override
+            public void noInternet() {
+                statusPreInternet = STATUS_NO_INTERNET;
+                if (isFirst) {
+                    binding.main.setVisibility(View.GONE);
+                    binding.image.setVisibility(View.VISIBLE);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
+                    statusInternet = STATUS_NO_INTERNET;
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    isFirst = false;
+
+                }
+                new AestheticDialog.Builder(EditProfileActivity.this, DialogStyle.CONNECTIFY, DialogType.ERROR)
+                        .setTitle("Không có kết nối mạng")
+                        .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                        .setCancelable(false)
+                        .setGravity(Gravity.BOTTOM).show();
+            }
+
+            @Override
+            public void lowInternet() {
+                binding.image.setVisibility(View.VISIBLE);
+                binding.main.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void goodInternet() {
+                statusPreInternet = STATUS_GOOD_INTERNET;
+                if (isFirst) {
+                    statusInternet = STATUS_GOOD_INTERNET;
+                    isFirst = false;
+                }
+                else{
+                    binding.image.setVisibility(View.GONE);
+                    binding.main.setVisibility(View.VISIBLE);
+                    MotionToast.Companion.createToast(EditProfileActivity.this, "😍",
+                            "Kết nối mạng đã được khôi phục",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
+                }
+            }
+        };
+        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 }
