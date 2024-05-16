@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,7 +36,9 @@ import com.example.joboishi.Api.CountryApi;
 import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApi;
 import com.example.joboishi.Api.ProvinceApiResponse;
+import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
+import com.example.joboishi.Api.UserRequest;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Fragments.SelectBirthFragment;

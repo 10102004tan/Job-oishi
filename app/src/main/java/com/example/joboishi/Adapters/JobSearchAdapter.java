@@ -100,10 +100,12 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public void removeFooterLoading() {
-        isLoadingAdd = false;
-
-        int pos = jobs.size() -1;
-        jobs.remove(pos);
-        notifyItemRemoved(pos);
+        if (isLoadingAdd && jobs.size() > 0) {
+            isLoadingAdd = false;
+            int pos = jobs.size() - 1;
+            jobs.remove(pos);
+            notifyItemRemoved(pos);
+        }
     }
+
 }

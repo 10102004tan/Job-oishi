@@ -203,6 +203,36 @@ public class JobCriteriaActivity extends AppCompatActivity {
             }
         });
 
+        // Go to add job position screen
+        LinearLayout buttonGotoAddJobPosition = findViewById(R.id.btn_choose_job_pos);
+        buttonGotoAddJobPosition.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(JobCriteriaActivity.this, RegisterMajorActivity.class);
+                intent.putExtra("majors", selectedJobs);
+                startActivityForResult(intent, REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE);
+            }
+        });
+
+        // Go to add city screen
+        LinearLayout buttonGotoAddCity = findViewById(R.id.btn_choose_city_name);
+        buttonGotoAddCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(JobCriteriaActivity.this, AddressActivity.class);
+                intent.putExtra("cities", selectedCities);
+                startActivityForResult(intent, REQUEST_TO_ADDRESS_ACTIVITY_CODE);
+            }
+        });
+
+        // Button Save JobCriteria
+        Button buttonSaveJobCriteria = findViewById(R.id.btn_save_salary);
+        buttonSaveJobCriteria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateUserJobCriteria();
+            }
+        });
 
         // listener swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -219,21 +249,8 @@ public class JobCriteriaActivity extends AppCompatActivity {
             }
         });
 
-        public void onClick(View v) {
-            Intent intent = new Intent(JobCriteriaActivity.this, AddressActivity.class);
-            intent.putExtra("cities", selectedCities);
-            startActivityForResult(intent, REQUEST_TO_ADDRESS_ACTIVITY_CODE);
-        }
-
-        // Button Save JobCriteria
-        Button buttonSaveJobCriteria = findViewById(R.id.btn_save_salary);
-        buttonSaveJobCriteria.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateUserJobCriteria();
-            }
-        });
     }
+
 
     private void registerInternetBroadcastReceiver() {
         internetBroadcastReceiver = new InternetBroadcastReceiver();
@@ -285,96 +302,96 @@ public class JobCriteriaActivity extends AppCompatActivity {
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
-        @SuppressLint("NotifyDataSetChanged")
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-            if (requestCode == REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE && resultCode == RESULT_OK) {
-                if (data != null) {
-                    ArrayList<String> value = (ArrayList<String>) data.getSerializableExtra("majorsChosen");
-                    if (value != null) {
-                        selectedJobs.clear();
-                        selectedJobs.addAll(value);
-                        majorChosenAdapter.notifyDataSetChanged();
-                    }
-                }
-            }
-
-            if (requestCode == REQUEST_TO_ADDRESS_ACTIVITY_CODE && resultCode == RESULT_OK) {
-                if (data != null) {
-                    ArrayList<String> value = (ArrayList<String>) data.getSerializableExtra("cities");
-                    if (value != null) {
-                        selectedCities.clear();
-                        selectedCities.addAll(value);
-                        cityChosenAdpater.notifyDataSetChanged();
-                    }
+        if (requestCode == REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                ArrayList<String> value = (ArrayList<String>) data.getSerializableExtra("majorsChosen");
+                if (value != null) {
+                    selectedJobs.clear();
+                    selectedJobs.addAll(value);
+                    majorChosenAdapter.notifyDataSetChanged();
                 }
             }
         }
 
-        public void updateUserJobCriteria() {
-            // Get user data from api
-            StringBuilder jobPositions = new StringBuilder();
-            StringBuilder cities = new StringBuilder();
-            StringBuilder userWorkForms = new StringBuilder();
-
-            String salary = salaryFragment.getMinSalarySelected() + "," + salaryFragment.getMaxSalarySelected();
-
-
-            for (int i = 0; i < selectedJobs.size(); i++) {
-                if (i == selectedJobs.size() - 1) {
-                    jobPositions.append(selectedJobs.get(i));
-                } else {
-                    jobPositions.append(selectedJobs.get(i)).append(",");
+        if (requestCode == REQUEST_TO_ADDRESS_ACTIVITY_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                ArrayList<String> value = (ArrayList<String>) data.getSerializableExtra("cities");
+                if (value != null) {
+                    selectedCities.clear();
+                    selectedCities.addAll(value);
+                    cityChosenAdpater.notifyDataSetChanged();
                 }
             }
-
-            for (int i = 0; i < selectedCities.size(); i++) {
-                if (i == selectedCities.size() - 1) {
-                    cities.append(selectedCities.get(i));
-                } else {
-                    cities.append(selectedCities.get(i)).append(",");
-                }
-            }
-
-
-            for (int i = 0; i < workFormChosen.size(); i++) {
-                if (i == workFormChosen.size() - 1) {
-                    userWorkForms.append(workFormChosen.get(i));
-                } else {
-                    userWorkForms.append(workFormChosen.get(i)).append(",");
-                }
-            }
-
-            Log.d("work_forms", userWorkForms.toString());
-
-
-            JobCriteriaRequest request = new JobCriteriaRequest();
-            request.setUser_id(USER_ID);
-            request.setJob_location(String.valueOf(cities));
-            request.setJob_salary(salary);
-            request.setIs_remote(checkIsRemote.isChecked() ? 1 : 0);
-            request.setJob_position(String.valueOf(jobPositions));
-            request.setWorking_form(String.valueOf(userWorkForms));
-
-
-            UserApi userApi = ApiClient.getUserAPI();
-            Call<JobCriteriaApiResponse> callUser = userApi.updateJobCriteria(request);
-            callUser.enqueue(new Callback<JobCriteriaApiResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Response<JobCriteriaApiResponse> response) {
-                    if (response.isSuccessful()) {
-                        Toast.makeText(JobCriteriaActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(JobCriteriaActivity.this, "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Throwable t) {
-                    Log.d("error", t.toString());
-                }
-            });
         }
     }
+
+    public void updateUserJobCriteria() {
+        // Get user data from api
+        StringBuilder jobPositions = new StringBuilder();
+        StringBuilder cities = new StringBuilder();
+        StringBuilder userWorkForms = new StringBuilder();
+
+        String salary = salaryFragment.getMinSalarySelected() + "," + salaryFragment.getMaxSalarySelected();
+
+
+        for (int i = 0; i < selectedJobs.size(); i++) {
+            if (i == selectedJobs.size() - 1) {
+                jobPositions.append(selectedJobs.get(i));
+            } else {
+                jobPositions.append(selectedJobs.get(i)).append(",");
+            }
+        }
+
+        for (int i = 0; i < selectedCities.size(); i++) {
+            if (i == selectedCities.size() - 1) {
+                cities.append(selectedCities.get(i));
+            } else {
+                cities.append(selectedCities.get(i)).append(",");
+            }
+        }
+
+
+        for (int i = 0; i < workFormChosen.size(); i++) {
+            if (i == workFormChosen.size() - 1) {
+                userWorkForms.append(workFormChosen.get(i));
+            } else {
+                userWorkForms.append(workFormChosen.get(i)).append(",");
+            }
+        }
+
+        Log.d("work_forms", userWorkForms.toString());
+
+
+        JobCriteriaRequest request = new JobCriteriaRequest();
+        request.setUser_id(USER_ID);
+        request.setJob_location(String.valueOf(cities));
+        request.setJob_salary(salary);
+        request.setIs_remote(checkIsRemote.isChecked() ? 1 : 0);
+        request.setJob_position(String.valueOf(jobPositions));
+        request.setWorking_form(String.valueOf(userWorkForms));
+
+
+        UserApi userApi = ApiClient.getUserAPI();
+        Call<JobCriteriaApiResponse> callUser = userApi.updateJobCriteria(request);
+        callUser.enqueue(new Callback<JobCriteriaApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Response<JobCriteriaApiResponse> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(JobCriteriaActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(JobCriteriaActivity.this, "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Throwable t) {
+                Log.d("error", t.toString());
+            }
+        });
+    }
+}
