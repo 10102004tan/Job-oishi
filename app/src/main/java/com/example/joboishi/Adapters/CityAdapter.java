@@ -8,25 +8,25 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.joboishi.databinding.CityItemBinding;
 import com.example.joboishi.Models.CityMajors;
+import com.example.joboishi.databinding.CityItemBinding;
 
 import java.util.ArrayList;
 
 public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> {
-    private Activity context;
+    private final Activity context;
     private ArrayList<CityMajors> cities = new ArrayList<>();
 
     private ItemClickListener itemClickListener;
-
-    public void setItemClickListener(ItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
 
     public CityAdapter(Activity context, ArrayList<CityMajors> cities) {
         this.context = context;
         this.cities = cities;
 
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     @NonNull
@@ -51,8 +51,13 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
         return cities.size();
     }
 
+    public interface ItemClickListener {
+        void onItemClick(CityAdapter.MyViewHolder holder, int position);
+
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private CityItemBinding cityItemBinding;
+        private final CityItemBinding cityItemBinding;
 
         public MyViewHolder(@NonNull CityItemBinding binding) {
             super(binding.getRoot());
@@ -68,11 +73,6 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.MyViewHolder> 
 
             });
         }
-
-    }
-
-    public interface ItemClickListener {
-        public void onItemClick(CityAdapter.MyViewHolder holder, int position);
 
     }
 

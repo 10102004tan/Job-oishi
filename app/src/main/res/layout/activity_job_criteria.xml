@@ -195,85 +195,41 @@
                     android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/fulltime"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_work_form"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/Profile_Title_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/input_outline"
+                        android:layout_marginTop="30dp"
+                        android:text="@string/place_working" />
+
+                    <LinearLayout
+                        android:id="@+id/place_working"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:padding="16dp"
+                        android:paddingBottom="20dp"
                         tools:ignore="UselessParent">
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/check_is_remote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:buttonTint="@color/checkbox_color" />
 
                         <TextView
                             style="@style/Profile_Normal_TextView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/fulltime" />
-
-                        <ImageButton
-                            android:id="@+id/fulltime_check_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:contentDescription="@string/todo"
-                            android:src="@color/white" />
+                            android:text="@string/can_remote" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/parttime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/input_outline"
-                        android:gravity="center"
-                        android:padding="16dp"
-                        tools:ignore="UselessParent">
 
-                        <TextView
-                            style="@style/Profile_Normal_TextView"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/parttime" />
-
-                        <ImageButton
-                            android:id="@+id/parttime_check_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:contentDescription="@string/todo"
-                            android:src="@color/white" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/every_day"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/input_outline"
-                        android:gravity="center"
-                        android:padding="16dp"
-                        tools:ignore="UselessParent">
-
-                        <TextView
-                            style="@style/Profile_Normal_TextView"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/every_day" />
-
-                        <ImageButton
-                            android:id="@+id/every_check_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:contentDescription="@string/todo"
-                            android:src="@color/white" />
-                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
