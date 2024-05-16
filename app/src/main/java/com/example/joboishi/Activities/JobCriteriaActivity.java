@@ -3,7 +3,6 @@ package com.example.joboishi.Activities;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -17,23 +16,24 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.joboishi.Adapters.MajorChosenAdapter;
+import com.example.joboishi.Adapters.CityChosenAdpater;
+import com.example.joboishi.Adapters.SelectedJobAdapter;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Fragments.SelectSalaryFragment;
-import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.R;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class JobCriteriaActivity extends AppCompatActivity {
 
-    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private final SelectSalaryFragment salaryFragment = new SelectSalaryFragment();
     private final int REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE = 8080;
-    private final ArrayList<JobSearch> selectedJobs = new ArrayList<>();
-    private MajorChosenAdapter majorChosenAdapter;
+    private final int REQUEST_TO_ADDRESS_ACTIVITY_CODE = 8081;
+    private final ArrayList<String> selectedJobs = new ArrayList<>();
+    private final ArrayList<String> selectedCities = new ArrayList<>();
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
+    private SelectedJobAdapter majorChosenAdapter;
+    private CityChosenAdpater cityChosenAdpater;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -49,6 +49,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
 
         // Get view
         RecyclerView listSelectedJob = findViewById(R.id.list_job_select);
+        RecyclerView listSelectedCity = findViewById(R.id.list_city_selected);
 
         // Change toolbar title
         TextView textTitle = findViewById(R.id.toolbar_text_title);
@@ -64,23 +65,44 @@ public class JobCriteriaActivity extends AppCompatActivity {
         });
 
         // List selected job
-        majorChosenAdapter = new MajorChosenAdapter(this, selectedJobs);
+        majorChosenAdapter = new SelectedJobAdapter(this, selectedJobs);
         listSelectedJob.setAdapter(majorChosenAdapter);
         // Management layout of recycler view
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        listSelectedJob.setLayoutManager(layoutManager);
+        LinearLayoutManager layoutManagerJob = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        layoutManagerJob.setOrientation(LinearLayoutManager.HORIZONTAL);
+        listSelectedJob.setLayoutManager(layoutManagerJob);
         // Handle remove item selected when touch in
-        majorChosenAdapter.setItemClickListener(new MajorChosenAdapter.ItemClickListener() {
+        majorChosenAdapter.setItemClickListener(new SelectedJobAdapter.ItemClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onItemClick(MajorChosenAdapter.MyViewHolder holder, int position) {
-                JobSearch job = selectedJobs.get(position);
+            public void onItemClick(SelectedJobAdapter.MyViewHolder holder, int position) {
+                String job = selectedJobs.get(position);
                 selectedJobs.remove(job);
                 majorChosenAdapter.notifyDataSetChanged();
             }
         });
 
+
+        // List selected city
+        cityChosenAdpater = new CityChosenAdpater(this, selectedCities);
+        listSelectedCity.setAdapter(cityChosenAdpater);
+        // Management layout of recycler view
+        // Management layout of recycler view
+        LinearLayoutManager layoutManagerCity = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        layoutManagerCity.setOrientation(LinearLayoutManager.HORIZONTAL);
+        listSelectedCity.setLayoutManager(layoutManagerCity);
+
+
+        // Handle remove item selected when touch in
+        cityChosenAdpater.setItemClickListener(new CityChosenAdpater.ItemClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onItemClick(CityChosenAdpater.MyViewHolder holder, int position) {
+                String city = selectedCities.get(position);
+                selectedCities.remove(city);
+                majorChosenAdapter.notifyDataSetChanged();
+            }
+        });
 
         // Salary Textview
         TextView salaryTextView = findViewById(R.id.salary_text_view);
@@ -97,7 +119,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
             public void onClick(View v) {
                 myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
                 myBottomSheetDialogFragment.setFragment(salaryFragment);
-                myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+                myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
             }
         });
 
@@ -118,11 +140,10 @@ public class JobCriteriaActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(JobCriteriaActivity.this, AddressActivity.class);
-                startActivity(intent);
+                intent.putExtra("cities", selectedCities);
+                startActivityForResult(intent, REQUEST_TO_ADDRESS_ACTIVITY_CODE);
             }
         });
-
-
     }
 
 
@@ -133,11 +154,22 @@ public class JobCriteriaActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE && resultCode == RESULT_OK) {
             if (data != null) {
-                ArrayList<JobSearch> value = (ArrayList<JobSearch>) data.getSerializableExtra("majorsChosen");
+                ArrayList<String> value = (ArrayList<String>) data.getSerializableExtra("majorsChosen");
                 if (value != null) {
                     selectedJobs.clear();
                     selectedJobs.addAll(value);
                     majorChosenAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+
+        if (requestCode == REQUEST_TO_ADDRESS_ACTIVITY_CODE && resultCode == RESULT_OK) {
+            if (data != null) {
+                ArrayList<String> value = (ArrayList<String>) data.getSerializableExtra("cities");
+                if (value != null) {
+                    selectedCities.clear();
+                    selectedCities.addAll(value);
+                    cityChosenAdpater.notifyDataSetChanged();
                 }
             }
         }
