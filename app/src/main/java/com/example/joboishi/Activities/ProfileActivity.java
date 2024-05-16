@@ -1,7 +1,6 @@
 package com.example.joboishi.Activities;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,7 +13,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -29,18 +27,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-
+import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.ProfileRecyclerViewAdapter;
+import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.UserApi;
+import com.example.joboishi.Api.UserApiResponse;
+import com.example.joboishi.Api.UserResponse;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.InforProfileAdd;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.ActivityProfileBinding;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
@@ -48,19 +55,21 @@ public class ProfileActivity extends AppCompatActivity {
 
     private final ArrayList<InforProfileAdd> profileRecyclerViewData = new ArrayList<>();
     private final ArrayList<ImageView> indicators = new ArrayList<>();
+    private final int STATUS_NO_INTERNET = 0;
+    private final int STATUS_LOW_INTERNET = 1;
+    private final int STATUS_GOOD_INTERNET = 2;
+    private final UserResponse userData = new UserResponse();
+    private final int USER_ID = 1;
+    private final int REQUEST_CODE_TO_EDIT_PROFILE_ACTIVITY = 9191;
     LinearLayout indicatorLayout;
     private int currentPosition = 0;
     private Intent profileIntent;
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
-    private final  int STATUS_NO_INTERNET = 0;
-    private final  int STATUS_LOW_INTERNET = 1;
-    private final  int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
     private ActivityProfileBinding binding;
-
+    private RoundedImageView userAvatar;
+    private LoadingDialog loadingDialog;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -69,7 +78,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding = ActivityProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //register receiver
+        // Register receiver
         registerInternetBroadcastReceiver();
 
         EdgeToEdge.enable(this);
@@ -79,6 +88,20 @@ public class ProfileActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Show loading while fetching data
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.show();
+
+        // Get view
+        userAvatar = findViewById(R.id.user_avatar);
+        TextView userName = findViewById(R.id.username_textview);
+        TextView userLocation = findViewById(R.id.user_location_textview);
+        TextView userBirth = findViewById(R.id.user_birth_textview);
+        TextView userGender = findViewById(R.id.user_gender_textview);
+        TextView userEdu = findViewById(R.id.user_edu_textview);
+        TextView userExperience = findViewById(R.id.user_experience_textview);
+
+        // Init data
         profileRecyclerViewData.add(new InforProfileAdd("Công việc gần nhất", "Thêm kinh nghiệm làm việc để nhà tuyển dụng thấy thành tựu và trách nhiệm mà bạn đạt được", "Thêm kinh nghiệm làm việc", ProfileRecyclerViewAdapter.BUILDING_ICON));
         profileRecyclerViewData.add(new InforProfileAdd("Trình độ học vấn của bạn", "Thêm trình độ học vấn để nhà tuyển dụng dễ dàng tìm thấy bạn thấy", "Thêm trình độ học vấn", ProfileRecyclerViewAdapter.EDU_ICON));
         profileRecyclerViewData.add(new InforProfileAdd("Trường học gần đây", "Thêm học vấn để nhà tuyển dụng cân nhắc dễ dàng hơn", "Thêm học vẫn", ProfileRecyclerViewAdapter.EDU_ICON));
@@ -129,14 +152,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
         // Event handler for button
-        // Button navigate to edit profile screen
+        // Button navigate to edit user profile screen
         btnNavigateToEditProfilePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 profileIntent = new Intent(ProfileActivity.this, EditProfileActivity.class);
-                startActivity(profileIntent);
+                profileIntent.putExtra("user_data", userData);
+                startActivityForResult(profileIntent, REQUEST_CODE_TO_EDIT_PROFILE_ACTIVITY);
             }
         });
 
@@ -145,25 +168,90 @@ public class ProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(), "Unprocessed function", Toast.LENGTH_SHORT).show();
-                // Handle back here
                 finish();
             }
         });
 
 
-        //lister swipe refresh layout
+        // Lister swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet){
+                if (statusPreInternet != statusInternet) {
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
-                if (statusInternet == STATUS_NO_INTERNET){
+                if (statusInternet == STATUS_NO_INTERNET) {
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+        // Get user info throw api by user id
+        // Get user data from api
+        UserApi userApi = ApiClient.getUserAPI();
+        Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
+        callUser.enqueue(new Callback<UserApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+
+                    userData.setId(response.body().getId());
+                    userData.setFirstName(response.body().getFirstname());
+                    userData.setLastName(response.body().getLastname());
+                    userData.setEducation(response.body().getEducation());
+                    userData.setBirth(response.body().getBirth());
+                    userData.setGender(response.body().getGender());
+                    userData.setPhotoUrl(response.body().getPhotoUrl());
+                    userData.setTimeStartingWorking(response.body().getTimeStartingWork());
+                    userData.setEmail(response.body().getEmail());
+                    userData.setCountry(response.body().getCountry());
+                    userData.setCity(response.body().getCity());
+                    userData.setProvince(response.body().getProvince());
+
+                    Log.d("avatar", userData.getPhotoUrl());
+
+                    Glide.with(getBaseContext())
+                            .load(userData.getPhotoUrl())
+                            .error(R.drawable.avatar_thinking_svgrepo_com)
+                            .into(userAvatar);
+
+                    userName.setText(userData.getFirstName() + " " + userData.getLastName());
+
+
+                    if (userData.getCity() != null) {
+                        userLocation.setText(userData.getCity());
+                    }
+
+                    if (userData.getGender() != null) {
+                        userGender.setText(userData.getGender());
+                    }
+
+                    if (userData.getEducation() != null) {
+                        userEdu.setText(userData.getEducation());
+                    }
+
+                    if (userData.getBirth() != null) {
+                        userBirth.setText(userData.getBirth());
+                    }
+
+                    if (userData.getTimeStartingWorking() != null) {
+                        userExperience.setText(userData.getTimeStartingWorking());
+                    }
+
+                    // Dismiss dialog when api call done
+                    loadingDialog.cancel();
+                } else {
+                    Log.d("User_Data_Error", "ERROR");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                Log.d("User_Data_Error", t.toString());
             }
         });
     }
@@ -196,8 +284,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
     private void registerInternetBroadcastReceiver() {
-        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
             @Override
             public void noInternet() {
@@ -231,8 +320,7 @@ public class ProfileActivity extends AppCompatActivity {
                 if (isFirst) {
                     statusInternet = STATUS_GOOD_INTERNET;
                     isFirst = false;
-                }
-                else{
+                } else {
                     binding.image.setVisibility(View.GONE);
                     binding.main.setVisibility(View.VISIBLE);
                     MotionToast.Companion.createToast(ProfileActivity.this, "😍",
@@ -244,9 +332,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         };
-        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
-
-        Log.d("testtttt","tetssss");
     }
 }

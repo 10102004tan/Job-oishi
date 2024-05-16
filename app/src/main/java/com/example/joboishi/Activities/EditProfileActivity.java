@@ -40,6 +40,7 @@ import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserRequest;
+import com.example.joboishi.Api.UserResponse;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Fragments.SelectBirthFragment;
@@ -49,7 +50,6 @@ import com.example.joboishi.Fragments.SelectEducationFragment;
 import com.example.joboishi.Fragments.SelectExperienceFragment;
 import com.example.joboishi.Fragments.SelectGenderFragment;
 import com.example.joboishi.R;
-import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.ActivityEditProfileBinding;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.thecode.aestheticdialogs.AestheticDialog;
@@ -60,11 +60,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,10 +83,6 @@ public class EditProfileActivity extends AppCompatActivity {
     private final ArrayList<String> genderData = new ArrayList<>(Arrays.asList("Nam", "Nữ", "Khác")); // List gender data
     private final ArrayList<String> EDUCATIONS = new ArrayList<>(Arrays.asList("Tiểu học", "Trung Học Cơ Sở", "Trung Học Phổ Thông", "Bảng Liên Kết", "Cao Đẳng", "Cử Nhân", "Thạc Sĩ", "Tiến Sĩ")); // List edu data
     private final ArrayList<String> EXPERIENCES = new ArrayList<>(Arrays.asList("Tôi đã có kinh nghiệm", "Tôi chưa có kinh nghiệm")); // List experience data
-    private final Date currentDate = new Date();
-    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-    private final String formattedDate = sdf.format(currentDate);
-    private final UserApiResponse userData = new UserApiResponse();
     private final ArrayList<CountryApiResponse> tempCountry = new ArrayList<>();
     private final ArrayList<ProvinceApiResponse> tempCity = new ArrayList<>();
     private final SelectCountryFragment countryFragment = new SelectCountryFragment();
@@ -99,36 +92,17 @@ public class EditProfileActivity extends AppCompatActivity {
     private final SelectEducationFragment eduFragment = new SelectEducationFragment();
     private final SelectExperienceFragment experienceFragment = new SelectExperienceFragment();
     private final int STATUS_NO_INTERNET = 0;
-    private final int STATUS_LOW_INTERNET = 1;
     private final int STATUS_GOOD_INTERNET = 2;
     private final String DEFAULT_COUNTRY_STR = "Chọn quốc gia";
-    private final String DEFAULT_CITY_STR = "Chọn thành phố";
-    private final String DEFAULT_BIRTH_STR = "Chọn ngày tháng năm sinh của bạn";
-    private final String DEFAULT_EDU_STR = "Chọn trình độ học vấn của bạn";
-    private final String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
-    private final String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
     private final int USER_ID = 1;
-    private final String experienceStartedDateValue = "04/2022"; // Begin employment time
-    private final String experienceSelectedValue = "Tôi đã có kinh nghiệm"; // Hard experience of user
-    private final String eduSelectedValue = "Cao Đẳng"; // Hard edu of user
-    private final String countrySelectedValue = "Vietnam"; // Hard Nationality of user
-    private final String citySelectedValue = "Thành phố Hồ Chí Minh"; // Hard City of user
-    private final String genderSelectedValue = "Nam"; // Hard gender of user
-    private final String tempExperience = "";
-    private final boolean isHaveExperience = true; // experience of user
-    private final String birthDate = "24/04/2004"; // birth date of user
+    private UserResponse userData = new UserResponse();
     private TextView countryTextView; // use to display country of user
     private TextView cityTextView; // use to display city of user
     private TextView genderTextView; // use to display gender of user
     private TextView eduTextView; // use to display edu of user
     private TextView experienceTextView; // use to display experience of user
     private TextView birthDayTextView; // use to display birth date of user
-    private int dayOfBirth;
-    private int monthOfBirth;
-    private int yearOfBirth;
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
@@ -136,7 +110,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private TextView firstNameTextView;
     private TextView lastNameTextView;
     private RoundedImageView userAvatar;
-    private LoadingDialog loadingDialog;
+    // private LoadingDialog loadingDialog;
     private TextView errorFirstnameTextView;
     private TextView errorLastnameTextView;
 
@@ -155,7 +129,7 @@ public class EditProfileActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
 
-        //register broadcast receiver
+        // Register broadcast receiver
         registerInternetBroadcastReceiver();
 
         setContentView(binding.getRoot());
@@ -165,10 +139,119 @@ public class EditProfileActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Show dialog loading when fetching data
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.show();
+        // Get View
+        countryTextView = findViewById(R.id.selected_country_label);
+        firstNameTextView = findViewById(R.id.firstname_textview);
+        lastNameTextView = findViewById(R.id.lastname_textview);
+        countryTextView = findViewById(R.id.selected_country_label);
+        userAvatar = findViewById(R.id.user_avatar);
+        errorFirstnameTextView = findViewById(R.id.error_firstname_textview);
+        errorLastnameTextView = findViewById(R.id.error_lastname_textview);
 
+        // Init default data
+        String countrySelectedValue = DEFAULT_COUNTRY_STR;
+        countryTextView.setText(countrySelectedValue);
+        countryFragment.setCountryTextView(countryTextView);
+        countryFragment.setCountrySelectedValue(countrySelectedValue);
+        countryFragment.setCountryData(countryData);
+
+        cityTextView = findViewById(R.id.selected_city_label);
+        // Hard City of user
+        String citySelectedValue = "Thành phố Hồ Chí Minh";
+        cityTextView.setText(citySelectedValue);
+        cityFragment.setCityData(provinceData);
+        cityFragment.setCityTextView(cityTextView);
+        cityFragment.setCitySelectedValue(citySelectedValue);
+
+        genderTextView = findViewById(R.id.selected_gender);
+        // Hard gender of user
+        String genderSelectedValue = "Nam";
+        genderTextView.setText(genderSelectedValue);
+        genderFragment.setGenderTextView(genderTextView);
+        genderFragment.setGenderData(genderData);
+        genderFragment.setGenderSelectedValue(genderSelectedValue);
+
+        eduTextView = findViewById(R.id.selected_edu);
+        // Hard edu of user
+        String eduSelectedValue = "Cao Đẳng";
+        eduTextView.setText(eduSelectedValue);
+        eduFragment.setEduTextView(eduTextView);
+        eduFragment.setEduData(EDUCATIONS);
+        eduFragment.setEduSelectedValue(eduSelectedValue);
+
+        experienceTextView = findViewById(R.id.selected_experience);
+        // Hard experience of user
+        String experienceSelectedValue = "Tôi đã có kinh nghiệm";
+        experienceTextView.setText(experienceSelectedValue);
+        experienceFragment.setExperienceSelectedValue(experienceSelectedValue);
+        // experience of user
+        boolean isHaveExperience = true;
+        experienceFragment.setHaveExperience(isHaveExperience);
+        experienceFragment.setExperienceData(EXPERIENCES);
+        experienceFragment.setExperienceTextView(experienceTextView);
+        // Begin employment time
+        String experienceStartedDateValue = "04/2022";
+        experienceFragment.setExperienceStartedDateValue(experienceStartedDateValue);
+
+        birthDayTextView = findViewById(R.id.selected_birth);
+        // birth date of user
+        String birthDate = "24/04/2004";
+        birthDayTextView.setText(birthDate);
+        birthFragment.setBirthDate(birthDate);
+        birthFragment.setBirthDayTextView(birthDayTextView);
+
+        // Get data from intent
+        Intent intent = getIntent();
+        userData = (UserResponse) intent.getSerializableExtra("user_data");
+
+        if (userData != null) {
+            Log.d("user_data", userData.getPhotoUrl());
+            Glide.with(getBaseContext())
+                    .load(userData.getPhotoUrl())
+                    .error(R.drawable.avatar_thinking_svgrepo_com)
+                    .into(userAvatar);
+
+            firstNameTextView.setText(userData.getFirstName());
+            lastNameTextView.setText(userData.getLastName());
+
+            if (userData.getCountry() != null) {
+                countryFragment.setCountrySelectedValue(userData.getCountry());
+                countryTextView.setText(userData.getCountry());
+            }
+
+            if (userData.getCity() != null) {
+                cityFragment.setCitySelectedValue(userData.getCity());
+                cityTextView.setText(userData.getCity());
+            }
+
+            if (userData.getGender() != null) {
+                genderFragment.setGenderSelectedValue(userData.getGender());
+                genderTextView.setText(userData.getGender());
+            }
+
+            if (userData.getEducation() != null) {
+                eduFragment.setEduSelectedValue(userData.getEducation());
+                eduTextView.setText(userData.getEducation());
+            }
+
+            if (userData.getBirth() != null) {
+                birthFragment.setBirthDate(userData.getBirth());
+                birthDayTextView.setText(userData.getBirth());
+            }
+
+            if (userData.getTimeStartingWorking() == null) {
+                experienceFragment.setHaveExperience(false);
+            } else {
+                experienceTextView.setText(userData.getTimeStartingWorking());
+                experienceFragment.setHaveExperience(true);
+                experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWorking());
+            }
+        }
+
+
+        // Show dialog loading when fetching data
+        // loadingDialog = new LoadingDialog(this);
+        // loadingDialog.show();
 
         // Change toolbar title
         TextView textTitle = findViewById(R.id.toolbar_text_title);
@@ -185,22 +268,6 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Set default value for EditText
-        countryTextView = findViewById(R.id.selected_country_label);
-        // use to display country of user
-
-        // Get user avatar view
-        userAvatar = findViewById(R.id.user_avatar);
-
-        // Error firstname textview
-        errorFirstnameTextView = findViewById(R.id.error_firstname_textview);
-        // Error lastname textview
-        errorLastnameTextView = findViewById(R.id.error_lastname_textview);
-
-
-        countryTextView = findViewById(R.id.selected_country_label);
-        firstNameTextView = findViewById(R.id.firstname_textview);
-        lastNameTextView = findViewById(R.id.lastname_textview);
         // Handle when firstname text view change
         firstNameTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -222,7 +289,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         lastNameTextView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -246,46 +312,7 @@ public class EditProfileActivity extends AppCompatActivity {
         });
 
 
-        // Hard Nationality of user
-        String countrySelectedValue = DEFAULT_COUNTRY_STR;
-        countryTextView.setText(countrySelectedValue);
-        countryFragment.setCountryTextView(countryTextView);
-        countryFragment.setCountrySelectedValue(countrySelectedValue);
-        countryFragment.setCountryData(countryData);
-
-        cityTextView = findViewById(R.id.selected_city_label);
-        cityTextView.setText(citySelectedValue);
-        cityFragment.setCityData(provinceData);
-        cityFragment.setCityTextView(cityTextView);
-        cityFragment.setCitySelectedValue(citySelectedValue);
-
-        genderTextView = findViewById(R.id.selected_gender);
-        genderTextView.setText(genderSelectedValue);
-        genderFragment.setGenderTextView(genderTextView);
-        genderFragment.setGenderData(genderData);
-        genderFragment.setGenderSelectedValue(genderSelectedValue);
-
-        eduTextView = findViewById(R.id.selected_edu);
-        eduTextView.setText(eduSelectedValue);
-        eduFragment.setEduTextView(eduTextView);
-        eduFragment.setEduData(EDUCATIONS);
-        eduFragment.setEduSelectedValue(eduSelectedValue);
-
-        experienceTextView = findViewById(R.id.selected_experience);
-        experienceTextView.setText(experienceSelectedValue);
-        experienceFragment.setExperienceSelectedValue(experienceSelectedValue);
-        experienceFragment.setHaveExperience(isHaveExperience);
-        experienceFragment.setExperienceData(EXPERIENCES);
-        experienceFragment.setExperienceTextView(experienceTextView);
-        experienceFragment.setExperienceStartedDateValue(experienceStartedDateValue);
-
-        birthDayTextView = findViewById(R.id.selected_birth);
-        birthDayTextView.setText(birthDate);
-        birthFragment.setBirthDate(birthDate);
-        birthFragment.setBirthDayTextView(birthDayTextView);
-
-
-        //lister swipe refresh layout
+        // Lister swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -362,85 +389,6 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Call<ArrayList<CountryApiResponse>> call, @NonNull Throwable t) {
                 Log.d("COUNTRY_API_ERROR", t.toString());
-            }
-        });
-
-        // Get user data from api
-        UserApi userApi = ApiClient.getUserAPI();
-        Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
-        callUser.enqueue(new Callback<UserApiResponse>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-
-                    userData.setId(response.body().getId());
-                    userData.setFirstname(response.body().getFirstname());
-                    userData.setLastname(response.body().getLastname());
-                    userData.setEducation(response.body().getEducation());
-                    userData.setBirth(response.body().getBirth());
-                    userData.setGender(response.body().getGender());
-                    userData.setPhotoUrl(response.body().getPhotoUrl());
-                    userData.setTimeStartingWork(response.body().getTimeStartingWork());
-                    userData.setEmail(response.body().getEmail());
-                    userData.setCountry(response.body().getCountry());
-                    userData.setCity(response.body().getCity());
-                    userData.setProvince(response.body().getProvince());
-
-                    Log.d("avatar", userData.getPhotoUrl());
-
-                    Glide.with(getBaseContext())
-                            .load(userData.getPhotoUrl())
-                            .error(R.drawable.avatar_thinking_svgrepo_com)
-                            .into(userAvatar);
-
-                    firstNameTextView.setText(userData.getFirstname());
-                    lastNameTextView.setText(userData.getLastname());
-
-                    if (userData.getCountry() != null) {
-                        countryFragment.setCountrySelectedValue(userData.getCountry());
-                        countryTextView.setText(userData.getCountry());
-                    }
-
-                    if (userData.getCity() != null) {
-                        cityFragment.setCitySelectedValue(userData.getCity());
-                        cityTextView.setText(userData.getCity());
-                    }
-
-                    if (userData.getGender() != null) {
-                        genderFragment.setGenderSelectedValue(userData.getGender());
-                        genderTextView.setText(userData.getGender());
-                    }
-
-                    if (userData.getEducation() != null) {
-                        eduFragment.setEduSelectedValue(userData.getEducation());
-                        eduTextView.setText(userData.getEducation());
-                    }
-
-                    if (userData.getBirth() != null) {
-                        birthFragment.setBirthDate(userData.getBirth());
-                        birthDayTextView.setText(userData.getBirth());
-                    }
-
-                    if (userData.getTimeStartingWork() == null) {
-                        experienceFragment.setHaveExperience(false);
-                    } else {
-                        experienceTextView.setText(userData.getTimeStartingWork());
-                        experienceFragment.setHaveExperience(true);
-                        experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
-                    }
-
-                    // Dismiss dialog when api call done
-                    loadingDialog.cancel();
-                } else {
-                    Log.d("User_Data_Error", "ERROR");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
-                Log.d("User_Data_Error", t.toString());
             }
         });
 
@@ -553,7 +501,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
 
     private void registerInternetBroadcastReceiver() {
-        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
             @Override
             public void noInternet() {
@@ -599,7 +547,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 }
             }
         };
-        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
@@ -619,22 +567,27 @@ public class EditProfileActivity extends AppCompatActivity {
             country = null;
         }
 
+        String DEFAULT_CITY_STR = "Chọn thành phố";
         if (city.equals(DEFAULT_CITY_STR)) {
             city = null;
         }
 
+        String DEFAULT_BIRTH_STR = "Chọn ngày tháng năm sinh của bạn";
         if (birth.equals(DEFAULT_BIRTH_STR)) {
             birth = null;
         }
 
+        String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
         if (gender.equals(DEFAULT_GENDER_STR)) {
             gender = null;
         }
 
+        String DEFAULT_EDU_STR = "Chọn trình độ học vấn của bạn";
         if (edu.equals(DEFAULT_EDU_STR)) {
             edu = null;
         }
 
+        String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
         if (timeStartingWork.equals(DEFAULT_NO_EXPERIENCE_STR)) {
             timeStartingWork = null;
         }
@@ -661,76 +614,17 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-
-                    userData.setId(response.body().getId());
-                    userData.setFirstname(response.body().getFirstname());
-                    userData.setLastname(response.body().getLastname());
-                    userData.setEducation(response.body().getEducation());
-                    userData.setBirth(response.body().getBirth());
-                    userData.setGender(response.body().getGender());
-                    userData.setPhotoUrl(response.body().getPhotoUrl());
-                    userData.setTimeStartingWork(response.body().getTimeStartingWork());
-                    userData.setEmail(response.body().getEmail());
-                    userData.setCountry(response.body().getCountry());
-                    userData.setCity(response.body().getCity());
-                    userData.setProvince(response.body().getProvince());
-
-                    firstNameTextView.setText(userData.getFirstname());
-                    lastNameTextView.setText(userData.getLastname());
-
-                    if (userData.getCountry() == null) {
-                        countryTextView.setText(R.string.choose_contry_textview);
-                    } else {
-                        countryTextView.setText(userData.getCountry());
-                    }
-
-                    if (userData.getCity() == null) {
-                        cityTextView.setText(R.string.choose_city_textview);
-                    } else {
-                        cityTextView.setText(userData.getCity());
-                    }
-
-                    if (userData.getGender() == null) {
-                        genderTextView.setText(R.string.choose_gender_textview);
-                    } else {
-                        genderTextView.setText(userData.getGender());
-                    }
-
-                    if (userData.getEducation() == null) {
-                        eduTextView.setText(R.string.choose_edu_textview);
-                    } else {
-                        eduTextView.setText(userData.getEducation());
-                    }
-
-                    if (userData.getBirth() == null) {
-                        birthDayTextView.setText(R.string.choose_birth_textview);
-                    } else {
-                        birthDayTextView.setText(userData.getBirth());
-                    }
-
-                    if (userData.getTimeStartingWork() == null) {
-                        experienceTextView.setText(R.string.not_experience);
-                        experienceFragment.setHaveExperience(false);
-                    } else {
-                        experienceTextView.setText(userData.getTimeStartingWork());
-                        experienceFragment.setHaveExperience(true);
-                        experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
-                    }
-
-
-                    firstNameTextView.setText(userData.getFirstname());
-                    firstNameTextView.setText(userData.getFirstname());
-
-                    finish();
-
+                    Toast.makeText(EditProfileActivity.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d("UPDATE_USER_ERROR", "ERROR");
+                    Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
                 Log.d("UPDATE_USER_ERROR", t.toString());
+                Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
             }
         });
     }
