@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".Activities.JobCriteriaActivity">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <include
             android:id="@+id/include"
             layout="@layout/toolbar" />
 
-        <ScrollView
-            android:id="@+id/scrollView2"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:padding="16dp"
@@ -233,7 +231,20 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/a404" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -254,8 +265,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/main" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

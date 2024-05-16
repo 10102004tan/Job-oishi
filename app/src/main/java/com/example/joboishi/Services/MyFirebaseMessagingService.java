@@ -19,6 +19,8 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
+    private static final String CHANNEL_ID = "1234567";
+
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
@@ -31,7 +33,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(message);
         String title = message.getNotification().getTitle();
         String body = message.getNotification().getBody();
-        Log.d("tannguyen", title + " " + body);
         showNotification(title, body);
     }
 
@@ -44,7 +45,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         // Tạo notification builder
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "11111")
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setSmallIcon(R.drawable.logo)
@@ -57,7 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Tạo notification manager và hiển thị notification
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("11111", "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);
         }
         notificationManager.notify(0, notificationBuilder.build());
