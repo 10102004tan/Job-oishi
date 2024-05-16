@@ -161,6 +161,52 @@ public class DetailJobActivity extends AppCompatActivity {
                     }
                 });
 
+                binding.txtCompanyName.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        startActivity(intent);
+                    }
+                });
+
+                binding.imgCompanyLogo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(intent);
+                    }
+                });
+
+                //Applied Job Event From Serve
+                if (job.isIs_edit()) {
+                    binding.btnApplied.setEnabled(true);
+                }
+                else {
+                    binding.btnApplied.setEnabled(false);
+                }
+                binding.btnApplied.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Lấy ngày giờ hiện tại
+                        LocalDateTime currentDateTime = LocalDateTime.now();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+
+                        String formattedDateTime = currentDateTime.format(formatter);
+                        Log.d("test", formattedDateTime);
+                        String address = job.getCompany().getAddress().get(0).getDistrict() + ", " +  job.getCompany().getAddress().get(0).getDistrict() + ", " + job.getCompany().getAddress().get(0).getProvince();
+                        AppliedJob(
+                                job.getId() + "",
+                                "1",
+                                job.getTitle(),
+                                job.getCompany().getId() + "",
+                                job.getCompany().getImage_logo(),
+                                address,
+                                true ,
+                                job.getIs_salary_visible(),
+                                formattedDateTime
+                                );
+                    }
+                });
+
             }
 
             @Override
