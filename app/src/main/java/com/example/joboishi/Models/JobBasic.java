@@ -22,7 +22,7 @@ public class JobBasic implements Serializable {
     private String sort_addresses;
 
     @SerializedName("is_salary_visible")
-    private boolean is_salary_visible;
+    private boolean is_salary_visible = false;
 
     @SerializedName("published")
     private  String published;

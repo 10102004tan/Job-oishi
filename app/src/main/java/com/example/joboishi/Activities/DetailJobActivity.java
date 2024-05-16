@@ -1,15 +1,20 @@
 package com.example.joboishi.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,10 +23,14 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.BenefitAdapter;
 import com.example.joboishi.Api.DetailJobAPI;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
 import java.util.ArrayList;
 
@@ -30,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class DetailJobActivity extends AppCompatActivity {
 
@@ -39,12 +50,24 @@ public class DetailJobActivity extends AppCompatActivity {
     private Intent intent;
     private String jobId;
     private DetailJobAPI detailJobAPI;
+
+    private InternetBroadcastReceiver internetBroadcastReceiver;
+    private IntentFilter intentFilter;
+    private final  int STATUS_NO_INTERNET = 0;
+    private final  int STATUS_LOW_INTERNET = 1;
+    private final  int STATUS_GOOD_INTERNET = 2;
+    private int statusInternet = -1;
+    private int statusPreInternet = -1;
+    private boolean isFirst = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.detail_job_layout);
         binding = DetailJobLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        //Dang ki receiver
+        registerInternetBroadcastReceiver();
 
         // Show loading indicator initially
         showLoadingIndicator();
@@ -146,6 +169,23 @@ public class DetailJobActivity extends AppCompatActivity {
             }
         });
 
+
+        //lister swipe refresh layout
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (statusPreInternet != statusInternet){
+                    registerInternetBroadcastReceiver();
+                    isFirst = true;
+                }
+                if (statusInternet == STATUS_NO_INTERNET){
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
     }
 
 
@@ -207,17 +247,73 @@ public class DetailJobActivity extends AppCompatActivity {
         return ssb;
     }
 
+
+
     //Ham hien thi loading
     private void showLoadingIndicator() {
         // Show loading indicator (e.g., ProgressBar)
-        binding.layoutContent.setVisibility(View.GONE);
+        binding.main.setVisibility(View.GONE);
         binding.progressBar.setVisibility(View.VISIBLE);
     }
 
     //Ham an loading
     private void hideLoadingIndicator() {
         // Hide loading indicator
-        binding.layoutContent.setVisibility(View.VISIBLE);
+        binding.main.setVisibility(View.VISIBLE);
         binding.progressBar.setVisibility(View.GONE);
+    }
+
+
+    // Ham dang ki receiver
+    private void registerInternetBroadcastReceiver() {
+        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
+            @Override
+            public void noInternet() {
+                statusPreInternet = STATUS_NO_INTERNET;
+                if (isFirst) {
+                    binding.main.setVisibility(View.GONE);
+                    binding.image.setVisibility(View.VISIBLE);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
+                    statusInternet = STATUS_NO_INTERNET;
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    isFirst = false;
+
+                }
+                new AestheticDialog.Builder(DetailJobActivity.this, DialogStyle.CONNECTIFY, DialogType.ERROR)
+                        .setTitle("Không có kết nối mạng")
+                        .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                        .setCancelable(false)
+                        .setGravity(Gravity.BOTTOM).show();
+            }
+
+            @Override
+            public void lowInternet() {
+                binding.image.setVisibility(View.VISIBLE);
+                binding.main.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void goodInternet() {
+                statusPreInternet = STATUS_GOOD_INTERNET;
+                if (isFirst) {
+                    statusInternet = STATUS_GOOD_INTERNET;
+                    isFirst = false;
+                }
+                else{
+                    binding.image.setVisibility(View.GONE);
+                    binding.main.setVisibility(View.VISIBLE);
+                    MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+                            "Kết nối mạng đã được khôi phục",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+                }
+            }
+        };
+        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 }
