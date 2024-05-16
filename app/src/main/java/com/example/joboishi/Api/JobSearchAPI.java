@@ -18,7 +18,7 @@ public interface JobSearchAPI {
             @Query("page_size") int pageSize
     );
 
-    @GET("api/jobs/searchrm")
+    @GET("api/jobs/searchremote")
     Call<ArrayList<JobSearch>> getListSearchRmJob(
             @Query("q") String keyword,
             @Query("page") int page,

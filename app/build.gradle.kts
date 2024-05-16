@@ -95,4 +95,5 @@ dependencies {
     implementation("com.facebook.android:facebook-android-sdk:latest.release")
     implementation ("com.google.firebase:firebase-auth:23.0.0")
     implementation ("com.github.vedraj360:DesignerToast:0.1.3")
+    implementation ("com.google.android.flexbox:flexbox:3.0.0")
 }

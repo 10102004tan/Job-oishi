@@ -32,6 +32,14 @@ public class JobSearch implements Serializable {
     private ArrayList<Benefit> benefits;
     private Boolean isChecked = false;
 
+    public ArrayList<Benefit> getBenefits() {
+        return benefits;
+    }
+
+    public void setBenefits(ArrayList<Benefit> benefits) {
+        this.benefits = benefits;
+    }
+
     public JobSearch(int id, String title, String company_id, String company_name, String company_logo, String sort_addresses, String published, ArrayList<Benefit> benefits, Boolean isChecked) {
         this.id = id;
         this.title = title;
