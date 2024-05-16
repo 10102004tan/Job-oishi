@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:padding="16dp"
     tools:context=".Activities.JobCriteriaActivity">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,11 +17,10 @@
             android:id="@+id/include"
             layout="@layout/toolbar" />
 
-        <ScrollView
-            android:id="@+id/scrollView2"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/main"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:padding="16dp"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -195,89 +194,58 @@
                     android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/fulltime"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/list_work_form"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        style="@style/Profile_Title_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/input_outline"
+                        android:layout_marginTop="30dp"
+                        android:text="@string/place_working" />
+
+                    <LinearLayout
+                        android:id="@+id/place_working"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:padding="16dp"
+                        android:paddingBottom="20dp"
                         tools:ignore="UselessParent">
+
+                        <androidx.appcompat.widget.AppCompatCheckBox
+                            android:id="@+id/check_is_remote"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:buttonTint="@color/checkbox_color" />
 
                         <TextView
                             style="@style/Profile_Normal_TextView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/fulltime" />
-
-                        <ImageButton
-                            android:id="@+id/fulltime_check_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:contentDescription="@string/todo"
-                            android:src="@color/white" />
+                            android:text="@string/can_remote" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/parttime"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/input_outline"
-                        android:gravity="center"
-                        android:padding="16dp"
-                        tools:ignore="UselessParent">
 
-                        <TextView
-                            style="@style/Profile_Normal_TextView"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/parttime" />
-
-                        <ImageButton
-                            android:id="@+id/parttime_check_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:contentDescription="@string/todo"
-                            android:src="@color/white" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/every_day"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:background="@drawable/input_outline"
-                        android:gravity="center"
-                        android:padding="16dp"
-                        tools:ignore="UselessParent">
-
-                        <TextView
-                            style="@style/Profile_Normal_TextView"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/every_day" />
-
-                        <ImageButton
-                            android:id="@+id/every_check_icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:background="@color/white"
-                            android:contentDescription="@string/todo"
-                            android:src="@color/white" />
-                    </LinearLayout>
                 </LinearLayout>
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/main"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/a404" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -298,8 +266,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
-
-
+            app:layout_constraintTop_toBottomOf="@+id/main" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-</RelativeLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

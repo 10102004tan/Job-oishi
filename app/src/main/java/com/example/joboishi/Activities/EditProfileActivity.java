@@ -1,8 +1,9 @@
 package com.example.joboishi.Activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,32 +13,25 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Api.CountryApiResponse;
-import com.example.joboishi.Api.ProvinceApiResponse;
-import com.example.joboishi.Adapters.CityRecyclerViewAdapter;
-import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.CountryApi;
 import com.example.joboishi.Api.CountryApiResponse;
@@ -46,8 +40,8 @@ import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserRequest;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
-import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.SelectBirthFragment;
 import com.example.joboishi.Fragments.SelectCityFragment;
 import com.example.joboishi.Fragments.SelectCountryFragment;
@@ -56,13 +50,13 @@ import com.example.joboishi.Fragments.SelectExperienceFragment;
 import com.example.joboishi.Fragments.SelectGenderFragment;
 import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.LoadingDialog;
-import com.example.joboishi.Views.TimePicker;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.example.joboishi.databinding.ActivityEditProfileBinding;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -70,7 +64,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,25 +74,22 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class EditProfileActivity extends AppCompatActivity {
 
 
+    private static final int PICK_IMAGE_REQUEST = 1;
     private final ArrayList<CountryApiResponse> countryData = new ArrayList<>(); // storage list country in the world
     private final ArrayList<ProvinceApiResponse> provinceData = new ArrayList<>(); // storage list province of VN
     private final ArrayList<String> genderData = new ArrayList<>(Arrays.asList("Nam", "Nữ", "Khác")); // List gender data
     private final ArrayList<String> EDUCATIONS = new ArrayList<>(Arrays.asList("Tiểu học", "Trung Học Cơ Sở", "Trung Học Phổ Thông", "Bảng Liên Kết", "Cao Đẳng", "Cử Nhân", "Thạc Sĩ", "Tiến Sĩ")); // List edu data
     private final ArrayList<String> EXPERIENCES = new ArrayList<>(Arrays.asList("Tôi đã có kinh nghiệm", "Tôi chưa có kinh nghiệm")); // List experience data
+    private final Date currentDate = new Date();
+    private final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    private final String formattedDate = sdf.format(currentDate);
     private final UserApiResponse userData = new UserApiResponse();
-    private TextView birthDayTextView;
-    private TextView cityTextView;
-    private TextView eduTextView;
-    private TextView experienceTextView;
-    private TextView countryTextView;
-    private TextView genderTextView;
-    private TextView firstNameTextView;
-    private TextView lastNameTextView;
-    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private final ArrayList<CountryApiResponse> tempCountry = new ArrayList<>();
     private final ArrayList<ProvinceApiResponse> tempCity = new ArrayList<>();
     private final SelectCountryFragment countryFragment = new SelectCountryFragment();
@@ -108,6 +98,9 @@ public class EditProfileActivity extends AppCompatActivity {
     private final SelectGenderFragment genderFragment = new SelectGenderFragment();
     private final SelectEducationFragment eduFragment = new SelectEducationFragment();
     private final SelectExperienceFragment experienceFragment = new SelectExperienceFragment();
+    private final int STATUS_NO_INTERNET = 0;
+    private final int STATUS_LOW_INTERNET = 1;
+    private final int STATUS_GOOD_INTERNET = 2;
     private final String DEFAULT_COUNTRY_STR = "Chọn quốc gia";
     private final String DEFAULT_CITY_STR = "Chọn thành phố";
     private final String DEFAULT_BIRTH_STR = "Chọn ngày tháng năm sinh của bạn";
@@ -115,17 +108,37 @@ public class EditProfileActivity extends AppCompatActivity {
     private final String DEFAULT_GENDER_STR = "Chọn giới tính của bạn";
     private final String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
     private final int USER_ID = 1;
-    private static final int PICK_IMAGE_REQUEST = 1;
+    private final String experienceStartedDateValue = "04/2022"; // Begin employment time
+    private final String experienceSelectedValue = "Tôi đã có kinh nghiệm"; // Hard experience of user
+    private final String eduSelectedValue = "Cao Đẳng"; // Hard edu of user
+    private final String countrySelectedValue = "Vietnam"; // Hard Nationality of user
+    private final String citySelectedValue = "Thành phố Hồ Chí Minh"; // Hard City of user
+    private final String genderSelectedValue = "Nam"; // Hard gender of user
+    private final String tempExperience = "";
+    private final boolean isHaveExperience = true; // experience of user
+    private final String birthDate = "24/04/2004"; // birth date of user
+    private TextView countryTextView; // use to display country of user
+    private TextView cityTextView; // use to display city of user
+    private TextView genderTextView; // use to display gender of user
+    private TextView eduTextView; // use to display edu of user
+    private TextView experienceTextView; // use to display experience of user
+    private TextView birthDayTextView; // use to display birth date of user
+    private int dayOfBirth;
+    private int monthOfBirth;
+    private int yearOfBirth;
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
+    private InternetBroadcastReceiver internetBroadcastReceiver;
+    private IntentFilter intentFilter;
+    private int statusInternet = -1;
+    private int statusPreInternet = -1;
+    private boolean isFirst = true;
+    private ActivityEditProfileBinding binding;
+    private TextView firstNameTextView;
+    private TextView lastNameTextView;
     private RoundedImageView userAvatar;
     private LoadingDialog loadingDialog;
     private TextView errorFirstnameTextView;
     private TextView errorLastnameTextView;
-
-
-
-
-
-
 
     // Func to check if a string contains char
     // Ex: "Vietnam" will contains "vi" , "am" , "nam" , "iet"
@@ -140,7 +153,12 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(com.example.joboishi.R.layout.activity_edit_profile);
+        binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
+
+        //register broadcast receiver
+        registerInternetBroadcastReceiver();
+
+        setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -152,7 +170,6 @@ public class EditProfileActivity extends AppCompatActivity {
         loadingDialog.show();
 
 
-
         // Change toolbar title
         TextView textTitle = findViewById(R.id.toolbar_text_title);
         textTitle.setText(R.string.edit_profile_toolbar_title);
@@ -162,11 +179,14 @@ public class EditProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
 
         // Set default value for EditText
+        countryTextView = findViewById(R.id.selected_country_label);
         // use to display country of user
 
         // Get user avatar view
@@ -176,11 +196,6 @@ public class EditProfileActivity extends AppCompatActivity {
         errorFirstnameTextView = findViewById(R.id.error_firstname_textview);
         // Error lastname textview
         errorLastnameTextView = findViewById(R.id.error_lastname_textview);
-
-
-
-
-
 
 
         countryTextView = findViewById(R.id.selected_country_label);
@@ -200,9 +215,9 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()){
+                if (s.toString().isEmpty()) {
                     errorFirstnameTextView.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     errorFirstnameTextView.setVisibility(View.GONE);
                 }
             }
@@ -222,15 +237,13 @@ public class EditProfileActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().isEmpty()){
+                if (s.toString().isEmpty()) {
                     errorLastnameTextView.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     errorLastnameTextView.setVisibility(View.GONE);
                 }
             }
         });
-
-
 
 
         // Hard Nationality of user
@@ -240,56 +253,52 @@ public class EditProfileActivity extends AppCompatActivity {
         countryFragment.setCountrySelectedValue(countrySelectedValue);
         countryFragment.setCountryData(countryData);
 
-        // use to display city of user
         cityTextView = findViewById(R.id.selected_city_label);
-        // Hard City of user
-        String citySelectedValue = DEFAULT_CITY_STR;
         cityTextView.setText(citySelectedValue);
         cityFragment.setCityData(provinceData);
         cityFragment.setCityTextView(cityTextView);
         cityFragment.setCitySelectedValue(citySelectedValue);
 
-        // use to display gender of user
         genderTextView = findViewById(R.id.selected_gender);
-        // Hard gender of user
-        String genderSelectedValue = DEFAULT_GENDER_STR;
         genderTextView.setText(genderSelectedValue);
         genderFragment.setGenderTextView(genderTextView);
         genderFragment.setGenderData(genderData);
         genderFragment.setGenderSelectedValue(genderSelectedValue);
 
-        // use to display edu of user
         eduTextView = findViewById(R.id.selected_edu);
-        // Hard edu of user
-        String eduSelectedValue = DEFAULT_EDU_STR;
         eduTextView.setText(eduSelectedValue);
         eduFragment.setEduTextView(eduTextView);
         eduFragment.setEduData(EDUCATIONS);
         eduFragment.setEduSelectedValue(eduSelectedValue);
 
-        // use to display experience of user
         experienceTextView = findViewById(R.id.selected_experience);
-        // Hard experience of user
-        String experienceSelectedValue = DEFAULT_NO_EXPERIENCE_STR;
         experienceTextView.setText(experienceSelectedValue);
         experienceFragment.setExperienceSelectedValue(experienceSelectedValue);
-        // experience of user
-        boolean isHaveExperience = false;
         experienceFragment.setHaveExperience(isHaveExperience);
         experienceFragment.setExperienceData(EXPERIENCES);
         experienceFragment.setExperienceTextView(experienceTextView);
-        // Begin employment time
-        String experienceStartedDateValue = "04/2024";
         experienceFragment.setExperienceStartedDateValue(experienceStartedDateValue);
 
-        // use to display birth date of user
         birthDayTextView = findViewById(R.id.selected_birth);
-        // birth date of user
-        String birthDate = "24/04/2004";
-        birthDayTextView.setText(DEFAULT_BIRTH_STR);
+        birthDayTextView.setText(birthDate);
         birthFragment.setBirthDate(birthDate);
         birthFragment.setBirthDayTextView(birthDayTextView);
 
+
+        //lister swipe refresh layout
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (statusPreInternet != statusInternet) {
+                    registerInternetBroadcastReceiver();
+                    isFirst = true;
+                }
+                if (statusInternet == STATUS_NO_INTERNET) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         // Update user
         Button btnUpdateUser = findViewById(R.id.btn_update_user);
@@ -309,7 +318,6 @@ public class EditProfileActivity extends AppCompatActivity {
                 openImagePicker();
             }
         });
-
 
         // Get province data from api
         ProvinceApi provinceApi = ApiClient.getProvinceAPI();
@@ -390,34 +398,34 @@ public class EditProfileActivity extends AppCompatActivity {
                     firstNameTextView.setText(userData.getFirstname());
                     lastNameTextView.setText(userData.getLastname());
 
-                    if (userData.getCountry() != null){
+                    if (userData.getCountry() != null) {
                         countryFragment.setCountrySelectedValue(userData.getCountry());
                         countryTextView.setText(userData.getCountry());
                     }
 
-                    if (userData.getCity() != null){
+                    if (userData.getCity() != null) {
                         cityFragment.setCitySelectedValue(userData.getCity());
                         cityTextView.setText(userData.getCity());
                     }
 
-                    if (userData.getGender() != null){
+                    if (userData.getGender() != null) {
                         genderFragment.setGenderSelectedValue(userData.getGender());
                         genderTextView.setText(userData.getGender());
                     }
 
-                    if (userData.getEducation() != null){
+                    if (userData.getEducation() != null) {
                         eduFragment.setEduSelectedValue(userData.getEducation());
                         eduTextView.setText(userData.getEducation());
                     }
 
-                    if (userData.getBirth() != null){
+                    if (userData.getBirth() != null) {
                         birthFragment.setBirthDate(userData.getBirth());
                         birthDayTextView.setText(userData.getBirth());
                     }
 
-                    if (userData.getTimeStartingWork() == null){
+                    if (userData.getTimeStartingWork() == null) {
                         experienceFragment.setHaveExperience(false);
-                    }else {
+                    } else {
                         experienceTextView.setText(userData.getTimeStartingWork());
                         experienceFragment.setHaveExperience(true);
                         experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
@@ -425,7 +433,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     // Dismiss dialog when api call done
                     loadingDialog.cancel();
-                }else {
+                } else {
                     Log.d("User_Data_Error", "ERROR");
                 }
             }
@@ -493,20 +501,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    // Open Image Picker to choose picture
-    private void openImagePicker() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-    }
-
     // Dialog country
     @SuppressLint({"PrivateResource", "NotifyDataSetChanged"})
     private void showCountryDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(countryFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
 
     }
 
@@ -515,7 +515,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showCityDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(cityFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog gender
@@ -523,7 +523,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showGenderDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(genderFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog education
@@ -531,7 +531,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showEduDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(eduFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog experience
@@ -539,7 +539,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showExperienceDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(experienceFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
     }
 
     // Dialog birth
@@ -547,8 +547,60 @@ public class EditProfileActivity extends AppCompatActivity {
     private void showBirthDialog() {
         myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
         myBottomSheetDialogFragment.setFragment(birthFragment);
-        myBottomSheetDialogFragment.show(getSupportFragmentManager(),"MyBottomSheetDialogFragmentTag");
+        myBottomSheetDialogFragment.show(getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
 
+    }
+
+
+    private void registerInternetBroadcastReceiver() {
+        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
+            @Override
+            public void noInternet() {
+                statusPreInternet = STATUS_NO_INTERNET;
+                if (isFirst) {
+                    binding.main.setVisibility(View.GONE);
+                    binding.image.setVisibility(View.VISIBLE);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
+                    statusInternet = STATUS_NO_INTERNET;
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    isFirst = false;
+
+                }
+                new AestheticDialog.Builder(EditProfileActivity.this, DialogStyle.CONNECTIFY, DialogType.ERROR)
+                        .setTitle("Không có kết nối mạng")
+                        .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                        .setCancelable(false)
+                        .setGravity(Gravity.BOTTOM).show();
+            }
+
+            @Override
+            public void lowInternet() {
+                binding.image.setVisibility(View.VISIBLE);
+                binding.main.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void goodInternet() {
+                statusPreInternet = STATUS_GOOD_INTERNET;
+                if (isFirst) {
+                    statusInternet = STATUS_GOOD_INTERNET;
+                    isFirst = false;
+                } else {
+                    binding.image.setVisibility(View.GONE);
+                    binding.main.setVisibility(View.VISIBLE);
+                    MotionToast.Companion.createToast(EditProfileActivity.this, "😍",
+                            "Kết nối mạng đã được khôi phục",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
+                }
+            }
+        };
+        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
     // Update user information
@@ -602,7 +654,6 @@ public class EditProfileActivity extends AppCompatActivity {
         userUpdateRequest.setProvince(userData.getProvince()); // Note: handler later
 
 
-
         UserApi userApi = ApiClient.getUserAPI();
         Call<UserApiResponse> call = userApi.updateUserInfo(USER_ID, userUpdateRequest);
         call.enqueue(new Callback<UserApiResponse>() {
@@ -627,40 +678,40 @@ public class EditProfileActivity extends AppCompatActivity {
                     firstNameTextView.setText(userData.getFirstname());
                     lastNameTextView.setText(userData.getLastname());
 
-                    if (userData.getCountry() == null){
+                    if (userData.getCountry() == null) {
                         countryTextView.setText(R.string.choose_contry_textview);
-                    }else {
+                    } else {
                         countryTextView.setText(userData.getCountry());
                     }
 
-                    if (userData.getCity() == null){
+                    if (userData.getCity() == null) {
                         cityTextView.setText(R.string.choose_city_textview);
-                    }else {
+                    } else {
                         cityTextView.setText(userData.getCity());
                     }
 
-                    if (userData.getGender() == null){
+                    if (userData.getGender() == null) {
                         genderTextView.setText(R.string.choose_gender_textview);
-                    }else {
+                    } else {
                         genderTextView.setText(userData.getGender());
                     }
 
-                    if (userData.getEducation() == null){
+                    if (userData.getEducation() == null) {
                         eduTextView.setText(R.string.choose_edu_textview);
-                    }else {
+                    } else {
                         eduTextView.setText(userData.getEducation());
                     }
 
-                    if (userData.getBirth() == null){
+                    if (userData.getBirth() == null) {
                         birthDayTextView.setText(R.string.choose_birth_textview);
-                    }else {
+                    } else {
                         birthDayTextView.setText(userData.getBirth());
                     }
 
-                    if (userData.getTimeStartingWork() == null){
+                    if (userData.getTimeStartingWork() == null) {
                         experienceTextView.setText(R.string.not_experience);
                         experienceFragment.setHaveExperience(false);
-                    }else {
+                    } else {
                         experienceTextView.setText(userData.getTimeStartingWork());
                         experienceFragment.setHaveExperience(true);
                         experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWork());
@@ -672,7 +723,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
                     finish();
 
-                }else {
+                } else {
                     Log.d("UPDATE_USER_ERROR", "ERROR");
                 }
             }
@@ -684,7 +735,6 @@ public class EditProfileActivity extends AppCompatActivity {
         });
     }
 
-
     // Resize image size
     public Bitmap getResizedBitmapWithPadding(Bitmap image, int maxWidth, int maxHeight) {
         float ratioBitmap = (float) image.getWidth() / (float) image.getHeight();
@@ -693,9 +743,9 @@ public class EditProfileActivity extends AppCompatActivity {
         int finalWidth = maxWidth;
         int finalHeight = maxHeight;
         if (ratioMax > 1) {
-            finalWidth = (int) ((float)maxHeight * ratioBitmap);
+            finalWidth = (int) ((float) maxHeight * ratioBitmap);
         } else {
-            finalHeight = (int) ((float)maxWidth / ratioBitmap);
+            finalHeight = (int) ((float) maxWidth / ratioBitmap);
         }
 
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(image, finalWidth, finalHeight, true);
@@ -767,6 +817,14 @@ public class EditProfileActivity extends AppCompatActivity {
             return null;
         }
         return imageFile;
+    }
+
+    // Open Image Picker to choose picture
+    private void openImagePicker() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
 }

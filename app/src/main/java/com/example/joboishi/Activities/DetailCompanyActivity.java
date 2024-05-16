@@ -1,31 +1,32 @@
 package com.example.joboishi.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Adapters.ImageDescCompanyAdapter;
 import com.example.joboishi.Api.CompanyByJobAPI;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.data.Address;
 import com.example.joboishi.Models.data.Company;
 import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.CompanyLayoutBinding;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -33,6 +34,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class DetailCompanyActivity extends AppCompatActivity {
 
@@ -40,6 +43,14 @@ public class DetailCompanyActivity extends AppCompatActivity {
     private ArrayList<Job> jobs;
     private CompanyByJobAPI companyByJobAPI;
     String company_id;
+    private InternetBroadcastReceiver internetBroadcastReceiver;
+    private IntentFilter intentFilter;
+    private final  int STATUS_NO_INTERNET = 0;
+    private final  int STATUS_LOW_INTERNET = 1;
+    private final  int STATUS_GOOD_INTERNET = 2;
+    private int statusInternet = -1;
+    private int statusPreInternet = -1;
+    private boolean isFirst = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,31 +58,19 @@ public class DetailCompanyActivity extends AppCompatActivity {
         binding = CompanyLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Change toolbar title
-        TextView textTitle = findViewById(R.id.toolbar_text_title);
-        textTitle.setText("Company");
-
-        // Button back in toolbar
-        ImageButton btnBack = findViewById(R.id.btn_toolbar_back);
-        btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
 
 //        initData();
 //        JobAdapter adapter = new JobAdapter(jobs);
 //        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 //        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 //        binding.jobsOfCompany.setLayoutManager(layoutManager);
-//
 //        binding.jobsOfCompany.setAdapter(adapter);
 
         company_id = getIntent().getIntExtra("COMPANY_ID", -1) + "";
         getDetailCompany(company_id,  new DetailCompanyCallBack() {
             @Override
             public void onGetCompanyLoaded(Company company) {
+                Log.d("test", "This is company: " + company.getDisplay_name());
                 //Company name
                 binding.lblCompanyName.setText(company.getDisplay_name());
                 //Company Address
@@ -104,34 +103,23 @@ public class DetailCompanyActivity extends AppCompatActivity {
                 //Get website
                 binding.lblWebsite.setText(company.getWebsite());
 
+            }
+        });
 
-                //Get Galaries image
-                if(company.getImage_galleries() != null && company.getImage_galleries().size() > 0) {
-                    binding.imageGalleriesItem.setVisibility(View.VISIBLE);
-                    ImageDescCompanyAdapter adapter = new ImageDescCompanyAdapter(company.getImage_galleries(), DetailCompanyActivity.this);
-                    LinearLayoutManager layoutManager = new LinearLayoutManager(DetailCompanyActivity.this);
-                    layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-                    binding.gralariesImage.setLayoutManager(layoutManager);
-                    binding.gralariesImage.setAdapter(adapter);
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (statusPreInternet != statusInternet){
+                    registerInternetBroadcastReceiver();
+                    isFirst = true;
                 }
-                else {
-                    binding.imageGalleriesItem.setVisibility(View.GONE);
+                if (statusInternet == STATUS_NO_INTERNET){
+                    binding.swipeRefreshLayout.setRefreshing(false);
                 }
-
-
+                binding.swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
-
-
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            onBackPressed(); // Xử lý sự kiện khi nhấn nút quay lại
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
 
     //Get Company
     private void getDetailCompany(String company_id, DetailCompanyCallBack callBack) {
@@ -189,6 +177,58 @@ public class DetailCompanyActivity extends AppCompatActivity {
         return ssb;
     }
 
+    private void registerInternetBroadcastReceiver() {
+        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
+            @Override
+            public void noInternet() {
+                statusPreInternet = STATUS_NO_INTERNET;
+                if (isFirst) {
+                    binding.main.setVisibility(View.GONE);
+                    binding.image.setVisibility(View.VISIBLE);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
+                    statusInternet = STATUS_NO_INTERNET;
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    isFirst = false;
 
+                }
+                new AestheticDialog.Builder(DetailCompanyActivity.this, DialogStyle.CONNECTIFY, DialogType.ERROR)
+                        .setTitle("Không có kết nối mạng")
+                        .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                        .setCancelable(false)
+                        .setGravity(Gravity.BOTTOM).show();
+            }
+
+            @Override
+            public void lowInternet() {
+                binding.image.setVisibility(View.VISIBLE);
+                binding.main.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void goodInternet() {
+                statusPreInternet = STATUS_GOOD_INTERNET;
+                if (isFirst) {
+                    statusInternet = STATUS_GOOD_INTERNET;
+                    isFirst = false;
+                }
+                else{
+                    binding.image.setVisibility(View.GONE);
+                    binding.main.setVisibility(View.VISIBLE);
+                    MotionToast.Companion.createToast(DetailCompanyActivity.this, "😍",
+                            "Kết nối mạng đã được khôi phục",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(DetailCompanyActivity.this, R.font.helvetica_regular));
+                }
+            }
+        };
+        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+
+        Log.d("testtttt","tetssss");
+    }
 
 }

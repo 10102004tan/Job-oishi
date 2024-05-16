@@ -1,7 +1,5 @@
 package com.example.joboishi.Api;
 
-import java.util.ArrayList;
-
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -16,13 +14,16 @@ public interface UserApi {
     Call<UserApiResponse> getDetailUser(@Path("id") int userId);
 
     @POST("{id}")
-    Call<UserApiResponse> updateUserInfo(@Path("id") int userId ,@Body UserRequest userUpdateRequest);
+    Call<UserApiResponse> updateUserInfo(@Path("id") int userId, @Body UserRequest userUpdateRequest);
 
     @Multipart
     @POST("{id}")
-    Call<UserApiResponse> updateAvatar(@Path("id") int userId ,@Part MultipartBody.Part photo_url);
+    Call<UserApiResponse> updateAvatar(@Path("id") int userId, @Part MultipartBody.Part photo_url);
 
     @POST("/api/user")
     Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest request);
+
+    @POST("{id}/job_criteria")
+    Call<JobCriteriaApiResponse> updateJobCriteria(@Body JobCriteriaRequest request);
 }
 

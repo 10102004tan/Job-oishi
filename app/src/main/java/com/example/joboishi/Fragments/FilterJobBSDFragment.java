@@ -1,6 +1,7 @@
 package com.example.joboishi.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,5 +21,23 @@ public class FilterJobBSDFragment extends BottomSheetDialogFragment {
 
     public interface OnData{
         void onData(String data);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("test123","onResume");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("test123","onStart");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("test123","onDestroy");
     }
 }
