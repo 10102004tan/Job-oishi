@@ -62,9 +62,9 @@ public class ProfileActivity extends AppCompatActivity {
     private final int STATUS_LOW_INTERNET = 1;
     private final int STATUS_GOOD_INTERNET = 2;
     private final UserResponse userData = new UserResponse();
-    private final int USER_ID = 1;
     private final int REQUEST_CODE_TO_EDIT_PROFILE_ACTIVITY = 9191;
     LinearLayout indicatorLayout;
+    private int USER_ID = 0;
     private int currentPosition = 0;
     private Intent profileIntent;
     private int statusInternet = -1;
@@ -103,16 +103,14 @@ public class ProfileActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
 
-         // Lấy giá trị từ SharedPreferences
+        // Lấy giá trị từ SharedPreferences
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        String userEmail = sharedPref.getString("user_email", null);
+        USER_ID = sharedPref.getInt("user_id", 0);
 
-        if (userEmail != null) {
-            // Sử dụng userEmail
-            Log.d("UserInfo", "Email Người Dùng: " + userEmail);
-        } else {
-            // Xử lý trường hợp không có giá trị lưu trữ
-            Log.d("UserInfo", "Không tìm thấy email người dùng");
+        if (USER_ID == 0) {
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
         // Get view

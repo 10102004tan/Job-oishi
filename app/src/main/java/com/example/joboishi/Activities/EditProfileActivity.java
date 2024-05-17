@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -95,7 +96,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private final int STATUS_NO_INTERNET = 0;
     private final int STATUS_GOOD_INTERNET = 2;
     private final String DEFAULT_COUNTRY_STR = "Chọn quốc gia";
-    private final int USER_ID = 1;
+    private int USER_ID = 0;
     private UserResponse userData = new UserResponse();
     private TextView countryTextView; // use to display country of user
     private TextView cityTextView; // use to display city of user
@@ -151,6 +152,16 @@ public class EditProfileActivity extends AppCompatActivity {
         userAvatar = findViewById(R.id.user_avatar);
         errorFirstnameTextView = findViewById(R.id.error_firstname_textview);
         errorLastnameTextView = findViewById(R.id.error_lastname_textview);
+
+        // Lấy giá trị từ SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        USER_ID = sharedPref.getInt("user_id", 0);
+
+        if (USER_ID == 0) {
+            Intent intent = new Intent(EditProfileActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Init default data
         String countrySelectedValue = DEFAULT_COUNTRY_STR;
