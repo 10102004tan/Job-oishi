@@ -114,6 +114,7 @@ public class EditProfileActivity extends AppCompatActivity {
     // private LoadingDialog loadingDialog;
     private TextView errorFirstnameTextView;
     private TextView errorLastnameTextView;
+    private boolean isDataChanged = false;
 
     // Func to check if a string contains char
     // Ex: "Vietnam" will contains "vi" , "am" , "nam" , "iet"
@@ -208,7 +209,7 @@ public class EditProfileActivity extends AppCompatActivity {
         userData = (UserResponse) intent.getSerializableExtra("user_data");
 
         if (userData != null) {
-            Log.d("user_data", userData.getPhotoUrl());
+            isDataChanged = false;
             Glide.with(getBaseContext())
                     .load(userData.getPhotoUrl())
                     .error(R.drawable.avatar_thinking_svgrepo_com)
@@ -266,7 +267,8 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(EditProfileActivity.this, ProfileActivity.class);
-                startActivity(intent);
+                intent.putExtra("data_user_updated", isDataChanged);
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -320,7 +322,9 @@ public class EditProfileActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 if (statusPreInternet != statusInternet) {
-                    registerInternetBroadcastReceiver();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerInternetBroadcastReceiver();
+                    }
                     isFirst = true;
                 }
                 if (statusInternet == STATUS_NO_INTERNET) {
@@ -626,6 +630,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             MotionToast.LONG_DURATION,
                             ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
 
+                    isDataChanged = true;
                 } else {
                     Log.d("UPDATE_USER_ERROR", "ERROR");
                     // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
@@ -713,6 +718,8 @@ public class EditProfileActivity extends AppCompatActivity {
                             MotionToast.GRAVITY_BOTTOM,
                             MotionToast.LONG_DURATION,
                             ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
+                    isDataChanged = true;
+
                 }
 
                 @Override
