@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:backgroundTint="@color/white"
-    android:paddingTop="20dp"
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"
     app:contentInsetRight="0dp"
