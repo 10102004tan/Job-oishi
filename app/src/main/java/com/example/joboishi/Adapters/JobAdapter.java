@@ -3,10 +3,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Models.JobBasic;
+import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.databinding.JobItemHolderBinding;
 import java.util.ArrayList;
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
@@ -83,7 +86,12 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
                 @Override
                 public void onClick(View v) {
                     if (iClickJob != null){
-                        iClickJob.onClickBookmark(job);
+                        if (binding.bookmarkImage.isSelected()){
+                            iClickJob.onRemoveBookmark(job, binding.bookmarkImage);
+                        }
+                        else{
+                            iClickJob.onAddJobBookmark(job, binding.bookmarkImage);
+                        }
                     }
                 }
             });
@@ -98,7 +106,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     public interface IClickJob{
         void onClickJob(int id);
-        void onClickBookmark(JobBasic job);
+        void onAddJobBookmark(JobBasic job,ImageView bookmarkImage);
+        void onRemoveBookmark(JobBasic jobBasic, ImageView bookmarkImage);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
@@ -109,4 +118,5 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     public interface OnLoadMoreListener {
         void onLoadMore();
     }
+
 }
