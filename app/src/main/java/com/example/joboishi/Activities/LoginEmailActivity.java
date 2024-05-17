@@ -100,6 +100,7 @@ public class LoginEmailActivity extends AppCompatActivity {
                         public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
                             if (response.isSuccessful()) {
                                 UserApiResponse userApiResponse = response.body();
+                                assert userApiResponse != null;
                                 String userEmail = userApiResponse.getEmail();
                                 int userId = userApiResponse.getId();
 
@@ -111,7 +112,8 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 editor.apply();
 
                                 // Log ra thông tin đã lưu
-                                // Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+                                 //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+
                                 // Chuyển sang màn hình RegisterMajorActivity
                                 Intent intent = new Intent(LoginEmailActivity.this, ProfileActivity.class);
                                 startActivity(intent);
@@ -121,7 +123,6 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 Toast.makeText(LoginEmailActivity.this, "Đăng nhập không thành công. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
                             }
                         }
-
                         @Override
                         public void onFailure(Call<UserApiResponse> call, Throwable t) {
                             // Ghi nhật ký lỗi
