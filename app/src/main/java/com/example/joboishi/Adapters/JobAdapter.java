@@ -20,6 +20,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     private boolean isBookmark = false;
     private OnLoadMoreListener onLoadMoreListener;
     private boolean isLoading = false;
+    private ArrayList<Integer> arrId;
 
 
     public void setBookmark(boolean bookmark) {
@@ -32,6 +33,10 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     public void setLoading(boolean loading) {
         isLoading = loading;
+    }
+
+    public void setArrId(ArrayList<Integer> arrId) {
+        this.arrId = arrId;
     }
 
     public JobAdapter(ArrayList<JobBasic> jobs, Context context) {
@@ -48,6 +53,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         JobBasic job = jobs.get(position);
+
+
         if (position == jobs.size() - 1 && !isLoading){
             isLoading = true;
             if (onLoadMoreListener != null){
@@ -62,6 +69,11 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
         holder.binding.bookmarkImage.setSelected(isBookmark);
         holder.binding.salaryTxt.setVisibility((job.isIs_salary_visible()) ? View.VISIBLE : View.GONE);
         Glide.with(context).load(job.getCompany_logo()).into(holder.binding.companyLogo);
+        if (arrId != null){
+            if (arrId.contains(job.getId())){
+                holder.binding.bookmarkImage.setSelected(true);
+            }
+        }
     }
 
     @Override
@@ -74,6 +86,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
         public JobViewHolder(@NonNull JobItemHolderBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
             this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

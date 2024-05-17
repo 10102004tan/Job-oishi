@@ -47,6 +47,7 @@ import com.github.angads25.toggle.interfaces.OnToggledListener;
 import com.github.angads25.toggle.model.ToggleableView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -84,6 +85,7 @@ public class HomeFragment extends BaseFragment {
     private int statusPreInternet = -1;
     private AestheticDialog.Builder builder;
     private static int page = 1;
+    private ArrayList<Integer> arrId;
 
     public boolean isNotification() {
         return isNotification;
@@ -101,6 +103,9 @@ public class HomeFragment extends BaseFragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         binding.imageNoInternet.setAnimation(R.raw.fetch_api_loading);
 
+        //get All array id bookmark
+        arrId = new ArrayList<>();
+        getAllIdBookmark(3);
 
 
         //Start init
@@ -112,6 +117,7 @@ public class HomeFragment extends BaseFragment {
 
 
         adapter = new JobAdapter(jobList, getContext());
+        adapter.setArrId(arrId);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
         getJobs();
@@ -315,11 +321,11 @@ public class HomeFragment extends BaseFragment {
         bookmarksRef.child("userId"+userId).child("job"+job.getId()).setValue(job)
                 .addOnSuccessListener(aVoid -> {
                     MotionToast.Companion.createToast(getActivity(), "😍",
-                                    "Đã thêm công việc thành công",
-                                    MotionToastStyle.SUCCESS,
-                                    MotionToast.GRAVITY_BOTTOM,
-                                    MotionToast.LONG_DURATION,
-                                    ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+                            "Đã thêm công việc thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý lỗi
@@ -332,17 +338,36 @@ public class HomeFragment extends BaseFragment {
         DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
         bookmarksRef.child("userId"+userId).child("job"+jobId).removeValue()
                 .addOnSuccessListener(aVoid -> {
-                                                MotionToast.Companion.createToast(getActivity(), "😍",
-                                    "Đã xoa công việc thành công",
-                                    MotionToastStyle.SUCCESS,
-                                    MotionToast.GRAVITY_BOTTOM,
-                                    MotionToast.LONG_DURATION,
-                                    ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+                    MotionToast.Companion.createToast(getActivity(), "😍",
+                            "Đã xoa công việc thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
                 })
                 .addOnFailureListener(e -> {
                     // Xử lý lỗi
                     Log.d("test11",e.getMessage());
                     Toast.makeText(getContext(), "Lỗi khi xóa khỏi bookmark "+ e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+
+    private void getAllIdBookmark(int userId){
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
+        bookmarksRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DataSnapshot dataSnapshot = task.getResult();
+                    for (DataSnapshot data : dataSnapshot.getChildren()) {
+                        JobBasic job = data.getValue(JobBasic.class);
+                        arrId.add(job.getId());
+                    }
+                } else {
+                    Log.d("test11",task.getException().getMessage());
+                }
+            }
+        });
     }
 }
