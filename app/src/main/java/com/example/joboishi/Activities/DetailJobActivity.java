@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -126,7 +127,7 @@ public class DetailJobActivity extends AppCompatActivity {
                 binding.shimmer.setVisibility(View.GONE);
                 binding.detailLayout.setVisibility(View.VISIBLE);
 
-//                Log.d("test", job);
+//                Log.d("test", job.getContent());
 
                 //Responsibilities
                 String longDescription = job.getResponsibilities();
@@ -230,32 +231,18 @@ public class DetailJobActivity extends AppCompatActivity {
                 });
 
                 //Applied Job Event From Serve
-                if (job.isIs_edit()) {
-                    binding.btnApplied.setEnabled(true);
-                }
-                else {
-                    binding.btnApplied.setEnabled(false);
-                }
+//                if (job.isIs_edit()) {
+//                    binding.btnApplied.setEnabled(true);
+//                }
+//                else {
+//                    binding.btnApplied.setEnabled(false);
+//                }
                 binding.btnApplied.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // Lấy ngày giờ hiện tại
-                        LocalDateTime currentDateTime = LocalDateTime.now();
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
-
-                        String formattedDateTime = currentDateTime.format(formatter);
-                        Log.d("test", formattedDateTime);
-                        String address = job.getCompany().getAddress().get(0).getDistrict() + ", " +  job.getCompany().getAddress().get(0).getDistrict() + ", " + job.getCompany().getAddress().get(0).getProvince();
                         AppliedJob(
                                 job.getId() + "",
-                                "1",
-                                job.getTitle(),
-                                job.getCompany().getId() + "",
-                                job.getCompany().getImage_logo(),
-                                address,
-                                true ,
-                                job.getIs_salary_visible(),
-                                formattedDateTime
+                                "7"
                         );
                     }
                 });
@@ -318,7 +305,7 @@ public class DetailJobActivity extends AppCompatActivity {
     }
 
     //Ham Applied Job
-    private void AppliedJob (String id, String user_id, String title ,String company_id, String company_logo, String sort_addresses,Boolean is_applied, Boolean is_salary_visible, String published) {
+    private void AppliedJob (String job_id, String user_id) {
         //Tao Retrofit
         progressDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
@@ -327,20 +314,12 @@ public class DetailJobActivity extends AppCompatActivity {
         JobAppliedAPI jobAppliedAPI = retrofit.create(JobAppliedAPI.class);
 
         //Chuyển đổi các tham số thành RequestBody
-        RequestBody idRequestBody = RequestBody.create(MediaType.parse("text/plain"), id);
+        RequestBody job_idRequestBody = RequestBody.create(MediaType.parse("text/plain"), job_id);
         RequestBody user_idRequestBody = RequestBody.create(MediaType.parse("text/plain"), user_id);
-        RequestBody titleRequestBody = RequestBody.create(MediaType.parse("text/plain"), title);
-        RequestBody company_idRequestBody = RequestBody.create(MediaType.parse("text/plain"), company_id);
-        RequestBody company_logoRequestBody = RequestBody.create(MediaType.parse("text/plain"), company_logo);
-        RequestBody sort_addressesRequestBody = RequestBody.create(MediaType.parse("text/plain"), sort_addresses);
-        RequestBody is_appliedRequestBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(is_applied));
-        RequestBody is_salary_visibleRequestBody = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(is_salary_visible));
-        RequestBody publishedRequestBody = RequestBody.create(MediaType.parse("text/plain"), published);
 
         //Gửi yêu cầu tải lên
         Call<ResponseBody> call = jobAppliedAPI.applied(
-                idRequestBody, user_idRequestBody, titleRequestBody, company_idRequestBody, company_logoRequestBody, sort_addressesRequestBody, is_appliedRequestBody ,is_salary_visibleRequestBody, publishedRequestBody
-        );
+                job_idRequestBody, user_idRequestBody);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -348,10 +327,11 @@ public class DetailJobActivity extends AppCompatActivity {
                 if(response.isSuccessful()){
 //                    Log.d("test", "Response");
                     progressDialog.dismiss();
-                    showDialog();
+                    showDialog("Ứng tuyển thành công", true);
                 }
                 else {
                     progressDialog.dismiss();
+                    showDialog("Ứng tuyển không thành công", false);
                     Log.d("test", "Failed");
                 }
             }
@@ -359,6 +339,7 @@ public class DetailJobActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 progressDialog.dismiss();
+                showDialog("Ứng tuyển không thành công", false);
             }
         });
 
@@ -395,19 +376,6 @@ public class DetailJobActivity extends AppCompatActivity {
 
 
 
-    //Ham hien thi loading
-    private void showLoadingIndicator() {
-        // Show loading indicator (e.g., ProgressBar)
-        binding.main.setVisibility(View.GONE);
-        binding.progressBar.setVisibility(View.VISIBLE);
-    }
-
-    //Ham an loading
-    private void hideLoadingIndicator() {
-        // Hide loading indicator
-        binding.main.setVisibility(View.VISIBLE);
-        binding.progressBar.setVisibility(View.GONE);
-    }
 
 
     // Ham dang ki receiver
@@ -462,10 +430,29 @@ public class DetailJobActivity extends AppCompatActivity {
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
-    private void showDialog() {
+
+    //Show dialog
+    private void showDialog(String message, Boolean type) {
         //Create the Dialog here
         Dialog dialog = new Dialog(DetailJobActivity.this);
         dialog.setContentView(R.layout.custom_dialog_layout);
+
+        TextView lbl_title = dialog.findViewById(R.id.textView2);
+        lbl_title.setText(message);
+        if(type) {
+            ImageView imageView = dialog.findViewById(R.id.imageView);
+            imageView.setImageResource(R.drawable.ic_checked);
+            TextView lbl_Name = dialog.findViewById(R.id.textView);
+            lbl_Name.setText("Successful");
+        }
+        else {
+            ImageView imageView = dialog.findViewById(R.id.imageView);
+            imageView.setImageResource(R.drawable.ic_failed);
+            TextView lbl_Name = dialog.findViewById(R.id.textView);
+            lbl_Name.setText("Failed");
+        }
+
+
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.setCancelable(false); //Optional
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog

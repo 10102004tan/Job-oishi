@@ -10,15 +10,21 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.joboishi.Api.UploadAPI;
 import com.example.joboishi.Models.RealPathUtil;
@@ -75,6 +81,10 @@ public class UploadFileActivity extends AppCompatActivity {
                             //Get PDF URi
                             Uri uri = data.getData();
                             mUri = uri;
+
+                            // Get the file name from the URI
+                            String fileName = getFileNameFromUri(uri);
+                            binding.lblFileName.setText(fileName);
                         }
                     }
                 }
@@ -146,7 +156,7 @@ public class UploadFileActivity extends AppCompatActivity {
 
                 // Tạo request body multipart
                 RequestBody requestBodyFile = RequestBody.create(MediaType.parse("multipart/form-data"), bytes);
-                MultipartBody.Part filePart = MultipartBody.Part.createFormData("name", "file_name", requestBodyFile);
+                MultipartBody.Part filePart = MultipartBody.Part.createFormData("pdf", "file_name", requestBodyFile);
 
                 // Tạo request body cho user_id
                 RequestBody requestBodyUserId = RequestBody.create(MediaType.parse("multipart/form-data"), "7");
@@ -167,11 +177,13 @@ public class UploadFileActivity extends AppCompatActivity {
                     public void onResponse(Call<ResponseBody> callback, Response<ResponseBody> response) {
                         if(response.isSuccessful()){
                             mProgressDialog.dismiss();
+
                             Log.d("test", "Response");
                             try {
                                 JSONObject jsonObject = new JSONObject(response.body().string());
-                                String fileName = jsonObject.getString("name");
-                                Log.d("test", "FIle: " + fileName);
+                                String message = jsonObject.getString("message");
+                                showDialog(message);
+//                                Log.d("test", "File: " + message);
                             } catch (JSONException | IOException e) {
                                 e.printStackTrace();
                             }
@@ -199,5 +211,46 @@ public class UploadFileActivity extends AppCompatActivity {
         }
     }
 
+    // Method to get the file name from the URI
+    private String getFileNameFromUri(Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
 
+    private void showDialog(String message) {
+        //Create the Dialog here
+        Dialog dialog = new Dialog(UploadFileActivity.this);
+        dialog.setContentView(R.layout.custom_dialog_layout);
+        TextView lbl_title = dialog.findViewById(R.id.textView2);
+        lbl_title.setText(message);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+
+        dialog.show();
+
+
+        Button Okay = dialog.findViewById(R.id.btn_okay);
+
+        Okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+    }
 }
