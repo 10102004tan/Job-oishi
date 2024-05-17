@@ -1,14 +1,7 @@
 package com.example.joboishi.Activities;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,10 +9,15 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.joboishi.Adapters.ViewPagerHomeAdapter;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.joboishi.Fragments.HomeFragment;
 import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.ProfileFragment;
@@ -36,6 +34,7 @@ import www.sanju.motiontoast.MotionToastStyle;
 
 
 public class HomeActivity extends AppCompatActivity{
+
     private static final int REQ = 111111;
     private HomeLayoutBinding binding;
 
@@ -77,7 +76,7 @@ public class HomeActivity extends AppCompatActivity{
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQ && permissions.length == grantResults.length) {
-            for (int check : grantResults){
+            for (int check : grantResults) {
                 if (check != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
@@ -86,12 +85,12 @@ public class HomeActivity extends AppCompatActivity{
         }
     }
 
-    private boolean checkPermission(String permission){
+    private boolean checkPermission(String permission) {
         int check = checkSelfPermission(permission);
         return (check == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void doWithPermission(){
+    private void doWithPermission() {
         // Cập nhật UI của Fragment nếu cần
 
     }

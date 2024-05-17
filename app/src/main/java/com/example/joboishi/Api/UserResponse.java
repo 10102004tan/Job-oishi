@@ -2,7 +2,9 @@ package com.example.joboishi.Api;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserResponse {
+import java.io.Serializable;
+
+public class UserResponse implements Serializable {
     @SerializedName("id")
     private int id;
     @SerializedName("first_name")
@@ -53,6 +55,10 @@ public class UserResponse {
         this.city = city;
         this.province = province;
         this.loginMethod = loginMethod;
+    }
+
+    public UserResponse() {
+
     }
 
     public int getId() {

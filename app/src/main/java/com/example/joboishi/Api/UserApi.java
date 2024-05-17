@@ -23,6 +23,9 @@ public interface UserApi {
     Call<UserApiResponse> updateAvatar(@Path("id") int userId, @Part MultipartBody.Part photo_url);
 
     @POST("/api/user")
+    Call<UserApiResponse> registerUser(@Body UserRegisterEmailRequest request);
+    @POST("/api/user/login")
+    Call<UserApiResponse> loginUser(@Body UserLoginEmailRequest request);
     Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest request);
 
     @POST("{id}/job_criteria")
