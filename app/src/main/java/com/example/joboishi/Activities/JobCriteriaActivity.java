@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -12,21 +13,19 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 
 import com.example.joboishi.Adapters.CityChosenAdpater;
 import com.example.joboishi.Adapters.SelectedJobAdapter;
@@ -35,39 +34,30 @@ import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.JobCriteriaApiResponse;
 import com.example.joboishi.Api.JobCriteriaRequest;
 import com.example.joboishi.Api.UserApi;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Fragments.SelectSalaryFragment;
 import com.example.joboishi.Models.WorkForm;
-
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.ActivityJobCriteriaBinding;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 
-
-import org.w3c.dom.Text;
-
-import www.sanju.motiontoast.MotionToast;
-import www.sanju.motiontoast.MotionToastStyle;
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class JobCriteriaActivity extends AppCompatActivity {
 
     private final SelectSalaryFragment salaryFragment = new SelectSalaryFragment();
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
-    private final  int STATUS_NO_INTERNET = 0;
-    private final  int STATUS_LOW_INTERNET = 1;
-    private final  int STATUS_GOOD_INTERNET = 2;
-    private int statusInternet = -1;
-    private int statusPreInternet = -1;
-    private boolean isFirst = true;
-    private ActivityJobCriteriaBinding binding;
+    private final int STATUS_NO_INTERNET = 0;
+    private final int STATUS_LOW_INTERNET = 1;
+    private final int STATUS_GOOD_INTERNET = 2;
     private final int REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE = 8080;
     private final int REQUEST_TO_ADDRESS_ACTIVITY_CODE = 8081;
     private final ArrayList<String> selectedJobs = new ArrayList<>();
@@ -75,6 +65,10 @@ public class JobCriteriaActivity extends AppCompatActivity {
     private final ArrayList<WorkForm> workForms = new ArrayList<>();
     private final ArrayList<String> workFormChosen = new ArrayList<>();
     private final int USER_ID = 1;
+    private int statusInternet = -1;
+    private int statusPreInternet = -1;
+    private boolean isFirst = true;
+    private ActivityJobCriteriaBinding binding;
     private AppCompatCheckBox checkIsRemote;
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private SelectedJobAdapter majorChosenAdapter;
@@ -89,7 +83,9 @@ public class JobCriteriaActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         //register broadcast receiver
-        registerInternetBroadcastReceiver();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerInternetBroadcastReceiver();
+        }
 
 
         EdgeToEdge.enable(this);
@@ -177,8 +173,9 @@ public class JobCriteriaActivity extends AppCompatActivity {
             @Override
             public void onItemClick(CityChosenAdpater.MyViewHolder holder, int position) {
                 String city = selectedCities.get(position);
+                Log.d("position", position + ", city: " + city);
                 selectedCities.remove(city);
-                majorChosenAdapter.notifyDataSetChanged();
+                cityChosenAdpater.notifyDataSetChanged();
             }
         });
 
@@ -236,11 +233,13 @@ public class JobCriteriaActivity extends AppCompatActivity {
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet){
-                    registerInternetBroadcastReceiver();
+                if (statusPreInternet != statusInternet) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerInternetBroadcastReceiver();
+                    }
                     isFirst = true;
                 }
-                if (statusInternet == STATUS_NO_INTERNET){
+                if (statusInternet == STATUS_NO_INTERNET) {
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
@@ -250,8 +249,9 @@ public class JobCriteriaActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
-        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
             @Override
             public void noInternet() {
@@ -297,9 +297,10 @@ public class JobCriteriaActivity extends AppCompatActivity {
                 }
             }
         };
-        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
+
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -362,8 +363,6 @@ public class JobCriteriaActivity extends AppCompatActivity {
             }
         }
 
-        Log.d("work_forms", userWorkForms.toString());
-
 
         JobCriteriaRequest request = new JobCriteriaRequest();
         request.setUser_id(USER_ID);
@@ -380,9 +379,20 @@ public class JobCriteriaActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Response<JobCriteriaApiResponse> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(JobCriteriaActivity.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(JobCriteriaActivity.this, "Thành công",
+                            "Cập nhật thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(JobCriteriaActivity.this, R.font.helvetica_regular));
                 } else {
-                    Toast.makeText(JobCriteriaActivity.this, "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(JobCriteriaActivity.this, "Thất bại",
+                            "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(JobCriteriaActivity.this, R.font.helvetica_regular));
+                    // Toast.makeText(JobCriteriaActivity.this, "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                 }
             }
 

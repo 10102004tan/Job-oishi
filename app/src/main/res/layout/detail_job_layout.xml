@@ -2,31 +2,29 @@
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeRefreshLayout"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_color"
+    android:background="@color/bg_color">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/image"
             android:layout_width="300dp"
             android:layout_height="300dp"
+            android:layout_centerInParent="true"
             android:visibility="gone"
-            app:lottie_rawRes="@raw/a404"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
-            android:layout_centerInParent="true"
-            />
+            app:lottie_rawRes="@raw/a404" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
             <!-- Add a ProgressBar aligned to the center of the parent -->
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -87,8 +85,7 @@
                                         app:layout_constraintEnd_toStartOf="@+id/guideline"
                                         app:layout_constraintStart_toStartOf="parent"
                                         app:layout_constraintTop_toTopOf="parent"
-                                        app:layout_constraintVertical_bias="0.5"
-                                        />
+                                        app:layout_constraintVertical_bias="0.5" />
 
                                     <TextView
                                         android:id="@+id/txt_company_name"
@@ -226,10 +223,11 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
                             android:text="Nội dung"
                             android:textSize="16sp"
-                            android:layout_marginBottom="10dp"
                             android:textStyle="bold" />
+
                         <TextView
                             android:id="@+id/txt_job_content"
                             android:layout_width="match_parent"
@@ -447,29 +445,31 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:visibility="gone">
+
                             <LinearLayout
                                 android:id="@+id/get_benefits_title"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:visibility="gone">
+
                                 <TextView
                                     android:layout_width="0dp"
-                                    android:layout_weight="8"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_weight="8"
                                     android:text="Phúc lợi công việc"
                                     android:textSize="16sp"
-                                    android:layout_marginBottom="10dp"
                                     android:textStyle="bold" />
 
                                 <TextView
                                     android:id="@+id/show_all_benefit"
                                     android:layout_width="0dp"
-                                    android:layout_weight="2"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/blue"
+                                    android:layout_weight="2"
                                     android:clickable="true"
-                                    android:text="Xem tất cả"/>
+                                    android:text="Xem tất cả"
+                                    android:textColor="@color/blue" />
                                 "
 
                             </LinearLayout>
@@ -478,8 +478,7 @@
                                 android:id="@+id/benefits_list"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                >
+                                android:layout_marginBottom="10dp">
 
                             </androidx.recyclerview.widget.RecyclerView>
                         </LinearLayout>
@@ -494,19 +493,20 @@
                         android:background="@color/white"
                         android:orientation="vertical"
                         android:padding="10dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
                             android:text="Bí kíp xin việc An toàn"
                             android:textSize="16sp"
-                            android:layout_marginBottom="5dp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_shield"
-                            android:text="KHÔNG cung cấp thông tin ngân hàng hoặc thẻ tín dụng khi ứng tuyển. Nhà tuyển dụng KHÔNG bao giờ yêu cầu chi phí ứng tuyển hoặc chi phí đào tạo"/>
+                            android:text="KHÔNG cung cấp thông tin ngân hàng hoặc thẻ tín dụng khi ứng tuyển. Nhà tuyển dụng KHÔNG bao giờ yêu cầu chi phí ứng tuyển hoặc chi phí đào tạo" />
 
                     </LinearLayout>
 
@@ -517,13 +517,15 @@
                         android:background="@color/white"
                         android:orientation="vertical"
                         android:padding="10dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
                             android:text="Thông tin công ty"
                             android:textSize="16sp"
-                            android:layout_marginBottom="5dp"
                             android:textStyle="bold" />
+
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/btn_detail"
                             android:layout_width="match_parent"
@@ -595,17 +597,19 @@
                         android:layout_marginBottom="20dp"
                         android:orientation="vertical"
                         android:padding="10dp">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
                             android:text="Viêc làm tương tự"
                             android:textSize="16sp"
-                            android:layout_marginBottom="20dp"
                             android:textStyle="bold" />
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/related_jobs"
                             android:layout_width="match_parent"
-                            android:layout_height="400dp"/>
+                            android:layout_height="400dp" />
                     </LinearLayout>
 
                 </LinearLayout>
