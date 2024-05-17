@@ -33,4 +33,5 @@ public interface UserApi {
 
     @GET("{id}/job_criteria")
     Call<JobCriteriaApiResponse> getJobCriteria(@Path("id") int userId);
+}
 
