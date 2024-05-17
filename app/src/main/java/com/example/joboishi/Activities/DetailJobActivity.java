@@ -25,17 +25,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.BenefitAdapter;
 import com.example.joboishi.Api.DetailJobAPI;
 import com.example.joboishi.Api.JobAppliedAPI;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.data.Job;
+import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -60,9 +56,6 @@ import www.sanju.motiontoast.MotionToastStyle;
 
 public class DetailJobActivity extends AppCompatActivity {
 
-    private final int STATUS_NO_INTERNET = 0;
-    private final int STATUS_LOW_INTERNET = 1;
-    private final int STATUS_GOOD_INTERNET = 2;
     private DetailJobLayoutBinding binding;
     private ArrayList<Job> jobs;
     private Job jobDetail;
@@ -72,10 +65,12 @@ public class DetailJobActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
+    private final  int STATUS_NO_INTERNET = 0;
+    private final  int STATUS_LOW_INTERNET = 1;
+    private final  int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,7 +182,7 @@ public class DetailJobActivity extends AppCompatActivity {
 
 
                 //Benefits
-                if (job.getBenefit() != null && job.getBenefit().size() > 0) {
+                if(job.getBenefit() != null && job.getBenefit().size() > 0) {
                     binding.getBenefits.setVisibility(View.VISIBLE);
                     binding.getBenefitsTitle.setVisibility(View.VISIBLE);
                     BenefitAdapter benefitAdapter = new BenefitAdapter(DetailJobActivity.this,job.getBenefit());
@@ -278,11 +273,11 @@ public class DetailJobActivity extends AppCompatActivity {
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet) {
+                if (statusPreInternet != statusInternet){
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
-                if (statusInternet == STATUS_NO_INTERNET) {
+                if (statusInternet == STATUS_NO_INTERNET){
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
@@ -306,7 +301,7 @@ public class DetailJobActivity extends AppCompatActivity {
         call.enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
-                if (response.isSuccessful()) {
+                if(response.isSuccessful()){
                     Job detailJob = response.body();
                     assert detailJob != null;
                     callback.onDetailJobLoaded(detailJob);
@@ -375,8 +370,8 @@ public class DetailJobActivity extends AppCompatActivity {
     }
 
     //Ham xu ly chuoi thanh cac dau cham dau dong
-    private SpannableStringBuilder processStringWithBullet(String longDescription) {
-        String[] arr = longDescription.split("\n");
+    private SpannableStringBuilder processStringWithBullet(String longDescription){
+        String arr[] = longDescription.split("\n");
         //lưu khoảng cách giữa ký tự đầu dòng và nội dung
         int bulletGap = (int) getResources().getDisplayMetrics().density * 15;
 
@@ -398,6 +393,8 @@ public class DetailJobActivity extends AppCompatActivity {
         return ssb;
     }
 
+
+
     //Ham hien thi loading
     private void showLoadingIndicator() {
         // Show loading indicator (e.g., ProgressBar)
@@ -411,6 +408,7 @@ public class DetailJobActivity extends AppCompatActivity {
         binding.main.setVisibility(View.VISIBLE);
         binding.progressBar.setVisibility(View.GONE);
     }
+
 
     // Ham dang ki receiver
     private void registerInternetBroadcastReceiver() {
@@ -448,7 +446,8 @@ public class DetailJobActivity extends AppCompatActivity {
                 if (isFirst) {
                     statusInternet = STATUS_GOOD_INTERNET;
                     isFirst = false;
-                } else {
+                }
+                else{
                     binding.image.setVisibility(View.GONE);
                     binding.main.setVisibility(View.VISIBLE);
                     MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
