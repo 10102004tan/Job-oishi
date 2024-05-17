@@ -101,4 +101,7 @@ public class JobBasic implements Serializable {
     public void setPublished(String published) {
         this.published = published;
     }
+
+    public JobBasic() {
+    }
 }

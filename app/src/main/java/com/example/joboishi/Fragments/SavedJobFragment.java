@@ -26,7 +26,13 @@ import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
+import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.thecode.aestheticdialogs.AestheticDialog;
@@ -49,7 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
-public class SavedJobFragment extends Fragment {
+public class SavedJobFragment extends BaseFragment {
     private FragmentSavedJobBinding binding;
     private ArrayList<JobBasic> jobs;
     private JobAdapter adapter;
@@ -79,38 +85,20 @@ public class SavedJobFragment extends Fragment {
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
             public void onClickJob(int id) {
-
+                Intent intent = new Intent(getActivity(), DetailJobActivity.class);
+                intent.putExtra("id",id);
+                startActivity(intent);
             }
 
             @Override
-            public void onClickBookmark(JobBasic job) {
-                //processing post id job remove bookmark
-                Call<ResponseBody> call = iJobsService.destroyJobOnBookmark(job.getId(),1);
-                jobs.remove(job);
-                adapter.updateData(jobs);
-                MotionToast.Companion.createToast(getActivity(), "😍",
-                        "Gỡ thành công",
-                        MotionToastStyle.SUCCESS,
-                        MotionToast.GRAVITY_BOTTOM,
-                        MotionToast.LONG_DURATION,
-                        ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {
+            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage) {
+                //Khong lam gi
+            }
 
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        MotionToast.Companion.createToast(getActivity(), "😍",
-                                "Thử lại sau",
-                                MotionToastStyle.ERROR,
-                                MotionToast.GRAVITY_BOTTOM,
-                                MotionToast.LONG_DURATION,
-                                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                    }
-                });
+            @Override
+            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage) {
+                DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
+                bookmarksRef.child("userId3").child("job"+job.getId()).removeValue();
             }
         });
 
@@ -126,106 +114,94 @@ public class SavedJobFragment extends Fragment {
                 if (statusInternet == STATUS_NO_INTERNET){
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
-
             }
         });
         return binding.getRoot();
     }
 
-    private void getJobsSaved(){
+    //get data from server
 
-        Call<ArrayList<JobBasic>> call = iJobsService.getAllJobsBookmarkById(0);
-        call.enqueue(new Callback<ArrayList<JobBasic>>() {
+    private void getJobsSaved(){
+        binding.listJob.setVisibility(View.GONE);
+        binding.image.setVisibility(View.VISIBLE);
+        binding.image.setAnimation(R.raw.fetch_api_loading);
+        binding.image.playAnimation();
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
+        bookmarksRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
-                if (response.isSuccessful()){
-                    jobs = response.body();
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    if(jobs.size() == 0){
-                        binding.image.setVisibility(View.VISIBLE);
-                        binding.image.setAnimation(R.raw.no_data);
-                        binding.image.playAnimation();
-                        binding.listJob.setVisibility(View.GONE);
-                    }
-                    else{
-                        binding.listJob.setVisibility(View.VISIBLE);
-                        binding.image.setVisibility(View.GONE);
-                    }
-                    adapter.updateData(jobs);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                jobs.clear();
+                for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
+                    JobBasic job = jobSnapshot.getValue(JobBasic.class);
+                    jobs.add(job);
                 }
-            }
-            @Override
-            public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
+                // Cập nhật Adapter của RecyclerView với danh sách bookmarkedJobs
                 binding.swipeRefreshLayout.setRefreshing(false);
+                if (jobs.size() == 0){
+                    binding.image.setVisibility(View.VISIBLE);
+                    binding.image.setAnimation(R.raw.no_data);
+                    binding.image.playAnimation();
+                    binding.listJob.setVisibility(View.GONE);
+                }
+                else{
+                    binding.listJob.setVisibility(View.VISIBLE);
+                    binding.image.setVisibility(View.GONE);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("test122",databaseError.getMessage());
             }
         });
     }
-    /*
-    CREATE METHODS FOR INTERNET BROADCAST RECEIVER
-    */
-    private void registerInternetBroadcastReceiver() {
-        internetBroadcastReceiver = new InternetBroadcastReceiver();
-        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
-            @Override
-            public void noInternet() {
-                statusPreInternet = STATUS_NO_INTERNET;
-                if (isFirst) {
-                    binding.image.setVisibility(View.VISIBLE);
-                    binding.image.setAnimation(R.raw.a404);
-                    binding.image.playAnimation();
-                    statusInternet = STATUS_NO_INTERNET;
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    isFirst = false;
-                    new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
-                            .setTitle("Không có kết nối mạng")
-                            .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                            .setCancelable(false)
-                            .setGravity(Gravity.BOTTOM).show();
-                    ;
-                }
-            }
-
-            @Override
-            public void lowInternet() {
-                binding.image.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void goodInternet() {
-                statusPreInternet = STATUS_GOOD_INTERNET;
-                if (isFirst) {
-                    statusInternet = STATUS_GOOD_INTERNET;
-                    isFirst = false;
-                }
-                else{
-                    binding.image.setVisibility(View.GONE);
-                    binding.listJob.setVisibility(View.VISIBLE);
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Kết nối mạng đã được khôi phục",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                }
-            }
-        };
-
-        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
-    }
-    /*
-    HANDLE NO INTERNET CONNECTION
-    */
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (internetBroadcastReceiver != null) {
-            getActivity().unregisterReceiver(internetBroadcastReceiver);
+    protected void handleNoInternet() {
+        statusPreInternet = STATUS_NO_INTERNET;
+        if (isFirst) {
+            binding.image.setVisibility(View.VISIBLE);
+            binding.image.setAnimation(R.raw.a404);
+            binding.image.playAnimation();
+            statusInternet = STATUS_NO_INTERNET;
+            binding.swipeRefreshLayout.setRefreshing(false);
+            isFirst = false;
+            new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
+                    .setTitle("Không có kết nối mạng")
+                    .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                    .setCancelable(false)
+                    .setGravity(Gravity.BOTTOM).show();
+            ;
         }
     }
+
     @Override
-    public void onStart() {
-        super.onStart();
-        registerInternetBroadcastReceiver();
+    protected void handleLowInternet() {
+        binding.image.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    protected void handleGoodInternet() {
+        statusPreInternet = STATUS_GOOD_INTERNET;
+        if (isFirst) {
+            statusInternet = STATUS_GOOD_INTERNET;
+            isFirst = false;
+        }
+        else{
+            binding.image.setVisibility(View.GONE);
+            binding.listJob.setVisibility(View.VISIBLE);
+            MotionToast.Companion.createToast(getActivity(), "😍",
+                    "Kết nối mạng đã được khôi phục",
+                    MotionToastStyle.SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getJobsSaved();
     }
 }
