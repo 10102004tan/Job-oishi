@@ -1,13 +1,17 @@
 package com.example.joboishi.Adapters;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.joboishi.R;
 import com.example.joboishi.databinding.OptionSearchItemBinding;
 
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
 
     private Activity context;
     private ArrayList<String> listOption = new ArrayList<>();
+    private boolean isRemoteSelected = false; // Biến trạng thái để theo dõi mục "remote"
 
     public ArrayList<String> getListOption() {
         return listOption;
@@ -35,7 +40,6 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Sử dụng MajorsItemBinding để inflate layout và tạo instance cho ViewHolder
         OptionSearchItemBinding binding = OptionSearchItemBinding.inflate(LayoutInflater.from(context), parent, false);
         return new MyViewHolder(binding);
     }
@@ -44,6 +48,16 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         String optionName = listOption.get(position);
         holder.optionSearchItemBinding.optionName.setText(optionName);
+
+        // Cập nhật màu nền dựa trên trạng thái lựa chọn
+        if (position == 1 && isRemoteSelected) {
+            holder.optionSearchItemBinding.optionName.setTextColor(ContextCompat.getColor(context, R.color.selected_color));
+            holder.optionSearchItemBinding.optionName.setBackgroundResource(R.drawable.background_item_selected);
+        } else {
+            holder.optionSearchItemBinding.optionName.setTextColor(ContextCompat.getColor(context, R.color.default_color));
+            holder.optionSearchItemBinding.optionName.setBackgroundResource(R.drawable.background_item_chosen);
+
+        }
     }
 
     @Override
@@ -64,10 +78,14 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
+                        // Đổi trạng thái của mục "remote" khi được click
+                        if (position == 1) {
+                            isRemoteSelected = !isRemoteSelected;
+                            notifyDataSetChanged(); // Cập nhật lại giao diện
+                        }
                         onItemClickListener.onItemClick(position);
                     }
                 }
-
             });
         }
     }
@@ -75,5 +93,4 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
-
 }

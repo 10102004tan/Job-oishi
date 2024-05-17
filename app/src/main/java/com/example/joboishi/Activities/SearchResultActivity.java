@@ -36,7 +36,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SearchResultActivity extends AppCompatActivity {
+public class SearchResultActivity extends AppCompatActivity implements OptionTypeJobFragment.OnOptionSelectedListener {
 
     private SearchResultLayoutBinding binding;
     private TextInputEditText input;
@@ -54,6 +54,11 @@ public class SearchResultActivity extends AppCompatActivity {
     private LottieAnimationView progressBar;
     private LottieAnimationView animateNoData;
 
+    private Boolean isRemote = false;
+    private String jobType;
+    private String experience;
+
+
     MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
 
     @Override
@@ -62,12 +67,15 @@ public class SearchResultActivity extends AppCompatActivity {
         binding = SearchResultLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Khởi tạo các thành phần và adapter
+        // Initialize components and adapter
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(JobSearchAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jobSearchAPI = retrofit.create(JobSearchAPI.class);
+
+        Intent intent = getIntent();
+        binding.inputMajor.setText(intent.getStringExtra("key"));
 
         recyclerView = binding.listJobSearched;
         ImageButton btnBack = binding.btnToolbarBack;
@@ -75,6 +83,9 @@ public class SearchResultActivity extends AppCompatActivity {
         rcv_tool = binding.listToolSearch;
         progressBar = binding.progressBar;
         animateNoData = binding.animateNoData;
+        input = binding.inputMajor;
+
+        DesignerToast.Success(getBaseContext(), input.getText().toString(), Gravity.CENTER, Toast.LENGTH_SHORT);
 
         // Set the initial visibility
         animateNoData.setVisibility(View.GONE);
@@ -98,12 +109,11 @@ public class SearchResultActivity extends AppCompatActivity {
                         DesignerToast.Success(SearchResultActivity.this, position + "", Gravity.CENTER, Toast.LENGTH_SHORT);
                         break;
                     case 1:
+                        isRemote = !isRemote;
                         listSearchJob.clear();
                         adapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.VISIBLE);
-                        currentPage = 1; // Reset current page when performing new search
-                        isLastPage = false;
-                        performJobSearchRm(input.getText().toString(), currentPage);
+                        performJobSearch(input.getText().toString(), currentPage);
                         break;
                     case 2:
                         dialogFragment.setFragment(new OptionExperienceFragment());
@@ -117,7 +127,8 @@ public class SearchResultActivity extends AppCompatActivity {
             }
         });
 
-        // Vô hiệu hóa sự kiện nhập liệu trên trường văn bản
+
+        // Disable text input
         inputForm.getEditText().setFocusable(false);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(SearchResultActivity.this, LinearLayoutManager.VERTICAL, false);
@@ -144,32 +155,28 @@ public class SearchResultActivity extends AppCompatActivity {
             }
         });
 
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("key")) {
-            String searchText = intent.getStringExtra("key");
-            input = binding.inputMajor;
-            input.setText(searchText);
-            performJobSearch(searchText, 1);
-        }
+        performJobSearch(input.getText().toString(), 1);
     }
 
     private void loadNextPage() {
         adapter.addFooterLoading();
-        jobSearchAPI.getListSearchJob(input.getText().toString(), currentPage, pageSize)
+
+        jobSearchAPI.getListSearchJob(input.getText().toString(), isRemote, experience, jobType, currentPage, pageSize)
                 .enqueue(new Callback<ArrayList<JobSearch>>() {
                     @Override
                     public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
                         adapter.removeFooterLoading();
-                        isLoading = false;
 
                         if (response.isSuccessful() && response.body() != null) {
                             listSearchJob.addAll(response.body());
                             adapter.notifyDataSetChanged();
+                            isLoading = false;
 
                             if (response.body().size() < pageSize) {
                                 isLastPage = true;
                             }
                         } else {
+                            isLoading = false;
                             if (listSearchJob.isEmpty()) {
                                 showNoDataAnimation();
                             } else {
@@ -189,83 +196,44 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private void performJobSearch(String key, int page) {
         progressBar.setVisibility(View.VISIBLE);
-        jobSearchAPI.getListSearchJob(key, page, pageSize)
-                .enqueue(new Callback<ArrayList<JobSearch>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
-                        progressBar.setVisibility(View.GONE);
+        jobSearchAPI.getListSearchJob(key ,isRemote, experience, jobType, page, pageSize).enqueue(new Callback<ArrayList<JobSearch>>() {
 
-                        if (response.isSuccessful() && response.body() != null) {
-                            if (page == 1) {
-                                listSearchJob.clear();
-                            }
-                            listSearchJob.addAll(response.body());
-                            if (listSearchJob.isEmpty()) {
-                                showNoDataAnimation();
-                            } else {
-                                hideNoDataAnimation();
-                                adapter = new JobSearchAdapter(listSearchJob, SearchResultActivity.this);
-                                recyclerView.setAdapter(adapter);
-                            }
+            @Override
+            public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
+                progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful() && response.body() != null) {
+                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " " + response.body().size(), Gravity.CENTER, Toast.LENGTH_SHORT);
 
-                            if (response.body().size() < pageSize) {
-                                isLastPage = true;
-                            } else {
-                                isLastPage = false;
-                            }
-                        } else {
+                    if (page == 1) {
+                        listSearchJob.clear(); // Clear the list for new searches
+                        listSearchJob.addAll(response.body());
+                        if (listSearchJob.isEmpty()) {
                             showNoDataAnimation();
-                            Toast.makeText(SearchResultActivity.this, "Không tìm thấy công việc nào", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayList<JobSearch>> call, Throwable t) {
-                        progressBar.setVisibility(View.GONE);
-                        Log.d("error", t.getMessage() + "");
-                    }
-                });
-    }
-
-    private void performJobSearchRm(String key, int page) {
-        progressBar.setVisibility(View.VISIBLE);
-        jobSearchAPI.getListSearchRmJob(key, page, pageSize)
-                .enqueue(new Callback<ArrayList<JobSearch>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
-                        progressBar.setVisibility(View.GONE);
-                        isLoading = false;
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            if (page == 1) {
-                                listSearchJob.clear();
-                            }
-                            listSearchJob.addAll(response.body());
-                            if (listSearchJob.isEmpty()) {
-                                showNoDataAnimation();
-                            } else {
-                                hideNoDataAnimation();
-                                adapter.notifyDataSetChanged();
-                            }
-
-                            if (response.body().size() < pageSize) {
-                                isLastPage = true;
-                            } else {
-                                isLastPage = false;
-                            }
                         } else {
-                            showNoDataAnimation();
-                            Toast.makeText(SearchResultActivity.this, "Không tìm thấy công việc nào", Toast.LENGTH_SHORT).show();
+                            hideNoDataAnimation();
+                            adapter = new JobSearchAdapter(listSearchJob, SearchResultActivity.this);
+                            recyclerView.setAdapter(adapter);
                         }
+                    } else {
+                        listSearchJob.addAll(response.body());
+                        adapter.notifyDataSetChanged();
                     }
 
-                    @Override
-                    public void onFailure(Call<ArrayList<JobSearch>> call, Throwable t) {
-                        progressBar.setVisibility(View.GONE);
-                        isLoading = false;
-                        Log.d("error", t.getMessage() + "");
+                    if (response.body().size() < pageSize) {
+                        isLastPage = true;
                     }
-                });
+                } else {
+                    showNoDataAnimation();
+                    Toast.makeText(SearchResultActivity.this, "Không tìm thấy công việc nào", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayList<JobSearch>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                Log.d("error", t.getMessage() + "");
+            }
+        });
     }
 
     private void showNoDataAnimation() {
@@ -277,5 +245,26 @@ public class SearchResultActivity extends AppCompatActivity {
     private void hideNoDataAnimation() {
         animateNoData.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onOptionSelected(String selectedOption, int pos) {
+        switch (pos) {
+            case 0:
+                jobType = selectedOption.toLowerCase();
+                listSearchJob.clear();
+                adapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.VISIBLE);
+                performJobSearch(input.getText().toString(), currentPage);
+                break;
+            case 1:
+                experience = selectedOption.toLowerCase();
+                listSearchJob.clear();
+                adapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.VISIBLE);
+                performJobSearch(input.getText().toString(), currentPage);
+                break;
+        }
     }
 }

@@ -104,8 +104,7 @@
             android:id="@+id/listJobSearched"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-           />
-
+            />
         <!-- ProgressBar toàn màn hình -->
         <com.airbnb.lottie.LottieAnimationView
             android:layout_centerInParent="true"
