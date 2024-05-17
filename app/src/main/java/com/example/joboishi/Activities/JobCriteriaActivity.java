@@ -39,12 +39,14 @@ import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Fragments.SelectSalaryFragment;
 import com.example.joboishi.Models.WorkForm;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.ActivityJobCriteriaBinding;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +67,8 @@ public class JobCriteriaActivity extends AppCompatActivity {
     private final ArrayList<WorkForm> workForms = new ArrayList<>();
     private final ArrayList<String> workFormChosen = new ArrayList<>();
     private final int USER_ID = 1;
+    private final int MAX_CHOOSE_JOB = 5;
+    private final int MAX_CHOOSE_CITY = 3;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
@@ -73,7 +77,9 @@ public class JobCriteriaActivity extends AppCompatActivity {
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private SelectedJobAdapter majorChosenAdapter;
     private CityChosenAdpater cityChosenAdpater;
-
+    private LoadingDialog loadingDialog;
+    private TextView limitSelectJob;
+    private TextView limitSelectCity;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -82,7 +88,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
         binding = ActivityJobCriteriaBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        //register broadcast receiver
+        // Register broadcast receiver
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerInternetBroadcastReceiver();
         }
@@ -96,6 +102,11 @@ public class JobCriteriaActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Run dialog when fetching data
+        loadingDialog = new LoadingDialog(this);
+        loadingDialog.show();
+
+
         // Init data
         workForms.add(new WorkForm("Toàn thời gian", false));
         workForms.add(new WorkForm("Bán thời gian", false));
@@ -107,6 +118,13 @@ public class JobCriteriaActivity extends AppCompatActivity {
         RecyclerView listSelectedJob = findViewById(R.id.list_job_select);
         RecyclerView listSelectedCity = findViewById(R.id.list_city_selected);
         RecyclerView listWorkForms = findViewById(R.id.list_work_form);
+        limitSelectJob = findViewById(R.id.choose_limit_job);
+        limitSelectCity = findViewById(R.id.choose_limit_city);
+
+        // Default text view value
+        limitSelectJob.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_JOB - selectedJobs.size()) + " lựa chọn");
+        limitSelectCity.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_CITY - selectedCities.size()) + " lựa chọn");
+
         // Change toolbar title
         TextView textTitle = findViewById(R.id.toolbar_text_title);
         textTitle.setText(R.string.job_criteria_toolbar_title);
@@ -135,13 +153,25 @@ public class JobCriteriaActivity extends AppCompatActivity {
                 String job = selectedJobs.get(position);
                 selectedJobs.remove(job);
                 majorChosenAdapter.notifyDataSetChanged();
+
+                limitSelectJob.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_JOB - selectedJobs.size()) + " lựa chọn");
             }
         });
-
 
         // List selected city
         cityChosenAdpater = new CityChosenAdpater(this, selectedCities);
         listSelectedCity.setAdapter(cityChosenAdpater);
+        // Handle remove item selected when touch in
+        cityChosenAdpater.setItemClickListener(new CityChosenAdpater.ItemClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onItemClick(CityChosenAdpater.MyViewHolder holder, int position) {
+                String city = selectedCities.get(position);
+                selectedCities.remove(city);
+                cityChosenAdpater.notifyDataSetChanged();
+                limitSelectCity.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_CITY - selectedCities.size()) + " lựa chọn");
+            }
+        });
         // Management layout of recycler view
         LinearLayoutManager layoutManagerCity = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         layoutManagerCity.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -167,25 +197,12 @@ public class JobCriteriaActivity extends AppCompatActivity {
         listWorkForms.setLayoutManager(layoutManagerWorkForm);
 
 
-        // Handle remove item selected when touch in
-        cityChosenAdpater.setItemClickListener(new CityChosenAdpater.ItemClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onItemClick(CityChosenAdpater.MyViewHolder holder, int position) {
-                String city = selectedCities.get(position);
-                Log.d("position", position + ", city: " + city);
-                selectedCities.remove(city);
-                cityChosenAdpater.notifyDataSetChanged();
-            }
-        });
-
         // Salary Textview
         TextView salaryTextView = findViewById(R.id.salary_text_view);
         salaryTextView.setText("1 - 9 Tr");
         salaryFragment.setSalaryTextView(salaryTextView);
         salaryFragment.setMinSalarySelected(1);
         salaryFragment.setMaxSalarySelected(9);
-
 
         // Button choose salary
         LinearLayout buttonChooseSalary = findViewById(R.id.btn_choose_salary);
@@ -205,6 +222,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(JobCriteriaActivity.this, RegisterMajorActivity.class);
                 intent.putExtra("majors", selectedJobs);
+                intent.putExtra("caller", "JobCriteriaActivity");
                 startActivityForResult(intent, REQUEST_TO_REGISTER_MAJOR_ACTIVITY_CODE);
             }
         });
@@ -216,6 +234,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(JobCriteriaActivity.this, AddressActivity.class);
                 intent.putExtra("cities", selectedCities);
+                intent.putExtra("caller", "JobCriteriaActivity");
                 startActivityForResult(intent, REQUEST_TO_ADDRESS_ACTIVITY_CODE);
             }
         });
@@ -246,6 +265,89 @@ public class JobCriteriaActivity extends AppCompatActivity {
             }
         });
 
+
+        // Get job criteria of user from api
+        UserApi userApi = ApiClient.getUserAPI();
+        Call<JobCriteriaApiResponse> jobCriteria = userApi.getJobCriteria(USER_ID);
+        jobCriteria.enqueue(new Callback<JobCriteriaApiResponse>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onResponse(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Response<JobCriteriaApiResponse> response) {
+                assert response.body() != null;
+                if (response.isSuccessful()) {
+                    // User have user
+                    if (response.body().getUserId() != 0) {
+
+                        if (response.body().getJobPosition() != null) {
+                            String strSelectedJobs = response.body().getJobPosition();
+                            String[] arrSelectedJob = strSelectedJobs.split(",");
+                            selectedJobs.clear();
+                            selectedJobs.addAll(Arrays.asList(arrSelectedJob));
+                            limitSelectJob.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_JOB - selectedJobs.size()) + " lựa chọn");
+                            majorChosenAdapter.notifyDataSetChanged();
+                        }
+
+                        if (response.body().getJobLocation() != null) {
+                            String strSelectedCity = response.body().getJobLocation();
+                            String[] arrSelectedCity = strSelectedCity.split(",");
+                            selectedCities.clear();
+                            selectedCities.addAll(Arrays.asList(arrSelectedCity));
+                            limitSelectCity.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_CITY - selectedCities.size()) + " lựa chọn");
+                            cityChosenAdpater.notifyDataSetChanged();
+                        }
+
+                        if (response.body().getJobSalary() != null) {
+                            String selectedSalary = response.body().getJobSalary();
+                            String[] arrSelectedSalary = selectedSalary.split(",");
+                            salaryTextView.setText(arrSelectedSalary[0] + " - " + arrSelectedSalary[1] + " Tr");
+                            salaryFragment.setMinSalarySelected(Integer.parseInt(arrSelectedSalary[0]));
+                            salaryFragment.setMaxSalarySelected(Integer.parseInt(arrSelectedSalary[1]));
+                        }
+
+                        if (response.body().getWorkingForm() != null) {
+                            String selectedWorkForm = response.body().getWorkingForm();
+                            String[] arrSelectedWorkForm = selectedWorkForm.split(",");
+                            workFormChosen.clear();
+                            workFormChosen.addAll(Arrays.asList(arrSelectedWorkForm));
+
+                            for (WorkForm form : workForms
+                            ) {
+                                if (workFormChosen.contains(form.getWorkFormName())) {
+                                    form.setChosen(true);
+                                }
+                            }
+
+                            workFormAdapter.notifyDataSetChanged();
+                        }
+
+                        if (response.body().getIsRemote() != 0) {
+                            checkIsRemote.setChecked(true);
+                        }
+
+                        // Close loading after fetching data
+                        loadingDialog.cancel();
+                    } else {
+                        MotionToast.Companion.createToast(JobCriteriaActivity.this, "Thất bại",
+                                "Không tìm thấy người dùng",
+                                MotionToastStyle.ERROR,
+                                MotionToast.GRAVITY_BOTTOM,
+                                MotionToast.LONG_DURATION,
+                                ResourcesCompat.getFont(JobCriteriaActivity.this, R.font.helvetica_regular));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Throwable t) {
+                Log.d("jobCriteria", t.toString());
+                MotionToast.Companion.createToast(JobCriteriaActivity.this, "Thất bại",
+                        "Đã xảy ra lỗi, vui lòng thử lại sau",
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(JobCriteriaActivity.this, R.font.helvetica_regular));
+            }
+        });
     }
 
 
@@ -301,7 +403,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -312,6 +414,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
                 if (value != null) {
                     selectedJobs.clear();
                     selectedJobs.addAll(value);
+                    limitSelectJob.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_JOB - selectedJobs.size()) + " lựa chọn");
                     majorChosenAdapter.notifyDataSetChanged();
                 }
             }
@@ -323,6 +426,7 @@ public class JobCriteriaActivity extends AppCompatActivity {
                 if (value != null) {
                     selectedCities.clear();
                     selectedCities.addAll(value);
+                    limitSelectCity.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_CITY - selectedCities.size()) + " lựa chọn");
                     cityChosenAdpater.notifyDataSetChanged();
                 }
             }
@@ -334,7 +438,6 @@ public class JobCriteriaActivity extends AppCompatActivity {
         StringBuilder jobPositions = new StringBuilder();
         StringBuilder cities = new StringBuilder();
         StringBuilder userWorkForms = new StringBuilder();
-
         String salary = salaryFragment.getMinSalarySelected() + "," + salaryFragment.getMaxSalarySelected();
 
 
@@ -353,7 +456,6 @@ public class JobCriteriaActivity extends AppCompatActivity {
                 cities.append(selectedCities.get(i)).append(",");
             }
         }
-
 
         for (int i = 0; i < workFormChosen.size(); i++) {
             if (i == workFormChosen.size() - 1) {

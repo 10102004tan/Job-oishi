@@ -25,5 +25,8 @@ public interface UserApi {
 
     @POST("{id}/job_criteria")
     Call<JobCriteriaApiResponse> updateJobCriteria(@Body JobCriteriaRequest request);
+
+    @GET("{id}/job_criteria")
+    Call<JobCriteriaApiResponse> getJobCriteria(@Path("id") int userId);
 }
 

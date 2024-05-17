@@ -73,6 +73,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/choose_limit_job"
                     style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -129,6 +130,7 @@
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/choose_limit_city"
                     style="@style/Profile_Normal_TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -211,6 +213,7 @@
                         android:id="@+id/place_working"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:clickable="true"
                         android:gravity="center"
                         android:paddingBottom="20dp"
                         tools:ignore="UselessParent">
