@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
@@ -20,10 +21,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
@@ -130,7 +131,9 @@ public class EditProfileActivity extends AppCompatActivity {
         binding = ActivityEditProfileBinding.inflate(getLayoutInflater());
 
         // Register broadcast receiver
-        registerInternetBroadcastReceiver();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerInternetBroadcastReceiver();
+        }
 
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -500,6 +503,7 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
         InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
@@ -614,17 +618,36 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    Toast.makeText(EditProfileActivity.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(EditProfileActivity.this, "Cập nhật thông tin thành công", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(EditProfileActivity.this, "Thành công",
+                            "Cập nhật thông tin thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
+
                 } else {
                     Log.d("UPDATE_USER_ERROR", "ERROR");
-                    Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(EditProfileActivity.this, "Thất bại",
+                            "Đã xảy ra lỗi trong quá trình cập nhật thông tin",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
                 Log.d("UPDATE_USER_ERROR", t.toString());
-                Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createToast(EditProfileActivity.this, "Thất bại",
+                        "Đã xảy ra lỗi trong quá trình cập nhật thông tin",
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
             }
         });
     }
@@ -683,12 +706,25 @@ public class EditProfileActivity extends AppCompatActivity {
             call.enqueue(new Callback<UserApiResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
-                    Toast.makeText(EditProfileActivity.this, "Ảnh đại diện của bạn đã được cập nhật", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(EditProfileActivity.this, "Ảnh đại diện của bạn đã được cập nhật", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(EditProfileActivity.this, "Thành công",
+                            "Cập nhật ảnh đại diện thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
-                    Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật ảnh", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật ảnh", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(EditProfileActivity.this, "Thất bại",
+                            "Đã xảy ra lỗi trong quá trình cập nhật ảnh đại diện",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(EditProfileActivity.this, R.font.helvetica_regular));
+
                 }
             });
 

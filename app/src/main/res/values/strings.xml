@@ -149,4 +149,15 @@
     <string name="default_web_client_id">128933413556-8obd637npob2ts0t9mul19ttqtf01ahl.apps.googleusercontent.com</string>
     <string name="internship">Thực tập</string>
     <string name="can_remote">Có thể làm việc từ xa</string>
+    <string name="h_s_c_nh_n">Hồ sơ cá nhân</string>
+    <string name="comple_profile">Hoàn thiện hồ sơ để tăng khả năng nhà tuyển dụng tìm thấy bạn!</string>
+    <string name="cv">CV</string>
+    <string name="job_criteria_txt">Tiêu chí công việc</string>
+    <string name="job_criteria_des_text">Tiêu chí công việc, địa điểm mong muốn khi đề xuất việc làm</string>
+    <string name="nh_ch_u">Đình Châu</string>
+    <string name="_113">113</string>
+    <string name="_1">1</string>
+    <string name="vi_c_l_u">Việc đã lưu</string>
+    <string name="_0">0</string>
+    <string name="chat_ng_tuy_n">Chat/Ứng tuyển</string>
 </resources>

@@ -1,37 +1,27 @@
 package com.example.joboishi.Activities;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.example.joboishi.Fragments.HomeFragment;
 import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.ProfileFragment;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.HomeLayoutBinding;
 import com.google.android.material.navigation.NavigationBarView;
-import com.thecode.aestheticdialogs.AestheticDialog;
-import com.thecode.aestheticdialogs.DialogStyle;
-import com.thecode.aestheticdialogs.DialogType;
-
-import www.sanju.motiontoast.MotionToast;
-import www.sanju.motiontoast.MotionToastStyle;
 
 
-public class HomeActivity extends AppCompatActivity implements HomeFragment.IHomeFragment{
+public class HomeActivity extends AppCompatActivity implements HomeFragment.IHomeFragment {
     private static final int REQ = 111111;
     private HomeLayoutBinding binding;
     private FragmentManager fragmentManager;
@@ -59,13 +49,11 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.IHom
         binding.bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId() == R.id.nav_home){
+                if (item.getItemId() == R.id.nav_home) {
                     switchFragment(homeFragment);
-                }
-                else if (item.getItemId() == R.id.nav_my_jobs){
+                } else if (item.getItemId() == R.id.nav_my_jobs) {
                     switchFragment(myJobFragment);
-                }
-                else if (item.getItemId() == R.id.nav_profile){
+                } else if (item.getItemId() == R.id.nav_profile) {
                     switchFragment(profileFragment);
                 }
                 return true;
@@ -95,7 +83,7 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.IHom
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQ && permissions.length == grantResults.length) {
-            for (int check : grantResults){
+            for (int check : grantResults) {
                 if (check != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
@@ -104,12 +92,12 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.IHom
         }
     }
 
-    private boolean checkPermission(String permission){
+    private boolean checkPermission(String permission) {
         int check = checkSelfPermission(permission);
         return (check == PackageManager.PERMISSION_GRANTED);
     }
 
-    private void doWithPermission(){
+    private void doWithPermission() {
         // Cập nhật UI của Fragment nếu cần
         if (homeFragment != null) {
             homeFragment.setNotification(true);
@@ -119,11 +107,10 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.IHom
     @Override
     protected void onStart() {
         super.onStart();
-        if (!checkPermission(Manifest.permission.POST_NOTIFICATIONS) && !hasRequestedPermission){
-            requestPermissions(new String[] {Manifest.permission.POST_NOTIFICATIONS},REQ);
+        if (!checkPermission(Manifest.permission.POST_NOTIFICATIONS) && !hasRequestedPermission) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQ);
             hasRequestedPermission = true;
-        }
-        else{
+        } else {
             doWithPermission();
         }
     }
@@ -141,7 +128,4 @@ public class HomeActivity extends AppCompatActivity implements HomeFragment.IHom
         }
         startActivity(intent);
     }
-
-
-
 }

@@ -3,18 +3,22 @@ package com.example.joboishi.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.joboishi.Activities.JobCriteriaActivity;
 import com.example.joboishi.Activities.ProfileActivity;
@@ -30,13 +34,13 @@ import www.sanju.motiontoast.MotionToastStyle;
 
 public class ProfileFragment extends Fragment {
 
+    private final int STATUS_NO_INTERNET = 0;
+    private final int STATUS_LOW_INTERNET = 1;
+    private final int STATUS_GOOD_INTERNET = 2;
     private FragmentProfileBinding binding;
     private boolean isFirst = true;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
-    private final  int STATUS_NO_INTERNET = 0;
-    private final  int STATUS_LOW_INTERNET = 1;
-    private final  int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
 
@@ -47,8 +51,9 @@ public class ProfileFragment extends Fragment {
 
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        registerInternetBroadcastReceiver();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerInternetBroadcastReceiver();
+        }
 
 
         //bắt sự kiện cho boxProfile
@@ -70,16 +75,26 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        // button go to user profile
+        binding.buttonEditUserProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
 
 
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet){
-                    registerInternetBroadcastReceiver();
+                if (statusPreInternet != statusInternet) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerInternetBroadcastReceiver();
+                    }
                     isFirst = true;
                 }
-                if (statusInternet == STATUS_NO_INTERNET){
+                if (statusInternet == STATUS_NO_INTERNET) {
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
@@ -89,6 +104,7 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
         internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
@@ -108,7 +124,6 @@ public class ProfileFragment extends Fragment {
                             .setMessage("Vui lòng kiểm tra lại kết nối mạng")
                             .setCancelable(false)
                             .setGravity(Gravity.BOTTOM).show();
-                    ;
                 }
             }
 
@@ -124,8 +139,7 @@ public class ProfileFragment extends Fragment {
                 if (isFirst) {
                     statusInternet = STATUS_GOOD_INTERNET;
                     isFirst = false;
-                }
-                else{
+                } else {
                     binding.image.setVisibility(View.GONE);
                     binding.main.setVisibility(View.VISIBLE);
                     MotionToast.Companion.createToast(getActivity(), "😍",

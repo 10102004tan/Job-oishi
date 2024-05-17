@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
@@ -80,7 +82,9 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Register receiver
-        registerInternetBroadcastReceiver();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerInternetBroadcastReceiver();
+        }
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -149,6 +153,9 @@ public class ProfileActivity extends AppCompatActivity {
             indicators.add(indicator);
         }
 
+        // Auto play slide
+        autoSlide(recyclerView);
+
         // Scroll Smooth
         SnapHelper snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
@@ -185,13 +192,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
         // Lister swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (statusPreInternet != statusInternet) {
-                    registerInternetBroadcastReceiver();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerInternetBroadcastReceiver();
+                    }
                     isFirst = true;
                 }
                 if (statusInternet == STATUS_NO_INTERNET) {
@@ -211,52 +219,57 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
+                    // Check if user exists
+                    if (response.body().getId() != 0) {
+                        userData.setId(response.body().getId());
+                        userData.setFirstName(response.body().getFirstname());
+                        userData.setLastName(response.body().getLastname());
+                        userData.setEducation(response.body().getEducation());
+                        userData.setBirth(response.body().getBirth());
+                        userData.setGender(response.body().getGender());
+                        userData.setPhotoUrl(response.body().getPhotoUrl());
+                        userData.setTimeStartingWorking(response.body().getTimeStartingWork());
+                        userData.setEmail(response.body().getEmail());
+                        userData.setCountry(response.body().getCountry());
+                        userData.setCity(response.body().getCity());
+                        userData.setProvince(response.body().getProvince());
 
-                    userData.setId(response.body().getId());
-                    userData.setFirstName(response.body().getFirstname());
-                    userData.setLastName(response.body().getLastname());
-                    userData.setEducation(response.body().getEducation());
-                    userData.setBirth(response.body().getBirth());
-                    userData.setGender(response.body().getGender());
-                    userData.setPhotoUrl(response.body().getPhotoUrl());
-                    userData.setTimeStartingWorking(response.body().getTimeStartingWork());
-                    userData.setEmail(response.body().getEmail());
-                    userData.setCountry(response.body().getCountry());
-                    userData.setCity(response.body().getCity());
-                    userData.setProvince(response.body().getProvince());
+                        Glide.with(getBaseContext())
+                                .load(userData.getPhotoUrl())
+                                .error(R.drawable.avatar_thinking_svgrepo_com)
+                                .into(userAvatar);
 
-                    Log.d("avatar", userData.getPhotoUrl());
-
-                    Glide.with(getBaseContext())
-                            .load(userData.getPhotoUrl())
-                            .error(R.drawable.avatar_thinking_svgrepo_com)
-                            .into(userAvatar);
-
-                    userName.setText(userData.getFirstName() + " " + userData.getLastName());
+                        userName.setText(userData.getFirstName() + " " + userData.getLastName());
 
 
-                    if (userData.getCity() != null) {
-                        userLocation.setText(userData.getCity());
+                        if (userData.getCity() != null) {
+                            userLocation.setText(userData.getCity());
+                        }
+
+                        if (userData.getGender() != null) {
+                            userGender.setText(userData.getGender());
+                        }
+
+                        if (userData.getEducation() != null) {
+                            userEdu.setText(userData.getEducation());
+                        }
+
+                        if (userData.getBirth() != null) {
+                            userBirth.setText(userData.getBirth());
+                        }
+
+                        if (userData.getTimeStartingWorking() != null) {
+                            userExperience.setText(userData.getTimeStartingWorking());
+                        }
+
+                        // Dismiss dialog when api call done
+                        loadingDialog.cancel();
+                    } else {
+                        // Back to login screen if not user
+                        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
-
-                    if (userData.getGender() != null) {
-                        userGender.setText(userData.getGender());
-                    }
-
-                    if (userData.getEducation() != null) {
-                        userEdu.setText(userData.getEducation());
-                    }
-
-                    if (userData.getBirth() != null) {
-                        userBirth.setText(userData.getBirth());
-                    }
-
-                    if (userData.getTimeStartingWorking() != null) {
-                        userExperience.setText(userData.getTimeStartingWorking());
-                    }
-
-                    // Dismiss dialog when api call done
-                    loadingDialog.cancel();
                 } else {
                     Log.d("User_Data_Error", "ERROR");
                 }
@@ -298,6 +311,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
         InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
