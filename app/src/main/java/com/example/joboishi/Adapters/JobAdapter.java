@@ -3,10 +3,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Models.JobBasic;
+import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.databinding.JobItemHolderBinding;
 import java.util.ArrayList;
 public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
@@ -16,8 +19,9 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     private IClickJob iClickJob;
     private boolean isBookmark = false;
     private OnLoadMoreListener onLoadMoreListener;
-    private boolean isLoadMore = false;
     private boolean isLoading = false;
+    private ArrayList<Integer> arrId;
+
 
     public void setBookmark(boolean bookmark) {
         isBookmark = bookmark;
@@ -25,6 +29,14 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     public void setiClickJob(IClickJob iClickJob) {
         this.iClickJob = iClickJob;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
+    }
+
+    public void setArrId(ArrayList<Integer> arrId) {
+        this.arrId = arrId;
     }
 
     public JobAdapter(ArrayList<JobBasic> jobs, Context context) {
@@ -42,7 +54,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         JobBasic job = jobs.get(position);
 
-        if (position == jobs.size() - 2 && !isLoading){
+
+        if (position == jobs.size() - 1 && !isLoading){
             isLoading = true;
             if (onLoadMoreListener != null){
                 onLoadMoreListener.onLoadMore();
@@ -56,6 +69,11 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
         holder.binding.bookmarkImage.setSelected(isBookmark);
         holder.binding.salaryTxt.setVisibility((job.isIs_salary_visible()) ? View.VISIBLE : View.GONE);
         Glide.with(context).load(job.getCompany_logo()).into(holder.binding.companyLogo);
+        if (arrId != null){
+            if (arrId.contains(job.getId())){
+                holder.binding.bookmarkImage.setSelected(true);
+            }
+        }
     }
 
     @Override
@@ -68,6 +86,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
         public JobViewHolder(@NonNull JobItemHolderBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
             this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -80,7 +99,12 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
                 @Override
                 public void onClick(View v) {
                     if (iClickJob != null){
-                        iClickJob.onClickBookmark(job);
+                        if (binding.bookmarkImage.isSelected()){
+                            iClickJob.onRemoveBookmark(job, binding.bookmarkImage);
+                        }
+                        else{
+                            iClickJob.onAddJobBookmark(job, binding.bookmarkImage);
+                        }
                     }
                 }
             });
@@ -95,7 +119,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     public interface IClickJob{
         void onClickJob(int id);
-        void onClickBookmark(JobBasic job);
+        void onAddJobBookmark(JobBasic job,ImageView bookmarkImage);
+        void onRemoveBookmark(JobBasic jobBasic, ImageView bookmarkImage);
     }
 
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
@@ -106,4 +131,5 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     public interface OnLoadMoreListener {
         void onLoadMore();
     }
+
 }

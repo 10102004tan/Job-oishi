@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -101,6 +102,18 @@ public class ProfileActivity extends AppCompatActivity {
         // Show loading while fetching data
         loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
+
+         // Lấy giá trị từ SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        String userEmail = sharedPref.getString("user_email", null);
+
+        if (userEmail != null) {
+            // Sử dụng userEmail
+            Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+        } else {
+            // Xử lý trường hợp không có giá trị lưu trữ
+            Log.d("UserInfo", "Không tìm thấy email người dùng");
+        }
 
         // Get view
         userAvatar = findViewById(R.id.user_avatar);
