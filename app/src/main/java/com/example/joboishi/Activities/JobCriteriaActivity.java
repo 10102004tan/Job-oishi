@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -66,9 +67,9 @@ public class JobCriteriaActivity extends AppCompatActivity {
     private final ArrayList<String> selectedCities = new ArrayList<>();
     private final ArrayList<WorkForm> workForms = new ArrayList<>();
     private final ArrayList<String> workFormChosen = new ArrayList<>();
-    private final int USER_ID = 1;
     private final int MAX_CHOOSE_JOB = 5;
     private final int MAX_CHOOSE_CITY = 3;
+    private int USER_ID = 0;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
@@ -120,6 +121,16 @@ public class JobCriteriaActivity extends AppCompatActivity {
         RecyclerView listWorkForms = findViewById(R.id.list_work_form);
         limitSelectJob = findViewById(R.id.choose_limit_job);
         limitSelectCity = findViewById(R.id.choose_limit_city);
+
+        // Lấy giá trị từ SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        USER_ID = sharedPref.getInt("user_id", 0);
+
+        if (USER_ID == 0) {
+            Intent intent = new Intent(JobCriteriaActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Default text view value
         limitSelectJob.setText("Bạn có thể chọn thêm " + (MAX_CHOOSE_JOB - selectedJobs.size()) + " lựa chọn");
