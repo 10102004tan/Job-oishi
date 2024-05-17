@@ -1,5 +1,3 @@
-
-
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
@@ -47,7 +45,6 @@ android {
         }
 
 
-
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -87,18 +84,20 @@ dependencies {
     implementation ("com.facebook.shimmer:shimmer:0.1.0@aar")
     implementation ("com.github.bumptech.glide:glide:4.16.0")
     implementation ("com.airbnb.android:lottie:3.4.0")
-    implementation ("com.github.vedraj360:DesignerToast:0.1.3")
     implementation("com.google.android.gms:play-services-auth:19.2.0")
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation ("com.github.Spikeysanju:MotionToast:1.4")
+    implementation ("com.github.angads25:toggle:1.1.0")
+    implementation ("com.github.gabriel-TheCode:AestheticDialogs:1.3.8")
     implementation ("com.facebook.android:facebook-login:latest.release")
     implementation ("com.facebook.android:facebook-android-sdk:[4,5)")
-    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-database:20.3.1")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.facebook.android:facebook-android-sdk:latest.release")
     implementation ("com.google.firebase:firebase-auth:23.0.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-
+    implementation ("com.github.vedraj360:DesignerToast:0.1.3")
+    implementation ("com.google.android.flexbox:flexbox:3.0.0")
 }

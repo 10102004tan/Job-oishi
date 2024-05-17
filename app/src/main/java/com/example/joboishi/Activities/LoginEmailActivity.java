@@ -2,6 +2,7 @@ package com.example.joboishi.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.content.Intent;
@@ -34,6 +35,15 @@ public class LoginEmailActivity extends AppCompatActivity {
         EditText passwordEditText = findViewById(R.id.password);
         TextView emailErrorTextView = findViewById(R.id.email_error);
         TextView passwordErrorTextView = findViewById(R.id.password_error);
+        TextView signupTextView = findViewById(R.id.sign_up);
+
+        // Hiển thị lỗi nếu các trường nhập liệu trống khi khởi tạo
+        if (emailEditText.getText().toString().trim().isEmpty()) {
+            emailErrorTextView.setVisibility(View.VISIBLE);
+        }
+        if (passwordEditText.getText().toString().trim().isEmpty()) {
+            passwordErrorTextView.setVisibility(View.VISIBLE);
+        }
 
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -91,10 +101,19 @@ public class LoginEmailActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 UserApiResponse userApiResponse = response.body();
                                 String userEmail = userApiResponse.getEmail();
+                                int userId = userApiResponse.getId();
+
+                                // Lưu email người dùng vào SharedPreferences
+                                SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPref.edit();
+                                editor.putString("user_email", userEmail);
+                                editor.putString("user_id", userId + "");
+                                editor.apply();
+
                                 // Log ra thông tin đã lưu
-                                Log.d("UserInfo", "User Email: " + userEmail);
+                                // Log.d("UserInfo", "Email Người Dùng: " + userEmail);
                                 // Chuyển sang màn hình RegisterMajorActivity
-                                Intent intent = new Intent(LoginEmailActivity.this, RegisterMajorActivity.class);
+                                Intent intent = new Intent(LoginEmailActivity.this, ProfileActivity.class);
                                 startActivity(intent);
                             } else {
                                 // Xử lý lỗi nếu có
@@ -114,7 +133,13 @@ public class LoginEmailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        signupTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginEmailActivity.this, RegisterUserActivity.class);
+                startActivity(intent);
+            }
+        });
     }
-
-
 }

@@ -1,34 +1,38 @@
 package com.example.joboishi.Activities;
-import static android.content.ContentValues.TAG;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.Settings;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
 
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.HomeFragment;
 import com.example.joboishi.Fragments.MyJobFragment;
 import com.example.joboishi.Fragments.ProfileFragment;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.HomeLayoutBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.firebase.messaging.FirebaseMessaging;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
-public class HomeActivity extends AppCompatActivity {
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
+
+
+public class HomeActivity extends AppCompatActivity implements HomeFragment.IHomeFragment{
+    private static final int REQ = 111111;
     private HomeLayoutBinding binding;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
@@ -36,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     private HomeFragment homeFragment;
     private ProfileFragment profileFragment;
     private MyJobFragment myJobFragment;
-    private ActivityResultLauncher<String> requestPermissionLauncher;
+    private boolean hasRequestedPermission = false;
 
 
     @Override
@@ -44,35 +48,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = HomeLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        //register permission
-        // Request permission
-        requestPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (isGranted) {
-                        // Quyền được cấp, gửi thông báo
-                    } else {
-                        // Quyền bị từ chối, xử lý tương ứng (ví dụ: thông báo cho người dùng)
-                    }
-                });
-
-        askNotificationPermission();
-
-        //register
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w(TAG, "Lấy mã thông báo FCM thất bại", task.getException());
-                            return;
-                        }
-                        String token = task.getResult();
-                        Log.d("tannguyen1", "Mã thông báo FCM: " + token);
-                        // Lưu trữ mã thông báo vào cơ sở dữ liệu hoặc chia sẻ với máy chủ của bạn
-                    }
-                });
 
         homeFragment = new HomeFragment();
         profileFragment = new ProfileFragment();
@@ -111,24 +86,62 @@ public class HomeActivity extends AppCompatActivity {
             } else {
                 transaction.add(R.id.fragmentHomeLayout, fragment);
             }
-
             transaction.commit();
             activeFragment = fragment;
         }
     }
 
-    // Declare the launcher at the top of your Activity/Fragment:
-    private void askNotificationPermission() {
-        // Chỉ cần thiết cho API level >= 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                // Quyền đã được cấp
-            } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
-                // Giải thích cho người dùng lý do cần quyền (nếu cần)
-            } else {
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQ && permissions.length == grantResults.length) {
+            for (int check : grantResults){
+                if (check != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
             }
+            doWithPermission();
         }
     }
+
+    private boolean checkPermission(String permission){
+        int check = checkSelfPermission(permission);
+        return (check == PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void doWithPermission(){
+        // Cập nhật UI của Fragment nếu cần
+        if (homeFragment != null) {
+            homeFragment.setNotification(true);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!checkPermission(Manifest.permission.POST_NOTIFICATIONS) && !hasRequestedPermission){
+            requestPermissions(new String[] {Manifest.permission.POST_NOTIFICATIONS},REQ);
+            hasRequestedPermission = true;
+        }
+        else{
+            doWithPermission();
+        }
+    }
+
+    @Override
+    public void onSwitchNotification(boolean isNotification) {
+        Intent intent = new Intent();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+        } else {
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("app_package", getPackageName());
+            intent.putExtra("app_uid", getApplicationInfo().uid);
+        }
+        startActivity(intent);
+    }
+
+
+
 }

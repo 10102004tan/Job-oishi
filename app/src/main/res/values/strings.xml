@@ -50,13 +50,13 @@
     <string name="title">Tiêu đề</string>
     <string name="todo">TODO</string>
     <string name="text_view_label_profile">Hoàn thiện hồ sơ để tăng khả năng nhà tuyền dụng tìm thấy bạn !</string>
-    <string name="t_ng_c_h_i_c_nh_tuy_n_d_ng_nh_n_th_y">Tăng cơ hội được nhà tuyển dụng nhìn thấy (0 / 3)</string>
+    <string name="t_ng_c_h_i_c_nh_tuy_n_d_ng_nh_n_th_y">Tăng cơ hội được nhà tuyển dụng nhìn thấy</string>
     <string name="c_ng_vi_c_g_n_nh_t">Công việc gân nhất ?</string>
     <string name="th_m_kinh_nghi_m_l_m_vi_c_cho_nh_tuy_n_d_ng_th_y_c_th_nh_t_u_v_tr_nh_nhi_m_m_b_n_l_m_c">Thêm kinh nghiệm làm việc cho nhà tuyển dụng thấy được thành tựu và tránh nhiệm mà bạn làm được</string>
     <string name="test">test</string>
-    <string name="b_sung_th_ng_tin_c_nh_n_v_th_m_t_nh_t_1_m_c_cho_kinh_nghi_m_l_m_vi_c_v_h_c_v_n_t_th_m_1_sao">Bổ sung thông tin cá nhân và thêm ít nhất 1 mục cho Kinh nghiệm làm việc và Học vấn để đạt thêm 1 sao</string>
-    <string name="xu_t_vi_c_l_m_ch_nh_x_c_h_n_0_1">Đề xuất việc làm chính xác hơn (0 / 1)</string>
-    <string name="h_s_n_i_b_t_h_n_0_2">Hồ sơ nổi bật hơn (0 / 2)</string>
+    <string name="b_sung_th_ng_tin_c_nh_n_v_th_m_t_nh_t_1_m_c_cho_kinh_nghi_m_l_m_vi_c_v_h_c_v_n_t_th_m_1_sao">Bổ sung thông tin cá nhân và thêm ít nhất 1 mục cho Kinh nghiệm làm việc và Học vấn</string>
+    <string name="xu_t_vi_c_l_m_ch_nh_x_c_h_n_0_1">Đề xuất việc làm chính xác hơn</string>
+    <string name="h_s_n_i_b_t_h_n_0_2">Hồ sơ nổi bật hơn</string>
     <string name="profile">Hồ sơ</string>
     <string name="nguy_n_ti_n_t">Nguyễn Tiến Đạt</string>
     <string name="th_nh_ph_h_ch_minh">Thành phố Hồ Chí Minh</string>
@@ -69,8 +69,8 @@
     <string name="experience_des">Thêm kinh nghiêm làm việc để tăng cơ hội làm việc trong mắt nhà tuyển dụng, 77% nhà tuyển dụng ưu tiên quan tâm khi xét duyệt hồ sơ</string>
     <string name="edu_text">Học vấn</string>
     <string name="edu_des">Thêm học vấn của bạn để tăng cơ hội khi ứng tuyển</string>
-    <string name="suggest_job_label">Đề xuất việc làm chính xác hơn (0 / 1)</string>
-    <string name="skill_label">Thêm ít nhất 3 kỹ năng để đạt được 1 sao</string>
+    <string name="suggest_job_label">Đề xuất việc làm chính xác hơn</string>
+    <string name="skill_label">Thêm ít nhất 3 kỹ năng</string>
     <string name="skill_text">Kỹ năng</string>
     <string name="skill_des">Tôi thiểu 3 kỹ năng</string>
     <string name="profile_label">Hồ sơ nổi bật hơn (0 / 2)</string>
@@ -86,6 +86,7 @@
     <string name="profile_toolbar_title">Hồ sơ</string>
     <string name="edit_profile_toolbar_title">Chỉnh sửa hồ sơ</string>
     <string name="job_criteria_toolbar_title">Tiêu chí công việc</string>
+    <string name="job_major_toolbar_title">Công việc mong muốn</string>
     <string name="btn_save_label">Lưu</string>
     <string name="label_input_name">Tên</string>
     <string name="your_name_label">Tên của bạn</string>
@@ -132,6 +133,7 @@
     <string name="currency_vnd">VND</string>
     <string name="_0_6_tr">0 - 6 Tr</string>
     <string name="chose_form_of_job">Chọn hinh thức làm việc</string>
+    <string name="place_working">Địa điểm làm việc</string>
     <string name="fulltime">Toàn thời gian</string>
     <string name="parttime">Bán thời gian</string>
     <string name="every_day">Mỗi ngày</string>
@@ -145,4 +147,6 @@
     <string name="waiting_get_data">Dữ liệu của bạn đang được tải lên, vui lòng chờ trong giây lát</string>
     <string name="default_notification_channel_id">11111</string>
     <string name="default_web_client_id">128933413556-8obd637npob2ts0t9mul19ttqtf01ahl.apps.googleusercontent.com</string>
+    <string name="internship">Thực tập</string>
+    <string name="can_remote">Có thể làm việc từ xa</string>
 </resources>

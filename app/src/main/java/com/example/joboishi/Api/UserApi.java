@@ -14,15 +14,19 @@ public interface UserApi {
     Call<UserApiResponse> getDetailUser(@Path("id") int userId);
 
     @POST("{id}")
-    Call<UserApiResponse> updateUserInfo(@Path("id") int userId ,@Body UserRequest userUpdateRequest);
+    Call<UserApiResponse> updateUserInfo(@Path("id") int userId, @Body UserRequest userUpdateRequest);
 
     @Multipart
     @POST("{id}")
-    Call<UserApiResponse> updateAvatar(@Path("id") int userId ,@Part MultipartBody.Part photo_url);
+    Call<UserApiResponse> updateAvatar(@Path("id") int userId, @Part MultipartBody.Part photo_url);
 
     @POST("/api/user")
     Call<UserApiResponse> registerUser(@Body UserRegisterEmailRequest request);
     @POST("/api/user/login")
     Call<UserApiResponse> loginUser(@Body UserLoginEmailRequest request);
+    Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest request);
+
+    @POST("{id}/job_criteria")
+    Call<JobCriteriaApiResponse> updateJobCriteria(@Body JobCriteriaRequest request);
 }
 

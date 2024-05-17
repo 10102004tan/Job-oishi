@@ -2,11 +2,13 @@ package com.example.joboishi.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joboishi.Api.ApiClient;
@@ -32,6 +34,15 @@ public class RegisterUserActivity extends AppCompatActivity {
         EditText passwordEditText = findViewById(R.id.password);
         EditText confirmPasswordEditText = findViewById(R.id.confirm_password);
         Button registerButton = findViewById(R.id.register_button);
+        TextView loginTextView = findViewById(R.id.login_textview);
+
+        loginTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RegisterUserActivity.this, LoginEmailActivity.class);
+                startActivity(intent);
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override

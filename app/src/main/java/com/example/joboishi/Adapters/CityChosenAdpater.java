@@ -8,39 +8,38 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.joboishi.databinding.ChosenItemBinding;
-import com.example.joboishi.Models.CityMajors;
+import com.example.joboishi.databinding.JobSelectItemLayoutBinding;
 
 import java.util.ArrayList;
 
 public class CityChosenAdpater extends RecyclerView.Adapter<CityChosenAdpater.MyViewHolder> {
 
     Activity context;
-    private ArrayList<CityMajors> citiesChosenList = new ArrayList<>();
+    private ArrayList<String> citiesChosenList = new ArrayList<>();
 
     private ItemClickListener itemClickListener;
+
+    public CityChosenAdpater(Activity context, ArrayList<String> citiesChosenList) {
+        this.context = context;
+        this.citiesChosenList = citiesChosenList;
+    }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
-    public CityChosenAdpater(Activity context, ArrayList<CityMajors> citiesChosenList) {
-        this.context = context;
-        this.citiesChosenList = citiesChosenList;
-    }
-
     @NonNull
     @Override
     public CityChosenAdpater.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ChosenItemBinding binding = ChosenItemBinding.inflate(LayoutInflater.from(context), parent, false);
+        JobSelectItemLayoutBinding binding = JobSelectItemLayoutBinding.inflate(LayoutInflater.from(context), parent, false);
         return new MyViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CityChosenAdpater.MyViewHolder holder, int position) {
-        CityMajors city = citiesChosenList.get(position);
+        String city = citiesChosenList.get(position);
 
-        holder.cityChosenItemBinding.jobChosen.setText(city.getName_city());
+        holder.cityChosenItemBinding.jobTitle.setText(city);
     }
 
     @Override
@@ -48,10 +47,17 @@ public class CityChosenAdpater extends RecyclerView.Adapter<CityChosenAdpater.My
         return citiesChosenList.size();
     }
 
+    // Dinh nghia Interface
+    public interface ItemClickListener {
+        void onItemClick(MyViewHolder holder, int position);
+
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private ChosenItemBinding cityChosenItemBinding;
-        public MyViewHolder(@NonNull ChosenItemBinding binding) {
+        private final JobSelectItemLayoutBinding cityChosenItemBinding;
+
+        public MyViewHolder(@NonNull JobSelectItemLayoutBinding binding) {
             super(binding.getRoot());
             cityChosenItemBinding = binding;
 
@@ -64,11 +70,5 @@ public class CityChosenAdpater extends RecyclerView.Adapter<CityChosenAdpater.My
                 }
             });
         }
-    }
-
-    // Dinh nghia Interface
-    public interface ItemClickListener {
-        public void onItemClick(MyViewHolder holder, int position);
-
     }
 }

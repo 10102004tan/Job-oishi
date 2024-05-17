@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joboishi.R;
@@ -39,8 +40,6 @@ import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity {
     CallbackManager callbackManager;
-    private static final int RC_SIGN_IN = 123;
-    private GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth mAuth;
     FirebaseUser user;
     FirebaseDatabase database;
@@ -50,6 +49,17 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
+        TextView loginEmail = findViewById(R.id.login_email);
+        loginEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, LoginEmailActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
@@ -104,6 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                             DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
                                     .child(currentUserUID);
                             String email = user.getEmail();
+                            Log.d("email", email);
                             String fullname = user.getDisplayName();
                             String number = user.getPhoneNumber();
                             userRef.child("fullname").setValue(fullname);
@@ -132,9 +143,6 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             });
 
-
-//                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
