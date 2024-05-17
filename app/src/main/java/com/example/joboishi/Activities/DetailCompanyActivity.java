@@ -2,6 +2,7 @@ package com.example.joboishi.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
@@ -14,8 +15,11 @@ import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.joboishi.Adapters.ImageDescCompanyAdapter;
 import com.example.joboishi.Api.CompanyByJobAPI;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.data.Address;
@@ -58,6 +62,23 @@ public class DetailCompanyActivity extends AppCompatActivity {
         binding = CompanyLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // Shimmer layout
+        binding.companyShimmer.startShimmerAnimation();
+        binding.companyShimmer.setVisibility(View.VISIBLE);
+        binding.companyLayout.setVisibility(View.INVISIBLE);
+
+        // Change toolbar title
+        TextView textTitle = findViewById(R.id.toolbar_text_title);
+        textTitle.setText("Company");
+
+        // Button back in toolbar
+        ImageButton btnBack = findViewById(R.id.btn_toolbar_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
 //        initData();
 //        JobAdapter adapter = new JobAdapter(jobs);
@@ -70,7 +91,11 @@ public class DetailCompanyActivity extends AppCompatActivity {
         getDetailCompany(company_id,  new DetailCompanyCallBack() {
             @Override
             public void onGetCompanyLoaded(Company company) {
-                Log.d("test", "This is company: " + company.getDisplay_name());
+                //Show layout
+                binding.companyShimmer.stopShimmerAnimation();
+                binding.companyShimmer.setVisibility(View.GONE);
+                binding.companyLayout.setVisibility(View.VISIBLE);
+
                 //Company name
                 binding.lblCompanyName.setText(company.getDisplay_name());
                 //Company Address
@@ -102,6 +127,21 @@ public class DetailCompanyActivity extends AppCompatActivity {
 
                 //Get website
                 binding.lblWebsite.setText(company.getWebsite());
+
+
+                //Get Galaries image
+                if(company.getImage_galleries() != null && company.getImage_galleries().size() > 0) {
+                    binding.imageGalleriesItem.setVisibility(View.VISIBLE);
+                    ImageDescCompanyAdapter adapter = new ImageDescCompanyAdapter(company.getImage_galleries(), DetailCompanyActivity.this);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(DetailCompanyActivity.this);
+                    layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+                    binding.gralariesImage.setLayoutManager(layoutManager);
+                    binding.gralariesImage.setAdapter(adapter);
+                }
+                else {
+                    binding.imageGalleriesItem.setVisibility(View.GONE);
+                }
+
 
             }
         });
