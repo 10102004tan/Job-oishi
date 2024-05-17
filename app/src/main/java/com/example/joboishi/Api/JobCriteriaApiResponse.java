@@ -25,25 +25,25 @@ public class JobCriteriaApiResponse {
     @SerializedName("job_position")
     private String jobPosition;
     @SerializedName("is_remote")
-    private String isRemote;
+    private int isRemote;
     @SerializedName("job_location")
-    private String lastname;
+    private String jobLocation;
     @SerializedName("id")
     private int id;
     @SerializedName("user_id")
-    private String firstname;
+    private int userId;
 
     public JobCriteriaApiResponse() {
     }
 
-    public JobCriteriaApiResponse(String jobSalary, String workingForm, String jobPosition, String isRemote, String lastname, int id, String firstname) {
+    public JobCriteriaApiResponse(String jobSalary, String workingForm, String jobPosition, int isRemote, String jobLocation, int id, int userId) {
         this.jobSalary = jobSalary;
         this.workingForm = workingForm;
         this.jobPosition = jobPosition;
         this.isRemote = isRemote;
-        this.lastname = lastname;
+        this.jobLocation = jobLocation;
         this.id = id;
-        this.firstname = firstname;
+        this.userId = userId;
     }
 
     public String getJobSalary() {
@@ -70,20 +70,20 @@ public class JobCriteriaApiResponse {
         this.jobPosition = jobPosition;
     }
 
-    public String getIsRemote() {
+    public int getIsRemote() {
         return isRemote;
     }
 
-    public void setIsRemote(String isRemote) {
+    public void setIsRemote(int isRemote) {
         this.isRemote = isRemote;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getJobLocation() {
+        return jobLocation;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setJobLocation(String jobLocation) {
+        this.jobLocation = jobLocation;
     }
 
     public int getId() {
@@ -94,11 +94,11 @@ public class JobCriteriaApiResponse {
         this.id = id;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

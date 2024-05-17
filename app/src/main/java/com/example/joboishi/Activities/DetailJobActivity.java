@@ -231,12 +231,13 @@ public class DetailJobActivity extends AppCompatActivity {
                 });
 
                 //Applied Job Event From Serve
-//                if (job.isIs_edit()) {
-//                    binding.btnApplied.setEnabled(true);
-//                }
-//                else {
-//                    binding.btnApplied.setEnabled(false);
-//                }
+
+                if (job.isIs_edit()) {
+                    binding.btnApplied.setEnabled(true);
+                }
+                else {
+                    binding.btnApplied.setEnabled(false);
+                }
                 binding.btnApplied.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

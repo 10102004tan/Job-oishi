@@ -7,7 +7,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.joboishi.Fragments.HomeFragment;
 import com.example.joboishi.Fragments.MyJobFragment;
+import com.example.joboishi.Fragments.ProfileFragment;
 
 public class ViewPagerHomeAdapter extends FragmentStateAdapter {
     public ViewPagerHomeAdapter(@NonNull FragmentActivity fragmentActivity) {
@@ -26,13 +28,15 @@ public class ViewPagerHomeAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0 : return new MyJobFragment();
+            case 0 : return new HomeFragment();
+            case 1 : return new MyJobFragment();
+            case 2 : return new ProfileFragment();
+            default: return null;
         }
-        return null;
     }
 
     @Override
     public int getItemCount() {
-        return 1;
+        return 3;
     }
 }
