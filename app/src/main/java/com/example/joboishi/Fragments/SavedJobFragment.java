@@ -133,7 +133,9 @@ public class SavedJobFragment extends Fragment {
     }
 
     private void getJobsSaved(){
-
+        binding.image.setVisibility(View.VISIBLE);
+        binding.image.setAnimation(R.raw.fetch_api_loading);
+        binding.image.playAnimation();
         Call<ArrayList<JobBasic>> call = iJobsService.getAllJobsBookmarkById(0);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
@@ -142,7 +144,6 @@ public class SavedJobFragment extends Fragment {
                     jobs = response.body();
                     binding.swipeRefreshLayout.setRefreshing(false);
                     if(jobs.size() == 0){
-                        binding.image.setVisibility(View.VISIBLE);
                         binding.image.setAnimation(R.raw.no_data);
                         binding.image.playAnimation();
                         binding.listJob.setVisibility(View.GONE);

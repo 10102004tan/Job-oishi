@@ -16,8 +16,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     private IClickJob iClickJob;
     private boolean isBookmark = false;
     private OnLoadMoreListener onLoadMoreListener;
-    private boolean isLoadMore = false;
     private boolean isLoading = false;
+
 
     public void setBookmark(boolean bookmark) {
         isBookmark = bookmark;
@@ -25,6 +25,10 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     public void setiClickJob(IClickJob iClickJob) {
         this.iClickJob = iClickJob;
+    }
+
+    public void setLoading(boolean loading) {
+        isLoading = loading;
     }
 
     public JobAdapter(ArrayList<JobBasic> jobs, Context context) {
@@ -41,8 +45,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     @Override
     public void onBindViewHolder(@NonNull JobViewHolder holder, int position) {
         JobBasic job = jobs.get(position);
-
-        if (position == jobs.size() - 2 && !isLoading){
+        if (position == jobs.size() - 1 && !isLoading){
             isLoading = true;
             if (onLoadMoreListener != null){
                 onLoadMoreListener.onLoadMore();

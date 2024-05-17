@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 
 import com.example.joboishi.Activities.HomeActivity;
@@ -71,7 +72,6 @@ public class HomeFragment extends Fragment {
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private ArrayList<String> filterJob;
     private boolean isNotification = false;
-    private IHomeFragment iHomeFragment;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
     private boolean isFirst = true;
@@ -81,6 +81,7 @@ public class HomeFragment extends Fragment {
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private AestheticDialog.Builder builder;
+    private static int page = 1;
 
     public boolean isNotification() {
         return isNotification;
@@ -96,6 +97,7 @@ public class HomeFragment extends Fragment {
 
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false);
+        binding.imageNoInternet.setAnimation(R.raw.fetch_api_loading);
         //register broadcast receiver
         registerInternetBroadcastReceiver();
 
@@ -103,9 +105,7 @@ public class HomeFragment extends Fragment {
         binding.switchNotification.setOnToggledListener(new OnToggledListener() {
             @Override
             public void onSwitched(ToggleableView toggleableView, boolean isOn) {
-                if (iHomeFragment != null) {
-                    iHomeFragment.onSwitchNotification(isOn);
-                }
+
             }
         });
 
@@ -214,20 +214,24 @@ public class HomeFragment extends Fragment {
         adapter.setOnLoadMoreListener(new JobAdapter.OnLoadMoreListener() {
             @Override
             public void onLoadMore() {
-                //create handler to delay 1s
-                binding.listJob.postDelayed(new Runnable() {
+               page+=1;
+                Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page);
+                call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
-                    public void run() {
-                        Log.d("testaaa", "Test");
-                        jobList.add(new JobBasic(11111, "title", "company", "address", "https://marketplace.canva.com/EAE85VgPq3E/1/0/1600w/canva-v%E1%BA%BD-tay-h%C3%ACnh-tr%C3%B2n-logo-c3Jw1yOiXJw.jpg", "logo", false,"test"));
-                        jobList.add(new JobBasic(11111, "title 1", "company", "address", "https://marketplace.canva.com/EAE85VgPq3E/1/0/1600w/canva-v%E1%BA%BD-tay-h%C3%ACnh-tr%C3%B2n-logo-c3Jw1yOiXJw.jpg", "logo", false,"test"));
-                        jobList.add(new JobBasic(11111, "title 2", "company", "address", "https://marketplace.canva.com/EAE85VgPq3E/1/0/1600w/canva-v%E1%BA%BD-tay-h%C3%ACnh-tr%C3%B2n-logo-c3Jw1yOiXJw.jpg", "logo", false,"test"));
-                        jobList.add(new JobBasic(11111, "title 3", "company", "address", "https://marketplace.canva.com/EAE85VgPq3E/1/0/1600w/canva-v%E1%BA%BD-tay-h%C3%ACnh-tr%C3%B2n-logo-c3Jw1yOiXJw.jpg", "logo", false,"test"));
-                        jobList.add(new JobBasic(11111, "title 4", "company", "address", "https://marketplace.canva.com/EAE85VgPq3E/1/0/1600w/canva-v%E1%BA%BD-tay-h%C3%ACnh-tr%C3%B2n-logo-c3Jw1yOiXJw.jpg", "logo", false,"test"));
-                        jobList.add(new JobBasic(11111, "title 5", "company", "address", "https://marketplace.canva.com/EAE85VgPq3E/1/0/1600w/canva-v%E1%BA%BD-tay-h%C3%ACnh-tr%C3%B2n-logo-c3Jw1yOiXJw.jpg", "logo", false,"test"));
-                        adapter.updateData(jobList);
+                    public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
+                        if (response.isSuccessful()) {
+                            jobList.addAll(response.body());
+                            binding.imageNoInternet.setVisibility(View.GONE);
+                            adapter.updateData(jobList);
+                        }
                     }
-                }, 1000);
+                    @Override
+                    public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
+                        binding.swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+               adapter.setLoading(false);
             }
         });
 
@@ -267,13 +271,15 @@ public class HomeFragment extends Fragment {
     }
 
     private void getJobs() {
-        Call<ArrayList<JobBasic>> call = iJobsService.getListJobs();
+        binding.imageNoInternet.setVisibility(View.VISIBLE);
+        Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 if (response.isSuccessful()) {
                     jobList = response.body();
                     binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.imageNoInternet.setVisibility(View.GONE);
                     adapter.updateData(jobList);
                 }
             }
@@ -290,16 +296,7 @@ public class HomeFragment extends Fragment {
         binding.switchNotification.setOn(isNotification);
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        iHomeFragment = (IHomeFragment) context;
-    }
 
-    //interface listener
-    public interface IHomeFragment {
-        void onSwitchNotification(boolean isNotification);
-    }
 
     private void registerInternetBroadcastReceiver() {
         internetBroadcastReceiver = new InternetBroadcastReceiver();
