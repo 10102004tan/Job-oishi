@@ -83,17 +83,10 @@ public class HomeFragment extends BaseFragment {
     private final  int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
-    private AestheticDialog.Builder builder;
     private static int page = 1;
     private ArrayList<Integer> arrId;
 
-    public boolean isNotification() {
-        return isNotification;
-    }
 
-    public void setNotification(boolean notification) {
-        isNotification = notification;
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -106,7 +99,6 @@ public class HomeFragment extends BaseFragment {
         //get All array id bookmark
         arrId = new ArrayList<>();
         getAllIdBookmark(3);
-
 
         //Start init
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
@@ -152,11 +144,15 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
+
+
+
         //refresh
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getJobs();
+                getAllIdBookmark(3);
             }
         });
 
@@ -223,6 +219,7 @@ public class HomeFragment extends BaseFragment {
                 }
                 else{
                     getJobs();
+                    getAllIdBookmark(3);
                     binding.listJob.setVisibility(View.VISIBLE);
                 }
             }
@@ -251,11 +248,13 @@ public class HomeFragment extends BaseFragment {
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.imageNoInternet.setVisibility(View.GONE);
                     adapter.updateData(jobList);
+                    Log.d("testss",jobList.size()+"");
                 }
             }
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                 binding.swipeRefreshLayout.setRefreshing(false);
+                Log.d("testss",t.getMessage());
             }
         });
     }
@@ -273,19 +272,16 @@ public class HomeFragment extends BaseFragment {
             isFirst = false;
         }
 
-        builder = new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
-                .setTitle("Không có kết nối mạng")
-                .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                .setCancelable(false)
-                .setGravity(Gravity.BOTTOM);
-        builder.show();
+        MotionToast.Companion.createToast(getActivity(), "😍",
+                "Không có kết nối mạng",
+                MotionToastStyle.ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
     }
 
     @Override
     protected void handleLowInternet() {
-        if (builder != null){
-            builder.dismiss();
-        }
         MotionToast.Companion.createToast(getActivity(), "😍",
                 "Đang kết nối ...",
                 MotionToastStyle.WARNING,
@@ -298,20 +294,11 @@ public class HomeFragment extends BaseFragment {
     protected void handleGoodInternet() {
         statusPreInternet = STATUS_GOOD_INTERNET;
         binding.listJob.setVisibility(View.VISIBLE);
-        if (builder != null){
-            builder.dismiss();
-        }
         if (isFirst) {
             isFirst = false;
         }else{
             getJobs();
             binding.imageNoInternet.setVisibility(View.GONE);
-            MotionToast.Companion.createToast(getActivity(), "😍",
-                    "Kết nối mạng đã được khôi phục",
-                    MotionToastStyle.SUCCESS,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
         }
     }
 
@@ -351,9 +338,8 @@ public class HomeFragment extends BaseFragment {
                     Toast.makeText(getContext(), "Lỗi khi xóa khỏi bookmark "+ e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
-
     private void getAllIdBookmark(int userId){
+        arrId.clear();
         DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
         bookmarksRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override

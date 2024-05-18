@@ -39,12 +39,12 @@
             android:exported="false" />
         <activity
             android:name=".Activities.SearchActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
 
 
         <activity
             android:name=".Activities.RegisterUserActivity"
-            android:exported="true"></activity>
+            android:exported="true"/>
         <activity
             android:name=".Activities.LoginEmailActivity"
             android:exported="true" />
@@ -108,6 +108,9 @@
             android:permission="TODO"
             tools:ignore="ExportedReceiver" />
 
+
+
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -152,6 +155,8 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+
     </application>
 
 </manifest>

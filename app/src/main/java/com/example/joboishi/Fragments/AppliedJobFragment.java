@@ -23,6 +23,7 @@ import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Fragments.BottomSheetDialog.FilterJobFragment;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
+import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentAppliedJobBinding;
 import com.example.joboishi.databinding.FragmentMyJobBinding;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
@@ -40,12 +41,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
-public class AppliedJobFragment extends Fragment {
+public class AppliedJobFragment extends BaseFragment {
 
     private FragmentAppliedJobBinding binding;
     private ArrayList<JobBasic> jobs;
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
     FilterJobBSDFragment filterJobBottomSheet;
     private IJobsService iJobsService;
     private  JobAdapter adapter;
@@ -59,7 +58,6 @@ public class AppliedJobFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAppliedJobBinding.inflate(inflater, container, false);
-        registerInternetBroadcastReceiver();
         jobs = new ArrayList<>();
         filterJobBottomSheet = FilterJobBSDFragment.newInstance();
 
@@ -97,67 +95,6 @@ public class AppliedJobFragment extends Fragment {
     /*
     CREATE METHODS FOR INTERNET BROADCAST RECEIVER
     */
-
-    private void registerInternetBroadcastReceiver() {
-        internetBroadcastReceiver = new InternetBroadcastReceiver();
-        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
-            @Override
-            public void noInternet() {
-                statusPreInternet = STATUS_NO_INTERNET;
-                if (isFirst) {
-                    binding.image.setVisibility(View.VISIBLE);
-                    binding.image.setAnimation(R.raw.a404);
-                    binding.image.playAnimation();
-                    statusInternet = STATUS_NO_INTERNET;
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    isFirst = false;
-                    new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
-                            .setTitle("Không có kết nối mạng")
-                            .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                            .setCancelable(false)
-                            .setGravity(Gravity.BOTTOM).show();
-                    ;
-                }
-            }
-
-            @Override
-            public void lowInternet() {
-                binding.image.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void goodInternet() {
-                statusPreInternet = STATUS_GOOD_INTERNET;
-                if (isFirst) {
-                    statusInternet = STATUS_GOOD_INTERNET;
-                    isFirst = false;
-                }
-                else{
-                    binding.image.setVisibility(View.GONE);
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Kết nối mạng đã được khôi phục",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                }
-                getJobsSaved();
-            }
-        };
-
-        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (internetBroadcastReceiver != null) {
-            getActivity().unregisterReceiver(internetBroadcastReceiver);
-        }
-    }
-
-
-
     private void getJobsSaved(){
         binding.image.setVisibility(View.VISIBLE);
         binding.image.setAnimation(R.raw.fetch_api_loading);
@@ -189,4 +126,52 @@ public class AppliedJobFragment extends Fragment {
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
         });
-    }}
+    }
+
+    @Override
+    protected void handleNoInternet() {
+        statusPreInternet = STATUS_NO_INTERNET;
+        if (isFirst) {
+            binding.image.setVisibility(View.VISIBLE);
+            binding.image.setAnimation(R.raw.a404);
+            binding.image.playAnimation();
+            statusInternet = STATUS_NO_INTERNET;
+            binding.swipeRefreshLayout.setRefreshing(false);
+            isFirst = false;
+            ;
+        }
+
+        MotionToast.Companion.createToast(getActivity(), "😍",
+                "Không có kết nối mạng",
+                MotionToastStyle.ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+    }
+
+    @Override
+    protected void handleLowInternet() {
+        MotionToast.Companion.createToast(getActivity(), "😍",
+                "Đang kết nối ...",
+                MotionToastStyle.WARNING,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.SHORT_DURATION,
+                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+    }
+
+    @Override
+    protected void handleGoodInternet() {
+        statusPreInternet = STATUS_GOOD_INTERNET;
+        if (isFirst) {
+            statusInternet = STATUS_GOOD_INTERNET;
+            isFirst = false;
+        }
+        else{
+            if (statusInternet == STATUS_NO_INTERNET){
+                binding.image.setVisibility(View.GONE);
+                binding.listJob.setVisibility(View.VISIBLE);
+            }
+
+        }
+    }
+}
