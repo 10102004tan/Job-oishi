@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface JobSearchAPI {
-    String BASE_URL = "http://ip172-18-0-43-cp43q3iim2rg00aoeki0-3001.direct.labs.play-with-docker.com/";
+    public static String BASE_URL = APIURL.BASE_URL;
 
     @GET("api/jobs/search")
     Call<ArrayList<JobSearch>> getListSearchJob(

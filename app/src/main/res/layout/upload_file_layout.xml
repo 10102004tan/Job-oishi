@@ -1,94 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="10dp"
+    android:orientation="vertical">
 
     <TextView
-        style="@style/Profile_Title_TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="18dp"
+        android:textStyle="bold"
         android:layout_marginBottom="20dp"
-        android:text="@string/h_s_ng_tuy_n_cv"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:text="Hồ sơ ứng tuyển (CV)"
+        />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_upload"
-        style="@style/Profile_Normal_TextView"
         android:layout_width="match_parent"
         android:layout_height="154dp"
         android:background="@drawable/btn_upload"
-        android:text="@string/ch_n_file"
-        android:textColor="@color/blue" />
+        android:textColor="@color/blue"
+        android:text="Chọn File" />
 
     <androidx.cardview.widget.CardView
-        style="@style/CardStyle"
-        android:layout_marginTop="30dp">
+        android:layout_marginTop="30dp"
+        style="@style/CardStyle">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
             <TextView
-                style="@style/Profile_Normal_TextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="@string/your_cv"
+                android:text="Your CV: "
                 android:textSize="15sp"
-                android:textStyle="bold" />
-
+                android:textStyle="bold"/>
             <TextView
                 android:id="@+id/lbl_file_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
                 android:layout_weight="9"
+                android:layout_marginLeft="10dp"
+                android:textStyle="bold"
                 android:textColor="@color/blue"
-                android:textSize="17sp"
-                android:textStyle="bold" />
+                android:textSize="17sp"/>
         </LinearLayout>
 
 
     </androidx.cardview.widget.CardView>
 
 
-    <TextView
-        android:id="@+id/lbl_description"
-        style="@style/Profile_Normal_TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:padding="10dp"
-        android:text="@string/cv_s_c_t_ng_g_i_cho_nh_tuy_d_ng_khi_b_n_ng_tuy_n_l_n_ti_p_theo_thay_i_h_y_upload_cv_m_i_trong_m_c_profile_nh"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/lbl_description"
+            android:layout_marginTop="25dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            android:text="CV sẽ được tự động gửi cho nhà tuyể dụng khi bạn ứng tuyển lần tiếp theo. Để thay đổi, hãy upload CV mới trong mục Profile nhé."/>
 
-    <TextView
-        android:id="@+id/lbl_require"
-        style="@style/Profile_Normal_TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="@string/nh_d_ng_pdf_dung_l_ng_t_i_a_5mb"
-        android:textSize="14sp" />
+        <TextView
+            android:id="@+id/lbl_require"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="14dp"
+            android:text="(Định dạng PDF, dung lượng tối đa 5MB"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="30dp"
+        android:orientation="horizontal"
         android:gravity="bottom"
-        android:orientation="vertical">
-
+        android:layout_marginBottom="30dp">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_push"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_outline"
-            android:text="@string/btn_save_label"
-            android:textColor="@color/blue" />
+            android:background="@drawable/button_selector"
+            android:enabled="false"
+            android:text="Lưu" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_update_cv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/btn_update_cv"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:text="Cập Nhật CV"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_delete_cv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_delete_cv"
+            android:layout_weight="5"
+            android:visibility="gone"
+            android:text="Xóa CV"/>
     </LinearLayout>
 
 </LinearLayout>
