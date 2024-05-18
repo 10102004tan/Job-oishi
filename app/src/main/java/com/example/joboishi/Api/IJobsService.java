@@ -1,7 +1,6 @@
 package com.example.joboishi.Api;
 
 import com.example.joboishi.Models.JobBasic;
-import com.example.joboishi.Models.JobSearch;
 
 import java.util.ArrayList;
 
@@ -9,7 +8,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
