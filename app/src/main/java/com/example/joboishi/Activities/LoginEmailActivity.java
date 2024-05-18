@@ -1,18 +1,19 @@
 package com.example.joboishi.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
@@ -23,6 +24,8 @@ import com.example.joboishi.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class LoginEmailActivity extends AppCompatActivity {
 
@@ -47,10 +50,12 @@ public class LoginEmailActivity extends AppCompatActivity {
 
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -64,10 +69,12 @@ public class LoginEmailActivity extends AppCompatActivity {
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -89,7 +96,14 @@ public class LoginEmailActivity extends AppCompatActivity {
                 // Kiểm tra nếu email hoặc mật khẩu trống
                 if (email.isEmpty() || password.isEmpty()) {
                     // Hiển thị thông báo lỗi nếu có ô nhập liệu rỗng
-                    Toast.makeText(LoginEmailActivity.this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(LoginEmailActivity.this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(LoginEmailActivity.this, "Lỗi",
+                            "Vui lòng nhập email và mật khẩu",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
+
                 } else {
                     // Xử lý logic đăng nhập nếu không có lỗi
                     UserLoginEmailRequest request = new UserLoginEmailRequest(email, password);
@@ -97,9 +111,10 @@ public class LoginEmailActivity extends AppCompatActivity {
                     Call<UserApiResponse> callUser = userApi.loginUser(request);
                     callUser.enqueue(new Callback<UserApiResponse>() {
                         @Override
-                        public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
+                        public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                             if (response.isSuccessful()) {
                                 UserApiResponse userApiResponse = response.body();
+                                assert userApiResponse != null;
                                 String userEmail = userApiResponse.getEmail();
                                 int userId = userApiResponse.getId();
 
@@ -107,27 +122,40 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString("user_email", userEmail);
-                                editor.putString("user_id", userId + "");
+                                editor.putInt("user_id", userId);
                                 editor.apply();
 
                                 // Log ra thông tin đã lưu
-                                // Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+                                 //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+
                                 // Chuyển sang màn hình RegisterMajorActivity
-                                Intent intent = new Intent(LoginEmailActivity.this, ProfileActivity.class);
+                                Intent intent = new Intent(LoginEmailActivity.this, RegisterMajorActivity.class);
+                                intent.putExtra("caller", "LoginEmailActivity");
                                 startActivity(intent);
                             } else {
                                 // Xử lý lỗi nếu có
                                 Log.e("LoginError", "Đăng nhập không thành công");
-                                Toast.makeText(LoginEmailActivity.this, "Đăng nhập không thành công. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
+                                // Toast.makeText(LoginEmailActivity.this, "Đăng nhập không thành công. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
+                                MotionToast.Companion.createToast(LoginEmailActivity.this, "Lỗi",
+                                        "Đăng nhập không thành công. Vui lòng thử lại sau",
+                                        MotionToastStyle.ERROR,
+                                        MotionToast.GRAVITY_BOTTOM,
+                                        MotionToast.LONG_DURATION,
+                                        ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
                             }
                         }
-
                         @Override
-                        public void onFailure(Call<UserApiResponse> call, Throwable t) {
+                        public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
                             // Ghi nhật ký lỗi
                             Log.e("LoginError", "Đăng nhập không thành công: " + t.getMessage());
                             // Thông báo cho người dùng
-                            Toast.makeText(LoginEmailActivity.this, "Đăng nhập không thành công. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(LoginEmailActivity.this, "Đăng nhập không thành công. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
+                            MotionToast.Companion.createToast(LoginEmailActivity.this, "Lỗi",
+                                    "Đăng nhập không thành công. Vui lòng thử lại sau",
+                                    MotionToastStyle.ERROR,
+                                    MotionToast.GRAVITY_BOTTOM,
+                                    MotionToast.LONG_DURATION,
+                                    ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
                         }
                     });
                 }

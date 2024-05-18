@@ -24,13 +24,14 @@ public interface UserApi {
 
     @POST("/api/user")
     Call<UserApiResponse> registerUser(@Body UserRegisterEmailRequest request);
+  
     @POST("/api/user/login")
     Call<UserApiResponse> loginUser(@Body UserLoginEmailRequest request);
-    Call<UserApiResponse> registerUser(@Body UserLoginEmailRequest request);
 
     @POST("{id}/job_criteria")
     Call<JobCriteriaApiResponse> updateJobCriteria(@Body JobCriteriaRequest request);
 
-
+    @GET("{id}/job_criteria")
+    Call<JobCriteriaApiResponse> getJobCriteria(@Path("id") int userId);
 }
 
