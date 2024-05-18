@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
@@ -59,9 +62,9 @@ public class ProfileActivity extends AppCompatActivity {
     private final int STATUS_LOW_INTERNET = 1;
     private final int STATUS_GOOD_INTERNET = 2;
     private final UserResponse userData = new UserResponse();
-    private final int USER_ID = 1;
     private final int REQUEST_CODE_TO_EDIT_PROFILE_ACTIVITY = 9191;
     LinearLayout indicatorLayout;
+    private int USER_ID = 0;
     private int currentPosition = 0;
     private Intent profileIntent;
     private int statusInternet = -1;
@@ -70,6 +73,12 @@ public class ProfileActivity extends AppCompatActivity {
     private ActivityProfileBinding binding;
     private RoundedImageView userAvatar;
     private LoadingDialog loadingDialog;
+    private TextView userName;
+    private TextView userLocation;
+    private TextView userBirth;
+    private TextView userGender;
+    private TextView userEdu;
+    private TextView userExperience;
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
@@ -79,7 +88,9 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Register receiver
-        registerInternetBroadcastReceiver();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerInternetBroadcastReceiver();
+        }
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -92,14 +103,24 @@ public class ProfileActivity extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
 
+        // Lấy giá trị từ SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        USER_ID = sharedPref.getInt("user_id", 0);
+
+        if (USER_ID == 0) {
+            Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         // Get view
         userAvatar = findViewById(R.id.user_avatar);
-        TextView userName = findViewById(R.id.username_textview);
-        TextView userLocation = findViewById(R.id.user_location_textview);
-        TextView userBirth = findViewById(R.id.user_birth_textview);
-        TextView userGender = findViewById(R.id.user_gender_textview);
-        TextView userEdu = findViewById(R.id.user_edu_textview);
-        TextView userExperience = findViewById(R.id.user_experience_textview);
+        userName = findViewById(R.id.username_textview);
+        userLocation = findViewById(R.id.user_location_textview);
+        userBirth = findViewById(R.id.user_birth_textview);
+        userGender = findViewById(R.id.user_gender_textview);
+        userEdu = findViewById(R.id.user_edu_textview);
+        userExperience = findViewById(R.id.user_experience_textview);
 
         // Init data
         profileRecyclerViewData.add(new InforProfileAdd("Công việc gần nhất", "Thêm kinh nghiệm làm việc để nhà tuyển dụng thấy thành tựu và trách nhiệm mà bạn đạt được", "Thêm kinh nghiệm làm việc", ProfileRecyclerViewAdapter.BUILDING_ICON));
@@ -135,6 +156,9 @@ public class ProfileActivity extends AppCompatActivity {
             indicatorLayout.addView(indicator);
             indicators.add(indicator);
         }
+
+        // Auto play slide
+        autoSlide(recyclerView);
 
         // Scroll Smooth
         SnapHelper snapHelper = new LinearSnapHelper();
@@ -172,13 +196,14 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-
         // Lister swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (statusPreInternet != statusInternet) {
-                    registerInternetBroadcastReceiver();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerInternetBroadcastReceiver();
+                    }
                     isFirst = true;
                 }
                 if (statusInternet == STATUS_NO_INTERNET) {
@@ -198,52 +223,57 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
+                    // Check if user exists
+                    if (response.body().getId() != 0) {
+                        userData.setId(response.body().getId());
+                        userData.setFirstName(response.body().getFirstname());
+                        userData.setLastName(response.body().getLastname());
+                        userData.setEducation(response.body().getEducation());
+                        userData.setBirth(response.body().getBirth());
+                        userData.setGender(response.body().getGender());
+                        userData.setPhotoUrl(response.body().getPhotoUrl());
+                        userData.setTimeStartingWorking(response.body().getTimeStartingWork());
+                        userData.setEmail(response.body().getEmail());
+                        userData.setCountry(response.body().getCountry());
+                        userData.setCity(response.body().getCity());
+                        userData.setProvince(response.body().getProvince());
 
-                    userData.setId(response.body().getId());
-                    userData.setFirstName(response.body().getFirstname());
-                    userData.setLastName(response.body().getLastname());
-                    userData.setEducation(response.body().getEducation());
-                    userData.setBirth(response.body().getBirth());
-                    userData.setGender(response.body().getGender());
-                    userData.setPhotoUrl(response.body().getPhotoUrl());
-                    userData.setTimeStartingWorking(response.body().getTimeStartingWork());
-                    userData.setEmail(response.body().getEmail());
-                    userData.setCountry(response.body().getCountry());
-                    userData.setCity(response.body().getCity());
-                    userData.setProvince(response.body().getProvince());
+                        Glide.with(getBaseContext())
+                                .load(userData.getPhotoUrl())
+                                .error(R.drawable.avatar_thinking_svgrepo_com)
+                                .into(userAvatar);
 
-                    Log.d("avatar", userData.getPhotoUrl());
-
-                    Glide.with(getBaseContext())
-                            .load(userData.getPhotoUrl())
-                            .error(R.drawable.avatar_thinking_svgrepo_com)
-                            .into(userAvatar);
-
-                    userName.setText(userData.getFirstName() + " " + userData.getLastName());
+                        userName.setText(userData.getFirstName() + " " + userData.getLastName());
 
 
-                    if (userData.getCity() != null) {
-                        userLocation.setText(userData.getCity());
+                        if (userData.getCity() != null) {
+                            userLocation.setText(userData.getCity());
+                        }
+
+                        if (userData.getGender() != null) {
+                            userGender.setText(userData.getGender());
+                        }
+
+                        if (userData.getEducation() != null) {
+                            userEdu.setText(userData.getEducation());
+                        }
+
+                        if (userData.getBirth() != null) {
+                            userBirth.setText(userData.getBirth());
+                        }
+
+                        if (userData.getTimeStartingWorking() != null) {
+                            userExperience.setText(userData.getTimeStartingWorking());
+                        }
+
+                        // Dismiss dialog when api call done
+                        loadingDialog.cancel();
+                    } else {
+                        // Back to login screen if not user
+                        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
-
-                    if (userData.getGender() != null) {
-                        userGender.setText(userData.getGender());
-                    }
-
-                    if (userData.getEducation() != null) {
-                        userEdu.setText(userData.getEducation());
-                    }
-
-                    if (userData.getBirth() != null) {
-                        userBirth.setText(userData.getBirth());
-                    }
-
-                    if (userData.getTimeStartingWorking() != null) {
-                        userExperience.setText(userData.getTimeStartingWorking());
-                    }
-
-                    // Dismiss dialog when api call done
-                    loadingDialog.cancel();
                 } else {
                     Log.d("User_Data_Error", "ERROR");
                 }
@@ -285,6 +315,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
         InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
@@ -334,5 +365,89 @@ public class ProfileActivity extends AppCompatActivity {
         };
         IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_TO_EDIT_PROFILE_ACTIVITY && resultCode == RESULT_OK) {
+            if (data != null) {
+                boolean isDataChange = data.getBooleanExtra("data_user_updated", false);
+                if (isDataChange) {
+                    // Get user info throw api by user id
+                    // Get user data from api
+                    UserApi userApi = ApiClient.getUserAPI();
+                    Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
+                    callUser.enqueue(new Callback<UserApiResponse>() {
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                            if (response.isSuccessful()) {
+                                assert response.body() != null;
+                                // Check if user exists
+                                if (response.body().getId() != 0) {
+                                    userData.setId(response.body().getId());
+                                    userData.setFirstName(response.body().getFirstname());
+                                    userData.setLastName(response.body().getLastname());
+                                    userData.setEducation(response.body().getEducation());
+                                    userData.setBirth(response.body().getBirth());
+                                    userData.setGender(response.body().getGender());
+                                    userData.setPhotoUrl(response.body().getPhotoUrl());
+                                    userData.setTimeStartingWorking(response.body().getTimeStartingWork());
+                                    userData.setEmail(response.body().getEmail());
+                                    userData.setCountry(response.body().getCountry());
+                                    userData.setCity(response.body().getCity());
+                                    userData.setProvince(response.body().getProvince());
+
+                                    Glide.with(getBaseContext())
+                                            .load(userData.getPhotoUrl())
+                                            .error(R.drawable.avatar_thinking_svgrepo_com)
+                                            .into(userAvatar);
+
+                                    userName.setText(userData.getFirstName() + " " + userData.getLastName());
+
+
+                                    if (userData.getCity() != null) {
+                                        userLocation.setText(userData.getCity());
+                                    }
+
+                                    if (userData.getGender() != null) {
+                                        userGender.setText(userData.getGender());
+                                    }
+
+                                    if (userData.getEducation() != null) {
+                                        userEdu.setText(userData.getEducation());
+                                    }
+
+                                    if (userData.getBirth() != null) {
+                                        userBirth.setText(userData.getBirth());
+                                    }
+
+                                    if (userData.getTimeStartingWorking() != null) {
+                                        userExperience.setText(userData.getTimeStartingWorking());
+                                    }
+
+                                    // Dismiss dialog when api call done
+                                    loadingDialog.cancel();
+                                } else {
+                                    // Back to login screen if not user
+                                    Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            } else {
+                                Log.d("User_Data_Error", "ERROR");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                            Log.d("User_Data_Error", t.toString());
+                        }
+                    });
+                }
+            }
+        }
     }
 }

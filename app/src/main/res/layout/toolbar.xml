@@ -10,7 +10,7 @@
     app:contentInsetEnd="0dp"
     app:contentInsetLeft="0dp"
     app:contentInsetRight="0dp"
-    app:contentInsetStart="0dp"
+    app:contentInsetStart="16dp"
     app:titleTextColor="@android:color/white">
 
     <RelativeLayout

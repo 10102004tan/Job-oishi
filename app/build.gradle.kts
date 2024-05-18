@@ -96,6 +96,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.facebook.android:facebook-android-sdk:latest.release")
     implementation ("com.google.firebase:firebase-auth:23.0.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.github.vedraj360:DesignerToast:0.1.3")
     implementation ("com.google.android.flexbox:flexbox:3.0.0")
 }

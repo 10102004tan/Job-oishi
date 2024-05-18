@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -37,17 +39,15 @@
             android:exported="false" />
         <activity
             android:name=".Activities.SearchActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true"></activity>
 
 
-       <activity
+        <activity
             android:name=".Activities.RegisterUserActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".Activities.LoginEmailActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="true">
@@ -60,7 +60,7 @@
 
         <activity
             android:name=".Activities.MyPersonalPageActivity"
-            android:exported="true" ></activity>
+            android:exported="true" />
         <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="true" />
@@ -82,8 +82,8 @@
             android:exported="false" />
         <activity
             android:name=".Activities.RegisterMajorActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.HomeActivity"
             android:exported="true" />
@@ -99,8 +99,8 @@
         </activity>
         <activity
             android:name=".Activities.AddressActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:exported="true" />
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.SettingActivity"
             android:exported="true" />
@@ -121,15 +121,16 @@
 
         <activity
             android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation" />
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
