@@ -8,7 +8,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Path;
 
 public interface DetailJobAPI {
-    public static String BASE_URL = "http://ip172-18-0-43-cp43q3iim2rg00aoeki0-3001.direct.labs.play-with-docker.com/";
+    public static String BASE_URL = "http://ip172-18-0-7-cp48j2ol2o9000avmmug-3001.direct.labs.play-with-docker.com/";
 
     @GET("api/job/id={id}")
     Call<Job> getJobDetail(@Path("id") String jobId);

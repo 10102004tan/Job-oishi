@@ -2,6 +2,7 @@ package com.example.joboishi.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -61,6 +62,7 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             jobViewHolder.binding.jobTitleTxt.setText(job.getTitle());
             jobViewHolder.binding.sortAddressesTxt.setText(job.getSort_addresses());
             jobViewHolder.binding.published.setText(job.getPublished());
+            jobViewHolder.binding.bookmarkImage.setVisibility(View.GONE);
             Glide.with(context).load(job.getCompany_logo()).into(jobViewHolder.binding.companyLogo);
         } else if (holder instanceof LoadingViewHolder) {
 

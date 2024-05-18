@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.splash_layout);
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
 
-        userEmail = sharedPref.getString("user_email", null);
+        userEmail = sharedPref.getString("user_email", "chien@gmail.com");
         // boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", true); // Mặc định là false
 
         FirebaseMessaging.getInstance().getToken()
@@ -78,6 +78,8 @@ public class SplashActivity extends AppCompatActivity {
 
                 } else {
                     // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
+                    startActivity(new Intent(SplashActivity.this, SearchActivity.class));
+
                     Log.e("testsss", "Send FCM token failed with code: " + response.code());
                 }
             }

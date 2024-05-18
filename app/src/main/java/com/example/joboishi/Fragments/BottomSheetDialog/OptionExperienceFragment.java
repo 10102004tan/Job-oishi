@@ -105,6 +105,9 @@ public class OptionExperienceFragment extends Fragment {
 
         btnReset.setOnClickListener(v -> {
             selectedOption = "";
+            if (listener != null) {
+                listener.onOptionSelected(selectedOption, POS);
+            }
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.remove("selectedJobType");
             editor.apply();

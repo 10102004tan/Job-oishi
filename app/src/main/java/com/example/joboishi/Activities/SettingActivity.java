@@ -2,29 +2,28 @@ package com.example.joboishi.Activities;
 
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.example.joboishi.Fragments.BottomSheetDialog.BtsLogoutFragment;
-import com.example.joboishi.Fragments.BottomSheetDialog.ChooseLanguageDisplayFragment;
-import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
-import com.example.joboishi.R;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.joboishi.Fragments.BottomSheetDialog.BtsLogoutFragment;
+import com.example.joboishi.Fragments.BottomSheetDialog.ChooseLanguageDisplayFragment;
+import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
+import com.example.joboishi.R;
 import com.example.joboishi.databinding.SettingLayoutBinding;
 
 public class SettingActivity extends AppCompatActivity {
     private SettingLayoutBinding binding;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,7 +74,7 @@ public class SettingActivity extends AppCompatActivity {
                 Toast.makeText(SettingActivity.this, "click", Toast.LENGTH_SHORT).show();
             }
         });
-        
+
         btnHoTro.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

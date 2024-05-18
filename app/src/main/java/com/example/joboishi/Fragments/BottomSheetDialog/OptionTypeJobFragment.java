@@ -1,6 +1,7 @@
 package com.example.joboishi.Fragments.BottomSheetDialog;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class OptionTypeJobFragment extends Fragment {
     private OnOptionSelectedListener listener;
     private String selectedOption;
 
+    private SharedPreferences sharedPreferences;
     private final int POS = 0;
     public interface OnOptionSelectedListener {
         void onOptionSelected(String selectedOption, int pos);
@@ -50,6 +52,8 @@ public class OptionTypeJobFragment extends Fragment {
         } else {
             throw new RuntimeException(context.toString() + " must implement OnOptionSelectedListener");
         }
+        sharedPreferences = context.getSharedPreferences("JobOptions", Context.MODE_PRIVATE);
+
     }
 
     @Override
@@ -60,7 +64,7 @@ public class OptionTypeJobFragment extends Fragment {
         recyclerView = view.findViewById(R.id.list_option_type_job);
         btnClose = view.findViewById(R.id.btn_close_dialog);
         btnDone = view.findViewById(R.id.btn_done);
-
+        btnReset = view.findViewById(R.id.btn_reset);
         btnClose.setOnClickListener(v -> {
             MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
             if (bottomSheetFragment != null) {
@@ -96,6 +100,17 @@ public class OptionTypeJobFragment extends Fragment {
             }
         });
 
+        btnReset.setOnClickListener(v -> {
+            selectedOption = "";
+            if (listener != null) {
+                listener.onOptionSelected(selectedOption, POS);
+            }
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("selectedJobType");
+            editor.apply();
+            adapter.clearSavedSelectedPosition(getContext());
+            DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);
+        });
         return view;
     }
 }
