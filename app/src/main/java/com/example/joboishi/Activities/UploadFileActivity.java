@@ -21,9 +21,11 @@ import android.os.Bundle;
 import android.provider.OpenableColumns;
 import android.text.Html;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.joboishi.Api.UploadAPI;
@@ -31,6 +33,7 @@ import com.example.joboishi.Models.RealPathUtil;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.UploadFileLayoutBinding;
 
+import org.checkerframework.checker.units.qual.A;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -39,6 +42,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -52,11 +56,13 @@ import retrofit2.Retrofit;
 public class UploadFileActivity extends AppCompatActivity {
 
     private UploadFileLayoutBinding binding;
-    private final int REQ =  999;
+    private final int REQ = 999;
     private Uri mUri;
     private ProgressDialog mProgressDialog;
 
     private ActivityResultLauncher<Intent> launcher;
+    private FileContent file = new FileContent();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +79,7 @@ public class UploadFileActivity extends AppCompatActivity {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        if(result.getResultCode() == Activity.RESULT_OK){
+                        if (result.getResultCode() == Activity.RESULT_OK) {
                             Intent data = result.getData();
                             if (data == null) {
                                 return;
@@ -83,8 +89,17 @@ public class UploadFileActivity extends AppCompatActivity {
                             mUri = uri;
 
                             // Get the file name from the URI
-                            String fileName = getFileNameFromUri(uri);
-                            binding.lblFileName.setText(fileName);
+                            file = getFileContentFromUri(uri);
+                            binding.lblFileName.setText(file.fileName);
+
+                            if (!file.typeFile.equalsIgnoreCase("pdf")) {
+                                showDialog("File được chọn không đúng định dạng!", false);
+                                binding.btnPush.setEnabled(false);
+                                Log.d("test", file.typeFile);
+                            } else {
+                                binding.btnPush.setEnabled(true);
+                            }
+
                         }
                     }
                 }
@@ -94,6 +109,7 @@ public class UploadFileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 onClickRequirementPermission();
+//                Log.d("test", file.toString());
             }
         });
 
@@ -102,20 +118,20 @@ public class UploadFileActivity extends AppCompatActivity {
             public void onClick(View view) {
                 callAPIUploadFile();
                 Log.d("test", "is upload");
+
             }
         });
 
     }
 
-    private void onClickRequirementPermission(){
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+    private void onClickRequirementPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
-        if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             openFile();
-        }
-        else {
-            String [] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
+        } else {
+            String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(permission, REQ);
         }
     }
@@ -123,7 +139,7 @@ public class UploadFileActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode >= REQ  && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (requestCode >= REQ && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //Khi duoc cho phep thi goi ham openFile
             openFile();
         }
@@ -175,20 +191,22 @@ public class UploadFileActivity extends AppCompatActivity {
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> callback, Response<ResponseBody> response) {
-                        if(response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             mProgressDialog.dismiss();
 
                             Log.d("test", "Response");
                             try {
                                 JSONObject jsonObject = new JSONObject(response.body().string());
                                 String message = jsonObject.getString("message");
-                                showDialog(message);
+                                showDialog(message, true);
+                                binding.btnPush.setVisibility(View.GONE);
+                                binding.btnUpdateCv.setVisibility(View.VISIBLE);
+                                binding.btnDeleteCv.setVisibility(View.VISIBLE);
 //                                Log.d("test", "File: " + message);
                             } catch (JSONException | IOException e) {
                                 e.printStackTrace();
                             }
-                        }
-                        else {
+                        } else {
                             mProgressDialog.dismiss();
                             Log.d("test", "Failed");
                         }
@@ -212,37 +230,58 @@ public class UploadFileActivity extends AppCompatActivity {
     }
 
     // Method to get the file name from the URI
-    private String getFileNameFromUri(Uri uri) {
-        String result = null;
+    private FileContent getFileContentFromUri(Uri uri) {
+        String fileName = "";
+        String fileExtension = "";
+        FileContent fileContent = new FileContent();
+
+        // Lấy tên tệp từ Uri
         if (uri.getScheme().equals("content")) {
             try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
-                    result = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                    fileName = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
                 }
             }
         }
-        if (result == null) {
-            result = uri.getPath();
-            int cut = result.lastIndexOf('/');
-            if (cut != -1) {
-                result = result.substring(cut + 1);
-            }
+
+        // Lấy định dạng tệp
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex != -1 && dotIndex < fileName.length() - 1) {
+            fileExtension = fileName.substring(dotIndex + 1);
         }
-        return result;
+
+        fileContent.setFileName(fileName);
+        fileContent.setTypeFile(fileExtension);
+
+        return fileContent;
     }
 
-    private void showDialog(String message) {
+    //Show dialog
+    private void showDialog(String message, Boolean type) {
         //Create the Dialog here
         Dialog dialog = new Dialog(UploadFileActivity.this);
         dialog.setContentView(R.layout.custom_dialog_layout);
+
         TextView lbl_title = dialog.findViewById(R.id.textView2);
         lbl_title.setText(message);
+        if (type) {
+            ImageView imageView = dialog.findViewById(R.id.imageView);
+            imageView.setImageResource(R.drawable.ic_checked);
+            TextView lbl_Name = dialog.findViewById(R.id.textView);
+            lbl_Name.setText("Successful");
+        } else {
+            ImageView imageView = dialog.findViewById(R.id.imageView);
+            imageView.setImageResource(R.drawable.ic_failed);
+            TextView lbl_Name = dialog.findViewById(R.id.textView);
+            lbl_Name.setText("Failed");
+        }
+
+
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.setCancelable(false); //Optional
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
 
         dialog.show();
-
 
         Button Okay = dialog.findViewById(R.id.btn_okay);
 
@@ -252,5 +291,37 @@ public class UploadFileActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+    private class FileContent {
+        private String fileName;
+        private String typeFile;
+
+        public FileContent() {
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+
+        public String getTypeFile() {
+            return typeFile;
+        }
+
+        public void setTypeFile(String typeFile) {
+            this.typeFile = typeFile;
+        }
+
+        @Override
+        public String toString() {
+            return "FileContent{" +
+                    "fileName='" + fileName + '\'' +
+                    ", typeFile='" + typeFile + '\'' +
+                    '}';
+        }
     }
 }
