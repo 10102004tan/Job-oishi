@@ -39,8 +39,6 @@ public class ProfileFragment extends Fragment {
     private final int STATUS_GOOD_INTERNET = 2;
     private FragmentProfileBinding binding;
     private boolean isFirst = true;
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
 
@@ -103,10 +101,9 @@ public class ProfileFragment extends Fragment {
         });
         return binding.getRoot();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
-        internetBroadcastReceiver = new InternetBroadcastReceiver();
+        InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
             @Override
             public void noInternet() {
@@ -152,7 +149,7 @@ public class ProfileFragment extends Fragment {
             }
         };
 
-        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 }

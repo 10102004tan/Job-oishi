@@ -1,11 +1,9 @@
 package com.example.joboishi.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,6 +11,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
@@ -47,10 +47,12 @@ public class LoginEmailActivity extends AppCompatActivity {
 
         emailEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -64,10 +66,12 @@ public class LoginEmailActivity extends AppCompatActivity {
 
         passwordEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -100,6 +104,7 @@ public class LoginEmailActivity extends AppCompatActivity {
                         public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
                             if (response.isSuccessful()) {
                                 UserApiResponse userApiResponse = response.body();
+                                assert userApiResponse != null;
                                 String userEmail = userApiResponse.getEmail();
                                 int userId = userApiResponse.getId();
 
@@ -107,13 +112,14 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
                                 editor.putString("user_email", userEmail);
-                                editor.putString("user_id", userId + "");
+                                editor.putInt("user_id", userId);
                                 editor.apply();
 
                                 // Log ra thông tin đã lưu
-                                // Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+                                 //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+
                                 // Chuyển sang màn hình RegisterMajorActivity
-                                Intent intent = new Intent(LoginEmailActivity.this, ProfileActivity.class);
+                                Intent intent = new Intent(LoginEmailActivity.this, HomeActivity.class);
                                 startActivity(intent);
                             } else {
                                 // Xử lý lỗi nếu có
@@ -121,7 +127,6 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 Toast.makeText(LoginEmailActivity.this, "Đăng nhập không thành công. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
                             }
                         }
-
                         @Override
                         public void onFailure(Call<UserApiResponse> call, Throwable t) {
                             // Ghi nhật ký lỗi

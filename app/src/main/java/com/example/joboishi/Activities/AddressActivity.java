@@ -38,8 +38,19 @@ public class AddressActivity extends AppCompatActivity {
         addressLayoutBinding = AddressLayoutBinding.inflate(LayoutInflater.from(this));
         setContentView(addressLayoutBinding.getRoot());
 
+
+        // Get View
+        Button btnDone = findViewById(R.id.btnDone);
+
         // Get data from intent, from Job criteria Activity
         Intent intent = getIntent();
+        // Use for check caller activity
+        String caller = intent.getStringExtra("caller");
+        assert caller != null;
+        if (caller.equals("JobCriteriaActivity")) {
+            btnDone.setText(R.string.btn_save_label);
+        }
+        // Get data from intent, from Job criteria Activity
         ArrayList<String> city = (ArrayList<String>) intent.getSerializableExtra("cities");
         assert city != null;
         if (!city.isEmpty()) {
@@ -135,20 +146,19 @@ public class AddressActivity extends AppCompatActivity {
                     }
                 }
                 updateButtonBackground(); // Gọi hàm để cập nhật nền của nút
-
             }
         });
-        // Button Gợi Ý
 
-        Button btnDone = findViewById(R.id.btnDone);
+        // Button Gợi Ý
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("cities", listCityChosen);
-
-                setResult(RESULT_OK, resultIntent);
-                finish();
+                if (caller.equals("JobCriteriaActivity")) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("cities", listCityChosen);
+                    setResult(RESULT_OK, resultIntent);
+                    finish();
+                }
             }
         });
     }
