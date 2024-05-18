@@ -111,7 +111,7 @@ public class DetailJobActivity extends AppCompatActivity {
 
 
         //Lay du lieu tu job api
-//        jobId = "2032881";
+        //jobId = "2032881";
         jobId = getIntent().getIntExtra("JOB_ID", -1) + "";
         if (jobId.equals("-1")) {
             // Không tìm thấy JOB_ID, xử lý lỗi
@@ -127,7 +127,7 @@ public class DetailJobActivity extends AppCompatActivity {
                 binding.shimmer.setVisibility(View.GONE);
                 binding.detailLayout.setVisibility(View.VISIBLE);
 
-//                Log.d("test", job.getContent());
+                Log.d("test", job.getContent());
 
                 //Responsibilities
                 String longDescription = job.getResponsibilities();
@@ -279,7 +279,8 @@ public class DetailJobActivity extends AppCompatActivity {
     //Ham gọi API
     private void getDetailJob(String jobId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
-//        Log.d("test", DetailJobAPI.BASE_URL);
+        Log.d("test", DetailJobAPI.BASE_URL);
+        Log.d("test", jobId);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailJobAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())

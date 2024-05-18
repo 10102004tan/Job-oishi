@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface IJobsService {
-    public static String BASE_URL = "http://10.0.2.2:3001";
+    public static String BASE_URL = APIURL.BASE_URL;
     @POST("api/jobs")
     Call<ArrayList<JobBasic>> getListJobs(@Query("page") int page);
 

@@ -77,6 +77,8 @@ public class SplashActivity extends AppCompatActivity {
                 } else {
                     // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
                     Log.e("testsss", "Send FCM token failed with code: " + response.code());
+                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
                 }
             }
 
