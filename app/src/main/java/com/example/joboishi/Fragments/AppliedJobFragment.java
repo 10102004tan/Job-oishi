@@ -54,6 +54,7 @@ public class AppliedJobFragment extends BaseFragment {
     private final  int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
+    private boolean isFirstLoading = true;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,15 +77,15 @@ public class AppliedJobFragment extends BaseFragment {
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                isFirstLoading = true;
                 if (statusPreInternet != statusInternet){
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
-                getJobsSaved();
+                getJobsApplied();
                 if (statusInternet == STATUS_NO_INTERNET){
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
-
             }
         });
 
@@ -95,14 +96,18 @@ public class AppliedJobFragment extends BaseFragment {
     /*
     CREATE METHODS FOR INTERNET BROADCAST RECEIVER
     */
-    private void getJobsSaved(){
-        binding.image.setVisibility(View.VISIBLE);
-        binding.image.setAnimation(R.raw.fetch_api_loading);
-        binding.image.playAnimation();
+    private void getJobsApplied(){
+        if (isFirstLoading){
+            binding.image.setVisibility(View.VISIBLE);
+
+            binding.image.setAnimation(R.raw.fetch_api_loading);
+            binding.image.playAnimation();
+            isFirstLoading = false;
+        }
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
-        Call<ArrayList<JobBasic>> call = iJobsService.getAllJobsBookmarkById(0);
+        Call<ArrayList<JobBasic>> call = iJobsService.getJobApplied();
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {

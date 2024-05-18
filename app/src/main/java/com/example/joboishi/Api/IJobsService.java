@@ -20,4 +20,7 @@ public interface IJobsService {
 
     @POST("api/jobs/bookmark/all")
     Call<ArrayList<JobBasic>> getAllJobsBookmarkById(@Body int userId);
+
+    @POST("api/applied")
+    Call<ArrayList<JobBasic>> getJobApplied();
 }

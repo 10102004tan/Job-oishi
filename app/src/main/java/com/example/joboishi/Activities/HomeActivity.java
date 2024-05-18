@@ -31,8 +31,6 @@ public class HomeActivity extends AppCompatActivity{
         ViewPagerHomeAdapter viewPagerHomeAdapter = new ViewPagerHomeAdapter(this);
         binding.viewPager.setUserInputEnabled(false);
         binding.viewPager.setAdapter(viewPagerHomeAdapter);
-
-
         //bottom navigation
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
            if (item.getItemId() == R.id.nav_home){
