@@ -159,6 +159,9 @@ public class AppliedJobFragment extends Fragment {
 
 
     private void getJobsSaved(){
+        binding.image.setVisibility(View.VISIBLE);
+        binding.image.setAnimation(R.raw.fetch_api_loading);
+        binding.image.playAnimation();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
@@ -170,7 +173,6 @@ public class AppliedJobFragment extends Fragment {
                     jobs = response.body();
                     binding.swipeRefreshLayout.setRefreshing(false);
                     if(jobs.size() == 0){
-                        binding.image.setVisibility(View.VISIBLE);
                         binding.image.setAnimation(R.raw.no_data);
                         binding.image.playAnimation();
                         binding.listJob.setVisibility(View.GONE);

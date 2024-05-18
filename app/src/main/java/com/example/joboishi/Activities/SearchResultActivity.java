@@ -14,9 +14,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.joboishi.Adapters.JobSearchAdapter;
+import com.example.joboishi.Adapters.OptionExperienceAdapter;
+import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Adapters.SearchOptionAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
-import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
+import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Models.JobSearch;
@@ -58,7 +60,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     private String jobType;
     private String experience;
 
-
+    private OptionJobTypeAdapter optionJobTypeAdapter;
+    private OptionExperienceAdapter optionExperienceAdapter;
     MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
 
     @Override
@@ -116,7 +119,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                         performJobSearch(input.getText().toString(), currentPage);
                         break;
                     case 2:
-                        dialogFragment.setFragment(new OptionExperienceFragment());
+                        dialogFragment.setFragment(new OptionTypeJobFragment());
                         dialogFragment.show(getSupportFragmentManager(), "experience");
                         break;
                     case 3:
@@ -267,4 +270,14 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                 break;
         }
     }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        optionJobTypeAdapter.clearSavedSelectedPosition(this);
+//        optionExperienceAdapter.clearSavedSelectedPosition(this);
+//
+//    }
+
+
 }

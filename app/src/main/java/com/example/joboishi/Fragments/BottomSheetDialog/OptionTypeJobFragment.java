@@ -1,12 +1,12 @@
 package com.example.joboishi.Fragments.BottomSheetDialog;
 
 import android.content.Context;
-import android.media.Image;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,7 +15,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.joboishi.Adapters.OptionAdapter;
+import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.R;
 import com.google.android.flexbox.FlexDirection;
@@ -28,11 +28,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class OptionTypeJobFragment extends Fragment {
-    private OptionAdapter adapter;
+    private OptionJobTypeAdapter adapter;
     private RecyclerView recyclerView;
     private TextView title;
     private ImageButton btnClose;
     private AppCompatButton btnDone;
+    private AppCompatButton btnReset;
     private OnOptionSelectedListener listener;
     private String selectedOption;
 
@@ -70,7 +71,7 @@ public class OptionTypeJobFragment extends Fragment {
         title.setText("Loại công việc");
 
         ArrayList<String> listOption = new ArrayList<>(Arrays.asList("Fulltime", "Part-time", "Internship", "Freelance"));
-        adapter = new OptionAdapter(getActivity(), listOption);
+        adapter = new OptionJobTypeAdapter(getActivity(), listOption);
 
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext());
         flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);

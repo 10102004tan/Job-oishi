@@ -115,7 +115,6 @@ public class SearchActivity extends AppCompatActivity {
         ArrayList<String> tempList = new ArrayList<>(updatedHistory);
         tempList.add(0, query);
 
-        // Giữ lại 3 mục gần nhất
         if (tempList.size() > 3) {
             tempList = new ArrayList<>(tempList.subList(0, 3));
         }

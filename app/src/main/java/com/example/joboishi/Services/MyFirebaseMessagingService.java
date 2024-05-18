@@ -18,15 +18,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
     private static final String CHANNEL_ID = "1234567";
-
-    @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
-
-        //send to server
-    }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {

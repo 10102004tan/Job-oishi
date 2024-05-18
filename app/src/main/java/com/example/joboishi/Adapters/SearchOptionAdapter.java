@@ -56,7 +56,6 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
         } else {
             holder.optionSearchItemBinding.optionName.setTextColor(ContextCompat.getColor(context, R.color.default_color));
             holder.optionSearchItemBinding.optionName.setBackgroundResource(R.drawable.background_item_chosen);
-
         }
     }
 
@@ -72,7 +71,6 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
             super(binding.getRoot());
             this.optionSearchItemBinding = binding;
 
-            // Gán sự kiện click cho CardView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

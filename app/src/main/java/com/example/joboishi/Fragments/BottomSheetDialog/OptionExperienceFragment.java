@@ -1,11 +1,13 @@
 package com.example.joboishi.Fragments.BottomSheetDialog;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +16,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.joboishi.Adapters.OptionAdapter;
+import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.R;
 import com.google.android.flexbox.FlexDirection;
@@ -27,22 +29,31 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class OptionExperienceFragment extends Fragment {
-    private OptionAdapter adapter;
+    private OptionJobTypeAdapter adapter;
     private RecyclerView recyclerView;
     private TextView title;
     private ImageButton btnClose;
     private AppCompatButton btnDone;
-    private OptionTypeJobFragment.OnOptionSelectedListener listener;
+    private Button btnReset;
+    private OnOptionSelectedListener listener;
     private String selectedOption;
-    private final int POS = 1;
+    private SharedPreferences sharedPreferences;
+
+    private final int POS = 0;
+
+    public interface OnOptionSelectedListener {
+        void onOptionSelected(String selectedOption, int pos);
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OptionTypeJobFragment.OnOptionSelectedListener) {
-            listener = (OptionTypeJobFragment.OnOptionSelectedListener) context;
+        if (context instanceof OnOptionSelectedListener) {
+            listener = (OnOptionSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement OnOptionSelectedListener");
         }
+        sharedPreferences = context.getSharedPreferences("JobOptions", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -53,17 +64,19 @@ public class OptionExperienceFragment extends Fragment {
         recyclerView = view.findViewById(R.id.list_option_type_job);
         btnClose = view.findViewById(R.id.btn_close_dialog);
         btnDone = view.findViewById(R.id.btn_done);
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onCloseDialog();
+        btnReset = view.findViewById(R.id.btn_reset);
+
+        btnClose.setOnClickListener(v -> {
+            MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
+            if (bottomSheetFragment != null) {
+                bottomSheetFragment.dismiss();
             }
         });
 
-        title.setText("Năm kinh nghiệm");
+        title.setText("Loại công việc");
 
-        ArrayList<String> listOption = new ArrayList<>(Arrays.asList("1 năm", "2 năm", "3 năm", "5 năm", "10 năm"));
-        adapter = new OptionAdapter(getActivity(), listOption);
+        ArrayList<String> listOption = new ArrayList<>(Arrays.asList("Fulltime", "Part-time", "Internship", "Freelance"));
+        adapter = new OptionJobTypeAdapter(getActivity(), listOption);
 
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext());
         flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
@@ -73,12 +86,9 @@ public class OptionExperienceFragment extends Fragment {
         recyclerView.setLayoutManager(flexboxLayoutManager);
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(new OptionAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                selectedOption = listOption.get(position);
-                DesignerToast.Success(getActivity(), selectedOption, Gravity.CENTER, Toast.LENGTH_SHORT);
-            }
+        adapter.setOnItemClickListener(position -> {
+            selectedOption = listOption.get(position);
+            DesignerToast.Success(getActivity(), selectedOption, Gravity.CENTER, Toast.LENGTH_SHORT);
         });
 
         btnDone.setOnClickListener(v -> {
@@ -91,15 +101,21 @@ public class OptionExperienceFragment extends Fragment {
             }
         });
 
+        btnReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        btnReset.setOnClickListener(v -> {
+            selectedOption = "";
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("selectedJobType");
+            editor.apply();
+            adapter.clearSavedSelectedPosition(getContext());
+            DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);
+        });
+
         return view;
     }
-
-    public void  onCloseDialog() {
-        MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
-        if (bottomSheetFragment != null) {
-            bottomSheetFragment.dismiss();
-        }
-    }
-
-
 }
