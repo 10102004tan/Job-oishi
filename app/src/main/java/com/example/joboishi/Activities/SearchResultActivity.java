@@ -18,6 +18,7 @@ import com.example.joboishi.Adapters.OptionExperienceAdapter;
 import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Adapters.SearchOptionAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
+import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
@@ -38,7 +39,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SearchResultActivity extends AppCompatActivity implements OptionTypeJobFragment.OnOptionSelectedListener {
+public class SearchResultActivity extends AppCompatActivity implements OptionTypeJobFragment.OnOptionSelectedListener, OptionExperienceFragment.OnOptionSelectedListener {
 
     private SearchResultLayoutBinding binding;
     private TextInputEditText input;
@@ -77,8 +78,6 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                 .build();
         jobSearchAPI = retrofit.create(JobSearchAPI.class);
 
-        Intent intent = getIntent();
-        binding.inputMajor.setText(intent.getStringExtra("key"));
 
         recyclerView = binding.listJobSearched;
         ImageButton btnBack = binding.btnToolbarBack;
@@ -87,6 +86,13 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         progressBar = binding.progressBar;
         animateNoData = binding.animateNoData;
         input = binding.inputMajor;
+        Intent intent = getIntent();
+        input.setText(intent.getStringExtra("key"));
+        String kword = "";
+        if (input.getText().length() > 0) {
+            kword = input.getText().toString();
+        }
+
 
         DesignerToast.Success(getBaseContext(), input.getText().toString(), Gravity.CENTER, Toast.LENGTH_SHORT);
 
@@ -104,6 +110,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         rcv_tool.setLayoutManager(linearLayoutManager);
         rcv_tool.setAdapter(optionAdapter);
 
+        String finalKword = kword;
         optionAdapter.setOnItemClickListener(new SearchOptionAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
@@ -114,12 +121,13 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                     case 1:
                         isRemote = !isRemote;
                         listSearchJob.clear();
+
                         adapter.notifyDataSetChanged();
                         progressBar.setVisibility(View.VISIBLE);
-                        performJobSearch(input.getText().toString(), currentPage);
+                        performJobSearch(finalKword, currentPage);
                         break;
                     case 2:
-                        dialogFragment.setFragment(new OptionTypeJobFragment());
+                        dialogFragment.setFragment(new OptionExperienceFragment());
                         dialogFragment.show(getSupportFragmentManager(), "experience");
                         break;
                     case 3:
@@ -133,6 +141,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
 
         // Disable text input
         inputForm.getEditText().setFocusable(false);
+        optionExperienceAdapter = new OptionExperienceAdapter(this, null);
+        optionJobTypeAdapter = new OptionJobTypeAdapter(this, null);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(SearchResultActivity.this, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
@@ -205,7 +215,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
             public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
-                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " " + response.body().size(), Gravity.CENTER, Toast.LENGTH_SHORT);
+                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " " + response.body().size() + key + " " + isRemote +" "+ experience+ " " + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
 
                     if (page == 1) {
                         listSearchJob.clear(); // Clear the list for new searches
@@ -271,13 +281,26 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         }
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("testssss", "onPause: ");
+    }
+
+
+        @Override
+    protected void onStop() {
+        super.onStop();
 //        optionJobTypeAdapter.clearSavedSelectedPosition(this);
 //        optionExperienceAdapter.clearSavedSelectedPosition(this);
-//
-//    }
+            Log.d("testssss", "onStop: ");
+    }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("testssss", "onDestroy: ");
+        optionJobTypeAdapter.clearSavedSelectedPosition(this);
+        optionExperienceAdapter.clearSavedSelectedPosition(this);
+    }
 }

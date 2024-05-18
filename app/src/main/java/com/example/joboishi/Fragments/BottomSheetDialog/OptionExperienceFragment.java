@@ -16,6 +16,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.joboishi.Adapters.OptionExperienceAdapter;
 import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.R;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class OptionExperienceFragment extends Fragment {
-    private OptionJobTypeAdapter adapter;
+    private OptionExperienceAdapter adapter;
     private RecyclerView recyclerView;
     private TextView title;
     private ImageButton btnClose;
@@ -39,7 +40,7 @@ public class OptionExperienceFragment extends Fragment {
     private String selectedOption;
     private SharedPreferences sharedPreferences;
 
-    private final int POS = 0;
+    private final int POS = 1;
 
     public interface OnOptionSelectedListener {
         void onOptionSelected(String selectedOption, int pos);
@@ -73,10 +74,10 @@ public class OptionExperienceFragment extends Fragment {
             }
         });
 
-        title.setText("Loại công việc");
+        title.setText("Năm kinh nghiệm");
 
-        ArrayList<String> listOption = new ArrayList<>(Arrays.asList("Fulltime", "Part-time", "Internship", "Freelance"));
-        adapter = new OptionJobTypeAdapter(getActivity(), listOption);
+        ArrayList<String> listOption = new ArrayList<>(Arrays.asList("1 năm", "2 năm", "3 năm", "5 năm", "10 năm"));
+        adapter = new OptionExperienceAdapter(getActivity(), listOption);
 
         FlexboxLayoutManager flexboxLayoutManager = new FlexboxLayoutManager(getContext());
         flexboxLayoutManager.setFlexDirection(FlexDirection.ROW);
@@ -88,7 +89,7 @@ public class OptionExperienceFragment extends Fragment {
 
         adapter.setOnItemClickListener(position -> {
             selectedOption = listOption.get(position);
-            DesignerToast.Success(getActivity(), selectedOption, Gravity.CENTER, Toast.LENGTH_SHORT);
+            DesignerToast.Success(getActivity(), selectedOption  + POS, Gravity.CENTER, Toast.LENGTH_SHORT);
         });
 
         btnDone.setOnClickListener(v -> {
@@ -101,12 +102,7 @@ public class OptionExperienceFragment extends Fragment {
             }
         });
 
-        btnReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
         btnReset.setOnClickListener(v -> {
             selectedOption = "";
             SharedPreferences.Editor editor = sharedPreferences.edit();
