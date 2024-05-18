@@ -20,6 +20,7 @@ public abstract class BaseFragment extends Fragment {
         getActivity().unregisterReceiver(internetBroadcastReceiver);
     }
 
+
     protected void registerInternetBroadcastReceiver() {
         internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {

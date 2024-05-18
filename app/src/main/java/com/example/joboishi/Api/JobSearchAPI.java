@@ -26,7 +26,7 @@ public interface JobSearchAPI {
     );
 
     // Lấy bỏ sang Chọn ngành nghề
-    @GET("api/jobs")
+    @GET("api/sjobs")
     Call<ArrayList<JobSearch>> getListJobs();
 
     @GET("api/jobs")
