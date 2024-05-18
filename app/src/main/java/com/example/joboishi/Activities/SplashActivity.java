@@ -28,6 +28,7 @@ public class SplashActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private UserFcmAPI userFcmAPI;
     private String userEmail;
+    private int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.splash_layout);
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userEmail = sharedPref.getString("user_email", null);
+        userId = sharedPref.getInt("user_id", 0);
         // boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", true); // Mặc định là false
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
@@ -44,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
                             return;
                         }
                         String token = task.getResult();
-                        int userId = 2;
                         // Lưu token vào db
                         sendRegistrationToServer(userId, token, userEmail);
                     }
@@ -67,10 +68,10 @@ public class SplashActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && userEmail != null) {
+                if (response.isSuccessful() && userId != 0) {
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
-                } else if (userEmail == null) {
+                } else if (userId == 0) {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
 

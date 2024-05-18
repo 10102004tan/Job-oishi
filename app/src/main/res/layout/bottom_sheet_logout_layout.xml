@@ -23,6 +23,7 @@
             />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/oke"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_button"
@@ -30,6 +31,7 @@
         android:textColor="@color/white"
         />
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_button_disable"
