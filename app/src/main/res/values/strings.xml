@@ -248,4 +248,14 @@
     <string name="choose_file">Chọn File</string>
     <string name="nh_d_ng_pdf_dung_l_ng_t_i_a_5mb">(Định dạng PDF, dung lượng tối đa 5MB</string>
     <string name="cv_s_c_t_ng_g_i_cho_nh_tuy_d_ng_khi_b_n_ng_tuy_n_l_n_ti_p_theo_thay_i_h_y_upload_cv_m_i_trong_m_c_profile_nh">CV sẽ được tự động gửi cho nhà tuyể dụng khi bạn ứng tuyển lần tiếp theo. Để thay đổi, hãy upload CV mới trong mục Profile nhé.</string>
+    <string name="your_cv">Your CV:</string>
+    <string name="ch_n_file">Chọn File</string>
+    <string name="t_i_kho_n">Tài khoản</string>
+    <string name="email_m_t_kh_u_v_s_i_n_tho_i">Email, mật khẩu và số điện thoại</string>
+    <string name="th_ng_b_o">Thông báo</string>
+    <string name="tp_h_ch_minh">TP. Hồ Chí Minh</string>
+    <string name="ng_tuy_n_nhanh_h_n_v_i_glints_chat_v_i_nh_tuy_n_d_ng_ngay">Ứng tuyển nhanh hơn với Glints Chat với nhà tuyển dụng ngay</string>
+    <string name="success">Success</string>
+    <string name="ng_tuy_n_th_nh_c_ng">Ứng tuyển thành công.</string>
+    <string name="okay">Okay</string>
 </resources>

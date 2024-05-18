@@ -15,9 +15,10 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:layout_marginLeft="150dp"
+            android:layout_marginStart="150dp"
             android:layout_marginTop="-10dp"
-            android:background="@drawable/z5365956487886_72a64f99e3311cf0b099b9308097c1fa"></ImageView>
+            android:background="@drawable/z5365956487886_72a64f99e3311cf0b099b9308097c1fa"
+            android:contentDescription="@string/todo"></ImageView>
     </LinearLayout>
 
     <LinearLayout
@@ -29,14 +30,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="4">
+            android:layout_weight="4"
+            android:gravity="center"
+            tools:ignore="NestedWeights">
 
             <ImageView
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
-                android:layout_marginLeft="75dp"
-                android:background="@drawable/z5365944536882_25681c4f12c2098bd5b3d80d8fae7963"></ImageView>
+                android:background="@drawable/z5365944536882_25681c4f12c2098bd5b3d80d8fae7963"
+                android:contentDescription="@string/todo" />
         </LinearLayout>
 
         <LinearLayout
@@ -51,10 +54,10 @@
                 android:layout_marginTop="0dp"
                 android:paddingLeft="50dp"
                 android:paddingRight="50dp"
-                android:text="Ứng tuyển nhanh hơn với Glints Chat với nhà tuyển dụng ngay"
+                android:text="@string/ng_tuy_n_nhanh_h_n_v_i_glints_chat_v_i_nh_tuy_n_d_ng_ngay"
                 android:textAlignment="center"
-                android:textSize="20dp"
-                android:textStyle="bold"></TextView>
+                android:textSize="20sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
 
@@ -99,7 +102,7 @@
                     style="@style/Profile_Title_TextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"></com.facebook.login.widget.LoginButton>
+                    android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
 
@@ -119,7 +122,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/xamnhat"></LinearLayout>
+                    android:background="@color/xamnhat" />
             </LinearLayout>
 
             <LinearLayout
@@ -134,7 +137,7 @@
                     android:text="@string/ho_c"
                     android:textColor="@color/grey"
                     android:textSize="16sp"
-                    android:textStyle="bold"></TextView>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
@@ -146,7 +149,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/xamnhat"></LinearLayout>
+                    android:background="@color/xamnhat" />
             </LinearLayout>
 
         </LinearLayout>
@@ -165,7 +168,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/blue"
                 android:textSize="18sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
@@ -174,17 +177,6 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"></LinearLayout>
+        <!--        //-->
     </LinearLayout>
 </LinearLayout>

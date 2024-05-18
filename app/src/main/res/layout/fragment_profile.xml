@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeRefreshLayout"
@@ -247,7 +248,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="2"
                             android:orientation="horizontal">
 
                             <TextView
@@ -264,7 +265,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="2"
                             android:orientation="horizontal">
 
                             <androidx.appcompat.widget.AppCompatButton
@@ -273,10 +274,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="20dp"
-                                android:layout_marginBottom="15dp"
+                                android:layout_marginBottom="10dp"
                                 android:background="@drawable/button_outline"
                                 android:text="@string/ho_n_thi_n_h_s"
-                                android:textColor="@color/blue">
+                                android:textColor="@color/blue"
+                                android:layout_marginTop="10dp">
 
                             </androidx.appcompat.widget.AppCompatButton>
 
@@ -305,36 +307,51 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="3"
+                            android:baselineAligned="false"
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="20dp"
-                                android:background="@drawable/note_text_svgrepo_com"
-                                android:contentDescription="@string/todo" />
-
-                            <TextView
-                                style="@style/Profile_Normal_TextView"
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginTop="18dp"
-                                android:layout_weight="2"
-                                android:text="@string/h_s_c_nh_n"
-                                tools:ignore="NestedWeights" />
+                                android:layout_weight="1"
+                                tools:ignore="NestedWeights">
 
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="-10dp"
-                                android:background="@drawable/next_svgrepo_com"
-                                android:contentDescription="@string/todo"
-                                android:padding="20dp" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="10dp"
+                                    android:background="@drawable/note_text_svgrepo_com"
+                                    android:contentDescription="@string/todo" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="8">
+
+                                <TextView
+                                    style="@style/Profile_Normal_TextView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    android:text="@string/h_s_c_nh_n"
+                                    tools:ignore="NestedWeights"
+                                    android:layout_marginStart="15dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="12dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/ic_next"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -347,35 +364,49 @@
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="3"
-                            android:gravity="center">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="15dp"
-                                android:background="@drawable/upload_square_svgrepo_com"
-                                android:contentDescription="@string/todo" />
-
-                            <TextView
-                                style="@style/Profile_Normal_TextView"
+                            android:baselineAligned="false"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+                            <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginTop="18dp"
-                                android:layout_weight="2"
-                                android:text="@string/cv"
-                                tools:ignore="NestedWeights" />
+                                android:layout_weight="1"
+                                tools:ignore="NestedWeights">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/upload_square_svgrepo_com"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="10dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="8">
 
-                            <ImageView
-                                style="@style/Profile_Normal_TextView"
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="-10dp"
-                                android:background="@drawable/next_svgrepo_com"
-                                android:contentDescription="@string/todo"
-                                android:padding="20dp" />
+                                <TextView
+                                    style="@style/Profile_Normal_TextView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="15dp"
+                                    android:layout_marginTop="17dp"
+                                    android:layout_weight="2"
+                                    android:text="@string/cv"
+                                    tools:ignore="NestedWeights" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/ic_next"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
@@ -383,68 +414,84 @@
                             android:layout_height="1dp"
                             android:layout_gravity="center"
                             android:background="@color/grey" />
-
                         <LinearLayout
                             android:id="@+id/boxJobCriteria"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="4"
-                            android:gravity="top">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="15dp"
-                                android:layout_marginTop="10dp"
-                                android:background="@drawable/location_arrow_svgrepo_com"
-                                android:contentDescription="@string/todo" />
-
+                            android:layout_weight="3"
+                            android:baselineAligned="false"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="2"
-                                android:orientation="vertical"
+                                android:layout_weight="1"
                                 tools:ignore="NestedWeights">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
+                                <ImageView
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="3">
-
-                                    <TextView
-                                        style="@style/Profile_Normal_TextView"
-                                        android:layout_width="290dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginStart="15dp"
-                                        android:layout_marginTop="5dp"
-                                        android:text="@string/job_criteria_txt"
-                                        tools:ignore="TooDeepLayout" />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="7">
-
-                                    <TextView
-                                        style="@style/Profile_Normal_TextView"
-                                        android:layout_width="270dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_marginStart="15dp"
-                                        android:text="@string/job_criteria_des_text"
-                                        android:textSize="12sp" />
-                                </LinearLayout>
-
+                                    android:background="@drawable/location_arrow_svgrepo_com"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginStart="10dp"/>
                             </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="8"
+                                android:baselineAligned="false">
 
-                            <ImageView
-                                android:layout_width="22dp"
-                                android:layout_height="22dp"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="-10dp"
-                                android:background="@drawable/next_svgrepo_com"
-                                android:contentDescription="@string/todo"
-                                android:padding="20dp" />
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    android:orientation="vertical"
+                                    tools:ignore="NestedWeights,UselessParent">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="3"
+                                        tools:ignore="TooDeepLayout">
+
+                                        <TextView
+                                            style="@style/Profile_Normal_TextView"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginStart="15dp"
+                                            android:layout_marginTop="5dp"
+                                            android:text="@string/job_criteria_txt"
+                                            tools:ignore="TooDeepLayout" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="7">
+
+                                        <TextView
+                                            style="@style/Profile_Normal_TextView"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginStart="15dp"
+                                            android:text="@string/job_criteria_des_text"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/ic_next"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
 

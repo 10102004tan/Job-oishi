@@ -20,15 +20,48 @@
         android:layout_width="match_parent"
         android:layout_height="154dp"
         android:background="@drawable/btn_upload"
-        android:text="@string/choose_file"
+        android:text="@string/ch_n_file"
         android:textColor="@color/blue" />
+
+    <androidx.cardview.widget.CardView
+        style="@style/CardStyle"
+        android:layout_marginTop="30dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Profile_Normal_TextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:text="@string/your_cv"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/lbl_file_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="9"
+                android:textColor="@color/blue"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
 
     <TextView
         android:id="@+id/lbl_description"
         style="@style/Profile_Normal_TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="25dp"
         android:padding="10dp"
         android:text="@string/cv_s_c_t_ng_g_i_cho_nh_tuy_d_ng_khi_b_n_ng_tuy_n_l_n_ti_p_theo_thay_i_h_y_upload_cv_m_i_trong_m_c_profile_nh"
         android:textSize="14sp" />

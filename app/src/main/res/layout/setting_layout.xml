@@ -11,6 +11,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
@@ -25,7 +26,7 @@
                 style="@style/Profile_Normal_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tài khoản"
+                android:text="@string/t_i_kho_n"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -33,7 +34,7 @@
                 style="@style/Profile_Normal_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Email, mật khẩu và số điện thoại" />
+                android:text="@string/email_m_t_kh_u_v_s_i_n_tho_i" />
         </LinearLayout>
 
         <LinearLayout
@@ -41,7 +42,8 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="right"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
 
             <TextView
                 android:id="@+id/btn_change_account"
@@ -60,6 +62,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingTop="20dp"
         android:paddingBottom="20dp">
@@ -74,7 +77,7 @@
                 style="@style/Profile_Normal_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Thông báo"
+                android:text="@string/th_ng_b_o"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -84,7 +87,8 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="right"
-            android:paddingRight="10dp">
+            android:paddingRight="10dp"
+            tools:ignore="RtlHardcoded,RtlSymmetry">
 
             <TextView
                 android:id="@+id/btn_thong_bao"
