@@ -33,11 +33,12 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_like_job"
+                        style="@style/Profile_Title_TextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:drawableEnd="@drawable/ic_arrow_down"
-                        android:text="Developer"
+                        android:text="@string/developer"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -71,6 +72,7 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_show_type"
+                        style="@style/Profile_Title_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
@@ -88,6 +90,7 @@
                     android:layout_weight="6">
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_location"
+                        style="@style/Profile_Title_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_choose_button"
@@ -100,6 +103,7 @@
 
 
         </LinearLayout>
+
 
 
         <com.google.android.material.tabs.TabLayout

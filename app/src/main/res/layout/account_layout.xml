@@ -1,128 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Activities.AccountSettingActivity"
-    android:padding="20dp">
+    android:padding="20dp"
+    tools:context=".Activities.AccountSettingActivity">
 
     <TextView
+        style="@style/Profile_Title_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Email"
-        android:textStyle="bold"/>
+        android:text="@string/email"
+        android:textStyle="bold" />
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/email"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="0dp"
-            android:layout_weight="7"
             android:layout_height="match_parent"
+            android:layout_weight="7"
             android:paddingTop="16dp"
-            android:textSize="15sp"
-            android:text="abc@gmail.com"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            />
+            android:text="@string/abc_gmail_com"
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnChangeEmail"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_weight="3"
             android:background="@drawable/background_edit_button"
-            android:text="Chỉnh sửa"
-            android:textColor="#1576A4"
-            android:textAllCaps="false" />
+            android:text="@string/edit"
+            android:textAllCaps="false"
+            android:textColor="#1576A4" />
     </LinearLayout>
 
     <TextView
+        style="@style/Profile_Title_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"
-        android:textStyle="bold"/>
+        android:text="@string/password"
+        android:textStyle="bold" />
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/password"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="0dp"
-            android:layout_weight="7"
             android:layout_height="match_parent"
+            android:layout_weight="7"
             android:paddingTop="16dp"
-            android:textSize="15sp"
-            android:text="*****"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            />
+            android:text="@string/start"
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonchangpw"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
+            android:layout_weight="3"
             android:background="@drawable/background_edit_button"
-            android:text="Chỉnh sửa"
-            android:textColor="#1576A4"
-            android:textAllCaps="false" />
+            android:text="@string/ch_nh_s_a"
+            android:textAllCaps="false"
+            android:textColor="#1576A4" />
     </LinearLayout>
 
     <TextView
+        style="@style/Profile_Title_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Số điện thoại"
-        android:textStyle="bold"/>
+        android:text="@string/phone_number"
+        android:textStyle="bold" />
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/phone"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="0dp"
-            android:layout_weight="7"
             android:layout_height="match_parent"
+            android:layout_weight="7"
             android:paddingTop="16dp"
-            android:textSize="15sp"
-            android:text="+84 123456789"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            />
+            android:text="@string/_84_123456789"
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPhoneNumber"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
-            android:text="Chỉnh sửa"
-            android:textColor="#1576A4"
-            android:textSize="16sp"
-            android:textAllCaps="false"
+            android:layout_weight="3"
             android:background="@drawable/background_edit_button"
-            />
+            android:text="@string/edit"
+            android:textAllCaps="false"
+            android:textColor="#1576A4" />
     </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:layout_marginTop="10dp"
         android:id="@+id/btnDeleteAccount"
+        style="@style/Profile_Title_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Xóa tài khoản"
-        android:textColor="#1576A4"
-        android:textSize="16sp"
-        android:textAllCaps="false"
+        android:layout_marginTop="10dp"
         android:background="@drawable/background_edit_button"
-        />
+        android:text="@string/remove_accoutn"
+        android:textAllCaps="false"
+        android:textColor="#1576A4"
+        android:textSize="16sp" />
 
 
 </LinearLayout>

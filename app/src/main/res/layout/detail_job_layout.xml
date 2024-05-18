@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -86,6 +85,7 @@
 
                                 <TextView
                                     android:id="@+id/lbl_job_title"
+                                    style="@style/Profile_Title_TextView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="5dp"
@@ -99,6 +99,7 @@
 
                                     <ImageView
                                         android:id="@+id/ic_company"
+                                        style="@style/Profile_Normal_TextView"
                                         android:layout_width="47dp"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
@@ -161,6 +162,7 @@
 
                                     <TextView
                                         android:id="@+id/txt_location"
+                                        style="@style/Profile_Normal_TextView"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:text="Quận 2, TP.Hồ Chí Minh"
@@ -185,6 +187,7 @@
 
                                     <TextView
                                         android:id="@+id/txt_job_bag"
+                                        style="@style/Profile_Normal_TextView"
                                         android:layout_width="0dp"
                                         android:layout_height="wrap_content"
                                         android:text="Làm tại công ty"
@@ -209,6 +212,7 @@
 
                                     <TextView
                                         android:id="@+id/txt_cv_file"
+                                        style="@style/Profile_Normal_TextView"
                                         android:layout_width="0dp"
                                         android:layout_height="16dp"
                                         android:text="Không yêu cầu CV"
@@ -245,6 +249,7 @@
                             android:background="@color/line_color" />
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="10dp"
@@ -267,6 +272,7 @@
                             android:background="@color/line_color" />
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Yêu cầu công viêc"
@@ -280,6 +286,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                style="@style/Profile_Normal_TextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
@@ -287,6 +294,7 @@
                                 android:text="1 - 3 năm kinh nghiệm" />
 
                             <TextView
+                                style="@style/Profile_Normal_TextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
@@ -296,6 +304,7 @@
                         </LinearLayout>
 
                         <TextView
+                            style="@style/Profile_Normal_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Cập nhật 17 phút trước"
@@ -374,6 +383,7 @@
                             android:padding="10dp">
 
                             <TextView
+                                style="@style/Profile_Title_TextView"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="5dp"
@@ -399,6 +409,7 @@
 
                                 <TextView
                                     android:id="@+id/company_name"
+                                    style="@style/Profile_Normal_TextView"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
@@ -425,6 +436,7 @@
 
                                 <TextView
                                     android:id="@+id/txt_company_size"
+                                    style="@style/Profile_Normal_TextView"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginLeft="10dp"
@@ -451,6 +463,7 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        style="@style/Profile_Title_TextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -459,6 +472,7 @@
                         android:padding="10dp">
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Kỹ năng yêu cầu"
@@ -473,25 +487,31 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                style="@style/Profile_Normal_TextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
                                 android:background="@drawable/text_badge"
-                                android:text="Lập trình API" />
+                                android:text="Lập trình API"
+                                android:textSize="14sp" />
 
                             <TextView
+                                style="@style/Profile_Normal_TextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
                                 android:background="@drawable/text_badge"
-                                android:text="PostgreQSL" />
+                                android:text="PostgreQSL"
+                                android:textSize="14sp" />
 
                             <TextView
+                                style="@style/Profile_Normal_TextView"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="10dp"
                                 android:background="@drawable/text_badge"
-                                android:text="Lập trình Back-End Web" />
+                                android:text="Lập trình Back-End Web"
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
@@ -510,6 +530,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="10dp"
@@ -519,12 +540,14 @@
 
                         <TextView
                             android:id="@+id/txt_responsibilities"
+                            style="@style/Profile_Normal_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance."
                             android:textSize="14sp" />
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginVertical="10dp"
@@ -601,6 +624,7 @@
                         android:padding="10dp">
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
@@ -609,6 +633,7 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            style="@style/Profile_Normal_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/ic_shield"
@@ -625,6 +650,7 @@
                         android:padding="10dp">
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="20dp"
