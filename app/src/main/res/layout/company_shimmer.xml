@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_color"
+    android:orientation="vertical">
+
+    <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginBottom="15dp"
+                    android:background="@drawable/intro_company_header"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp">
+
+                        <ImageView
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:background="#DDDDDD" />
+
+                    </androidx.cardview.widget.CardView>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:orientation="vertical">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="187dp">
+
+                            <ImageView
+                                android:id="@+id/ic_verify_bd"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_weight="1"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toTopOf="@+id/ic_location"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintHorizontal_bias="0.481"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:layout_constraintVertical_bias="0.5" />
+
+                            <TextView
+                                android:id="@+id/l1"
+                                android:layout_width="0dp"
+                                android:layout_height="30dp"
+                                android:background="@color/dddddd"
+                                android:textAllCaps="true"
+                                app:layout_constraintBottom_toBottomOf="@+id/ic_verify_bd"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintTop_toTopOf="@+id/ic_verify_bd" />
+
+                            <ImageView
+                                android:id="@+id/ic_people"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_weight="1"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toTopOf="@+id/ic_field"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ic_location"
+                                app:layout_constraintVertical_bias="0.5" />
+
+                            <TextView
+                                android:id="@+id/l3"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toBottomOf="@+id/ic_people"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintTop_toTopOf="@+id/ic_people" />
+
+                            <ImageView
+                                android:id="@+id/ic_location"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_weight="1"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toTopOf="@+id/ic_people"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ic_verify_bd"
+                                app:layout_constraintVertical_bias="0.5"
+                                app:tint="@color/black" />
+
+                            <TextView
+                                android:id="@+id/l2"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toBottomOf="@+id/ic_location"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintTop_toTopOf="@+id/ic_location" />
+
+                            <ImageView
+                                android:id="@+id/ic_field"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_weight="1"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toTopOf="@+id/ic_verify"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ic_people"
+                                app:layout_constraintVertical_bias="0.5"
+                                app:tint="@color/black" />
+
+                            <TextView
+                                android:id="@+id/l4"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toBottomOf="@+id/ic_field"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintTop_toTopOf="@+id/ic_field" />
+
+                            <ImageView
+                                android:id="@+id/ic_verify"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_weight="1"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/ic_field"
+                                app:layout_constraintVertical_bias="0.5"
+                                app:tint="@color/black" />
+
+                            <TextView
+                                android:id="@+id/t5"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:background="@color/dddddd"
+                                app:layout_constraintBottom_toBottomOf="@+id/ic_verify"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="@+id/guideline"
+                                app:layout_constraintTop_toTopOf="@+id/ic_verify" />
+
+                            <androidx.constraintlayout.widget.Guideline
+                                android:id="@+id/guideline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintGuide_end="265dp" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="7dp"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:background="@color/dddddd"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@color/dddddd"
+                            android:layout_marginHorizontal="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="60dp"
+                            android:background="@color/dddddd"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginHorizontal="10dp"
+                            android:orientation="vertical">
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@color/dddddd"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginHorizontal="10dp"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:background="@color/dddddd"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginHorizontal="10dp"
+                            android:orientation="vertical">
+                        </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:background="@color/dddddd"
+                        android:layout_marginHorizontal="10dp"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@color/dddddd"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:orientation="vertical">
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

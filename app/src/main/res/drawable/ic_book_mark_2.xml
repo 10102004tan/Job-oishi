@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<!-- Border Shape -->
+<item>
+    <shape android:shape="rectangle">
+        <solid android:color="@android:color/transparent" /> <!-- Adjust as needed -->
+        <stroke
+            android:width="1dp"
+            android:color="#ccc" />
+        <padding
+            android:left="10dp"
+            android:top="10dp"
+            android:right="10dp"
+            android:bottom="10dp" />
+        <corners android:radius="10dp" />
+    </shape>
+</item>
+
+<!-- Your Original Vector Drawable -->
+<item>
+    <vector
+        android:viewportWidth="28.8"
+        android:viewportHeight="28.8"
+        android:width="800dp"
+        android:height="800dp">
+        <group
+            android:translateX="2.4"
+            android:translateY="2.4">
+            <path
+                android:pathData="M5 6.2C5 5.07989 5 4.51984 5.21799 4.09202C5.40973 3.71569 5.71569 3.40973 6.09202 3.21799C6.51984 3 7.07989 3 8.2 3H15.8C16.9201 3 17.4802 3 17.908 3.21799C18.2843 3.40973 18.5903 3.71569 18.782 4.09202C19 4.51984 19 5.07989 19 6.2V21L12 16L5 21V6.2Z"
+                android:strokeColor="#000000"
+                android:strokeWidth="0.696"
+                android:strokeLineJoin="round"/>
+        </group>
+    </vector>
+</item>
+</layer-list>

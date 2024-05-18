@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,8 @@ public class MyJobFragment extends Fragment {
         /*
         *ADD ITEM ON TABLAYOUT
         */
-        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Da ung tuyen"));
-        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Viec da luu"));
-
+        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Đã ứng tuyển"));
+        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Việc đã lưu"));
         /*ADD LISTENER FOR tablayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -57,4 +57,5 @@ public class MyJobFragment extends Fragment {
         });
         return binding.getRoot();
     }
+
 }

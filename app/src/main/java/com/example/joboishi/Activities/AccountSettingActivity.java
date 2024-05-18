@@ -5,10 +5,13 @@ import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.joboishi.Fragments.BottomSheetDialog.BtsDeleteAccountFragment;
+import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.AccountLayoutBinding;
 
@@ -28,6 +31,14 @@ public class AccountSettingActivity extends AppCompatActivity {
 
         changBackGroundButton(btnChangeEmail, btnChangePass, btnChangePhone, btnDeleteAccount);
 
+        btnDeleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
+                dialogFragment.setFragment(new BtsDeleteAccountFragment());
+                dialogFragment.show(getSupportFragmentManager(), "del account");
+            }
+        });
     }
 
     @SuppressLint("ClickableViewAccessibility")

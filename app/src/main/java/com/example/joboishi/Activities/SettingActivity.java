@@ -5,6 +5,9 @@ import android.animation.AnimatorSet;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.joboishi.Fragments.BottomSheetDialog.BtsLogoutFragment;
+import com.example.joboishi.Fragments.BottomSheetDialog.ChooseLanguageDisplayFragment;
+import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.R;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -83,8 +86,9 @@ public class SettingActivity extends AppCompatActivity {
         btnLanguage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(SettingActivity.this, "click", Toast.LENGTH_SHORT).show();
-
+                MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
+                dialogFragment.setFragment(new ChooseLanguageDisplayFragment());
+                dialogFragment.show(getSupportFragmentManager(), "choose language");
             }
         });
 
@@ -100,6 +104,15 @@ public class SettingActivity extends AppCompatActivity {
                     break;
             }
             return false;
+        });
+
+        btnLogOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MyBottomSheetDialogFragment fragment = MyBottomSheetDialogFragment.newInstance();
+                fragment.setFragment(new BtsLogoutFragment());
+                fragment.show(getSupportFragmentManager(), null);
+            }
         });
     }
 

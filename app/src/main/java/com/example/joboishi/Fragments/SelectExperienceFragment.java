@@ -134,7 +134,6 @@ public class SelectExperienceFragment extends BottomSheetDialogFragment {
         String messageExprience = "";
         TextView experienceMessageTextView = view.findViewById(R.id.experience_year_message);
 
-
         // Choose time experience
         assert monthPicker != null;
         monthPicker.setOnScrollListener(new NumberPicker.OnScrollListener() {
@@ -204,6 +203,7 @@ public class SelectExperienceFragment extends BottomSheetDialogFragment {
                 experienceTextView.setText(experienceSelectedValue);
                 isHaveExperience = experienceSelectedValue.equals(experienceData.get(0)); // Update is have experience
                 experienceStartedDateValue = monthPicker.getValue() < 10 ? "0" + monthPicker.getValue() + "/" + yearPicker.getValue() : monthPicker.getValue() + "/" + yearPicker.getValue();
+                experienceTextView.setText(experienceStartedDateValue);
                 tempExperience = "";
                 onCloseDialog();
             }

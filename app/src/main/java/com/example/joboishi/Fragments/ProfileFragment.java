@@ -1,66 +1,166 @@
 package com.example.joboishi.Fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
-
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import com.example.joboishi.Activities.JobCriteriaActivity;
+import com.example.joboishi.Activities.ProfileActivity;
+import com.example.joboishi.Activities.SettingActivity;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.R;
+import com.example.joboishi.databinding.FragmentProfileBinding;
+import com.thecode.aestheticdialogs.AestheticDialog;
+import com.thecode.aestheticdialogs.DialogStyle;
+import com.thecode.aestheticdialogs.DialogType;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
+
 public class ProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private final int STATUS_NO_INTERNET = 0;
+    private final int STATUS_LOW_INTERNET = 1;
+    private final int STATUS_GOOD_INTERNET = 2;
+    private FragmentProfileBinding binding;
+    private boolean isFirst = true;
+    private int statusInternet = -1;
+    private int statusPreInternet = -1;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment profileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerInternetBroadcastReceiver();
+        }
+
+
+        binding.setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển đến màn hình đăng xuất
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        //bắt sự kiện cho boxProfile
+        binding.boxProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển đến màn hình ProfileActivity
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // bắt sự kiện cho boxJobCriteria
+        binding.boxJobCriteria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), JobCriteriaActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        // button go to user profile
+        binding.buttonEditUserProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (statusPreInternet != statusInternet) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        registerInternetBroadcastReceiver();
+                    }
+                    isFirst = true;
+                }
+                if (statusInternet == STATUS_NO_INTERNET) {
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                }
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+
+        });
+        return binding.getRoot();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    private void registerInternetBroadcastReceiver() {
+        InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
+        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
+            @Override
+            public void noInternet() {
+                statusPreInternet = STATUS_NO_INTERNET;
+                if (isFirst) {
+                    binding.main.setVisibility(View.GONE);
+                    binding.image.setVisibility(View.VISIBLE);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
+                    statusInternet = STATUS_NO_INTERNET;
+                    binding.swipeRefreshLayout.setRefreshing(false);
+                    isFirst = false;
+                    new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
+                            .setTitle("Không có kết nối mạng")
+                            .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                            .setCancelable(false)
+                            .setGravity(Gravity.BOTTOM).show();
+                }
+            }
+
+            @Override
+            public void lowInternet() {
+                binding.image.setVisibility(View.VISIBLE);
+                binding.main.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void goodInternet() {
+                statusPreInternet = STATUS_GOOD_INTERNET;
+                if (isFirst) {
+                    statusInternet = STATUS_GOOD_INTERNET;
+                    isFirst = false;
+                } else {
+                    binding.image.setVisibility(View.GONE);
+                    binding.main.setVisibility(View.VISIBLE);
+                    MotionToast.Companion.createToast(getActivity(), "😍",
+                            "Kết nối mạng đã được khôi phục",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+                }
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
     }
 }

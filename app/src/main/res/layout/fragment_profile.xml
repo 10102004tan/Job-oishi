@@ -1,400 +1,520 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.MainActivity"
-    android:orientation="vertical">
+    tools:context=".Activities.HomeActivity"
+    android:background="@color/white">
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal"
-        android:background="@color/background">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:id="@+id/main"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2">
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="10dp"
-                android:background="@drawable/image"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp">
-            </ImageView>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="8"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="3">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Đình Châu"
-                    android:textSize="23dp"
-                    android:textStyle="bold"
-                    android:backgroundTint="@android:color/transparent">
-                </TextView>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="5">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="099999999"
-                    android:textSize="18dp"
-                    android:backgroundTint="@android:color/transparent">
-                </TextView>
-            </LinearLayout>
+                android:layout_weight="1"
+                android:background="@color/background"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp">
 
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/setting"
-                android:layout_gravity="center"
-                android:layout_marginRight="10dp">
-            </ImageView>
-        </LinearLayout>
-
-
-
-
-
-    </LinearLayout>
-
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="8"
-        android:orientation="vertical"
-        android:background="@color/background"
-        android:paddingTop="50dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-
-        <androidx.cardview.widget.CardView
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="3"
-            android:orientation="horizontal"
-            app:cardElevation="10dp"
-            app:cardCornerRadius="10dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_weight="2"
+                    tools:ignore="NestedWeights">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/bag_4_svgrepo_com"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp">
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:layout_gravity="center"
-                        android:textSize="20dp">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Chat/Ứng tuyển"
-                        android:layout_gravity="center"
-                        android:textSize="13dp"
-                        android:textColor="@color/grey"
-                        android:textStyle="bold">
-                    </TextView>
+                        android:layout_marginStart="10dp"
+                        android:background="@drawable/image"
+                        android:contentDescription="@string/todo"
+                        android:padding="10dp" />
+                </LinearLayout>
 
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="1dp"
-                    android:layout_height="65dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/xamnhat">
-                </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="8"
+                    android:gravity="center"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/mark_2_svgrepo_com"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="10dp">
-                    </ImageView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:layout_gravity="center"
-                        android:textSize="20dp">
-                    </TextView>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Việc đã lưu"
-                        android:layout_gravity="center"
-                        android:textSize="13dp"
-                        android:textColor="@color/grey"
-                        android:textStyle="bold">
-                    </TextView>
 
-                </LinearLayout>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-        <androidx.cardview.widget.CardView
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
-            android:layout_marginBottom="20dp"
-            app:cardElevation="10dp"
-            app:cardCornerRadius="10dp">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/star_svgrepo_com"
-                        android:layout_gravity="bottom"
-                        android:layout_marginLeft="130dp">
-                    </ImageView>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/star_svgrepo_com"
-                        android:layout_gravity="bottom">
-                    </ImageView>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/star_svgrepo_com"
-                        android:layout_gravity="bottom">
-                    </ImageView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-                    <TextView
+                   <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Hoàn thiện hồ sơ để tăng khả năng nhà tuyển dụng tìm thấy bạn!"
-                        android:textAlignment="center"
-                        android:textStyle="bold"
-                        android:paddingHorizontal="2dp"
-                        android:textSize="16dp">
-                    </TextView>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="20dp"
-                        android:layout_marginBottom="15dp"
-                        android:background="@drawable/duongvien"
-                        android:text="@string/ho_n_thi_n_h_s">
-
-                    </androidx.appcompat.widget.AppCompatButton>
-
-                </LinearLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-        <androidx.cardview.widget.CardView
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="7"
-            android:layout_marginBottom="80dp"
-            app:cardElevation="10dp"
-            app:cardCornerRadius="10dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/note_text_svgrepo_com"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="20dp">
-                    </ImageView>
-                    <TextView
-                        android:layout_width="290dp"
-                        android:layout_height="match_parent"
-                        android:text="@string/h_s_glints"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginLeft="15dp"
-                        android:textSize="18dp">
-                    </TextView>
-
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/ic_next"
-                        android:padding="20dp">
-                    </ImageView>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="300dp"
-                    android:layout_height="1dp"
-                    android:background="@color/grey"
-                    android:layout_gravity="center">
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="3">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/upload_square_svgrepo_com"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="15dp">
-                    </ImageView>
-                    <TextView
-                        android:layout_width="290dp"
-                        android:layout_height="match_parent"
-                        android:text="CV"
-                        android:layout_marginTop="18dp"
-                        android:layout_marginLeft="15dp"
-                        android:textSize="18dp">
-                    </TextView>
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/ic_next"
-                        android:layout_gravity="center"
-                        android:padding="20dp">
-                    </ImageView>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="300dp"
-                    android:layout_height="1dp"
-                    android:background="@color/grey"
-                    android:layout_gravity="center">
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="4">
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/location_arrow_svgrepo_com"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginLeft="15dp">
-                    </ImageView>
+                        android:layout_height="0dp"
+                        android:layout_weight="3">
+                        <TextView
+                            android:id="@+id/username_textview"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Đình Châu"
+                            android:textSize="23dp"
+                            android:textStyle="bold"
+                            android:backgroundTint="@android:color/transparent">
+                        </TextView>
+                    </LinearLayout>
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="5">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="099999999"
+                            android:textSize="18dp"
+                            android:backgroundTint="@android:color/transparent">
+                        </TextView>
+                    </LinearLayout>
+                  </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:id="@+id/setting"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/setting"
+                        android:contentDescription="@string/todo" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:background="@color/background"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="50dp"
+                android:paddingRight="10dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="3"
+                    android:orientation="horizontal"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/bag_4_svgrepo_com" />
+
+                            <TextView
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/_0"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/chat_ng_tuy_n"
+                                android:textColor="@color/grey"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="1dp"
+                            android:layout_height="65dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/blue" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="10dp"
+                                android:background="@drawable/mark_2_svgrepo_com"
+                                android:contentDescription="@string/todo" />
+
+                            <TextView
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/_1"
+                                android:textSize="20sp" />
+
+                            <TextView
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/vi_c_l_u"
+                                android:textColor="@color/grey"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="5"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3">
-                            <TextView
-                                android:layout_width="290dp"
-                                android:layout_height="match_parent"
-                                android:text="Tiêu chí công việc"
-                                android:layout_marginTop="5dp"
-                                android:layout_marginLeft="15dp"
-                                android:textSize="18dp">
-                            </TextView>
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:layout_marginStart="140dp"
+                                android:background="@drawable/star_svgrepo_com_color"
+                                android:contentDescription="@string/todo" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:background="@drawable/star_svgrepo_com_color"
+                                android:contentDescription="@string/todo" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom"
+                                android:background="@drawable/star_svgrepo_com_color"
+                                android:contentDescription="@string/todo" />
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="7">
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:orientation="horizontal">
+
                             <TextView
-                                android:layout_width="290dp"
-                                android:layout_height="match_parent"
-                                android:text="Tiêu chí công việc, địa điểm mong muốn khi đề xuất việc làm"
-                                android:layout_marginLeft="15dp"
-                                android:textSize="15dp">
-                            </TextView>
+                                style="@style/Profile_Title_TextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:paddingHorizontal="10dp"
+                                android:text="@string/comple_profile"
+                                android:textAlignment="center"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="2"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/button_edit_user_profile"
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="20dp"
+                                android:layout_marginBottom="10dp"
+                                android:background="@drawable/button_outline"
+                                android:text="@string/ho_n_thi_n_h_s"
+                                android:textColor="@color/blue"
+                                android:layout_marginTop="10dp">
+
+                            </androidx.appcompat.widget.AppCompatButton>
+
                         </LinearLayout>
 
                     </LinearLayout>
+                </androidx.cardview.widget.CardView>
 
-                    <ImageView
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/ic_next"
-                        android:layout_gravity="center"
-                        android:padding="20dp">
-                    </ImageView>
-                </LinearLayout>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="80dp"
+                    android:layout_weight="7"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/boxProfile"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="3"
+                            android:baselineAligned="false"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                tools:ignore="NestedWeights">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="10dp"
+                                    android:background="@drawable/note_text_svgrepo_com"
+                                    android:contentDescription="@string/todo" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="8">
+
+                                <TextView
+                                    style="@style/Profile_Normal_TextView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    android:text="@string/h_s_c_nh_n"
+                                    tools:ignore="NestedWeights"
+                                    android:layout_marginStart="15dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginTop="10dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/ic_next"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="300dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="@color/grey" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="3"
+                            android:baselineAligned="false"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                tools:ignore="NestedWeights">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/upload_square_svgrepo_com"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="10dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="8">
+
+                                <TextView
+                                    style="@style/Profile_Normal_TextView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginStart="15dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_weight="2"
+                                    android:text="@string/cv"
+                                    tools:ignore="NestedWeights" />
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/ic_next"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="300dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="center"
+                            android:background="@color/grey" />
+                        <LinearLayout
+                            android:id="@+id/boxJobCriteria"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="4"
+                            android:baselineAligned="false"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                tools:ignore="NestedWeights">
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/location_arrow_svgrepo_com"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_marginTop="5dp"
+                                    android:layout_marginStart="10dp"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="8"
+                                android:baselineAligned="false">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="2"
+                                    android:orientation="vertical"
+                                    tools:ignore="NestedWeights,UselessParent">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="3"
+                                        tools:ignore="TooDeepLayout">
+
+                                        <TextView
+                                            style="@style/Profile_Normal_TextView"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginStart="15dp"
+                                            android:layout_marginTop="5dp"
+                                            android:text="@string/job_criteria_txt"
+                                            tools:ignore="TooDeepLayout" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="7">
+
+                                        <TextView
+                                            style="@style/Profile_Normal_TextView"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginStart="15dp"
+                                            android:text="@string/job_criteria_des_text"
+                                            android:textSize="12sp" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1">
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:background="@drawable/ic_next"
+                                    android:contentDescription="@string/todo"
+                                    android:layout_gravity="center" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
             </LinearLayout>
+        </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/image"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/a404" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-</LinearLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

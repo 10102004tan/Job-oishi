@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
-import com.datto.demo_android.models.InforProfileAdd;
+import com.example.joboishi.Models.InforProfileAdd;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.ProfileRecyclerViewItemBinding;
 

@@ -4,14 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
+    android:layout_height="wrap_content"
     android:background="?attr/colorPrimary"
     android:backgroundTint="@color/white"
+    app:contentInsetEnd="0dp"
+    app:contentInsetLeft="0dp"
+    app:contentInsetRight="0dp"
+    app:contentInsetStart="16dp"
     app:titleTextColor="@android:color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingTop="16dp">
 
         <ImageButton
             android:id="@+id/btn_toolbar_back"
@@ -36,7 +41,6 @@
             android:textColor="@android:color/black"
             android:textSize="18sp"
             tools:ignore="RelativeOverlap,RtlSymmetry" />
-
     </RelativeLayout>
 
 </androidx.appcompat.widget.Toolbar>

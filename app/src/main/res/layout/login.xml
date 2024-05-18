@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Activities.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +16,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:background="@drawable/z5365956487886_72a64f99e3311cf0b099b9308097c1fa"
-            android:layout_marginLeft="150dp"
+            android:layout_marginStart="150dp"
             android:layout_marginTop="-10dp">
         </ImageView>
     </LinearLayout>
@@ -49,7 +51,7 @@
                 android:textAlignment="center"
                 android:paddingLeft="50dp"
                 android:paddingRight="50dp"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="0dp">
             </TextView>
         </LinearLayout>
 
@@ -68,27 +70,33 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal">
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1">-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/btn_google_sign_in"-->
+<!--                    android:layout_width="55dp"-->
+<!--                    android:layout_height="55dp"-->
+<!--                    android:layout_gravity="center"-->
+<!--                    android:layout_marginLeft="130dp"-->
+<!--                    android:background="@drawable/ic_google"-->
+<!--                    android:onClick="signIn"-->
+<!--                    android:layout_centerInParent="true">-->
+<!--                </ImageView>-->
+<!--            </LinearLayout>-->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
-                <ImageView
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/facebook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="130dp"
-                    android:background="@drawable/ic_google"></ImageView>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_facebook"
-                    android:layout_gravity="center">
-                </ImageView>
+                    android:layout_marginLeft="110dp">
+                </com.facebook.login.widget.LoginButton>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -141,6 +149,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
             <TextView
+                android:id="@+id/login_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="TIẾP TỤC VỚI EMAIL"

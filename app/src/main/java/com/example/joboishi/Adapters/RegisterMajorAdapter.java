@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.databinding.MajorsItemBinding;
-import com.example.joboishi.Models.RegisterMajors;
 
 import java.util.ArrayList;
 
 public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdapter.MyViewHolder> {
     private Activity context;
-    private ArrayList<RegisterMajors> majors = new ArrayList<>();
+    private ArrayList<JobSearch> majors = new ArrayList<>();
 
     private ItemClickListener itemClickListener;
 
@@ -23,10 +23,14 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
         this.itemClickListener = itemClickListener;
     }
 
-    public RegisterMajorAdapter(Activity context, ArrayList<RegisterMajors> majors) {
+    public RegisterMajorAdapter(Activity context, ArrayList<JobSearch> majors) {
         this.context = context;
         this.majors = majors;
+    }
 
+    public void updateData(ArrayList<JobSearch> newMajors) {
+        majors = newMajors;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -39,12 +43,11 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        RegisterMajors major = majors.get(position);
+        JobSearch major = majors.get(position);
 
-        holder.majorsItemBinding.job.setText(major.getName_job());
-        holder.majorsItemBinding.company.setText(major.getName_cpn());
+        holder.majorsItemBinding.job.setText(major.getTitle());
+        holder.majorsItemBinding.company.setText(major.getCompany_name());
         holder.majorsItemBinding.customCheckbox.setChecked(major.getChecked());
-
     }
 
     @Override
@@ -66,15 +69,11 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
                     int position = getAdapterPosition();
                     itemClickListener.onItemClick(MyViewHolder.this, position);
                 }
-
             });
         }
-
     }
 
     public interface ItemClickListener {
-        public void onItemClick(MyViewHolder holder, int position);
-
+        void onItemClick(MyViewHolder holder, int position);
     }
-
 }
