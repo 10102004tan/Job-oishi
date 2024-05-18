@@ -12,358 +12,471 @@
         android:layout_height="match_parent">
 
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <include layout="@layout/detail_job_shimmer" />
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <LinearLayout
-        android:id="@+id/detail_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <!-- Toolbar -->
-        <include
-            android:id="@+id/include"
-            layout="@layout/toolbar" />
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/image"
-            android:layout_width="300dp"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:layout_weight="1"
-            android:visibility="gone"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/a404" />
-
-        <!-- Add a ProgressBar aligned to the center of the parent -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:visibility="gone" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/main"
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="visible">
+            android:visibility="gone">
 
-            <LinearLayout
+            <include layout="@layout/detail_job_shimmer" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <LinearLayout
+            android:id="@+id/detail_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <!-- Toolbar -->
+            <include
+                android:id="@+id/include"
+                layout="@layout/toolbar" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/image"
+                android:layout_width="300dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/a404" />
+
+            <!-- Add a ProgressBar aligned to the center of the parent -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:visibility="gone" />
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/main"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="10dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="8"
-                            android:orientation="vertical">
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="8"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/lbl_job_title"
+                                    style="@style/Profile_Title_TextView"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="5dp"
+                                    android:text="@string/intermediate_backend_developer_golang"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="187dp">
+
+                                    <ImageView
+                                        android:id="@+id/ic_company"
+                                        android:layout_width="47dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/verify_bg"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_money"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintVertical_bias="0.5"
+                                        tools:ignore="TooDeepLayout" />
+
+                                    <TextView
+                                        android:id="@+id/txt_company_name"
+                                        style="@style/Profile_Normal_TextView"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:clickable="true"
+                                        android:text="@string/cong_ty_co_phan_cong_nghe_techfram"
+                                        android:textAllCaps="true"
+                                        android:textColor="#0CABEC"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_company"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_company"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_money"
+                                        android:layout_width="47dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_money"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_location"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_company"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <TextView
+                                        android:id="@+id/txt_salary"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:text=""
+                                        android:textStyle="bold"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_money"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_money"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_location"
+                                        android:layout_width="47dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_location"
+                                        android:textColor="@color/black"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_at"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_money"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <TextView
+                                        android:id="@+id/txt_location"
+                                        style="@style/Profile_Normal_TextView"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/qu_n_2_tp_h_ch_minh"
+                                        android:textColor="@color/black"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_location"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_location"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_at"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_job_bag"
+                                        app:layout_constraintBottom_toTopOf="@+id/ic_file_cv"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_location"
+                                        app:layout_constraintVertical_bias="0.5"
+                                        app:tint="@color/blue" />
+
+                                    <TextView
+                                        android:id="@+id/txt_job_bag"
+                                        style="@style/Profile_Normal_TextView"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/l_m_t_i_c_ng_ty"
+                                        android:textColor="@color/black"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_at"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintHorizontal_bias="0.0"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_at"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <ImageView
+                                        android:id="@+id/ic_file_cv"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:contentDescription="@string/todo"
+                                        android:src="@drawable/ic_cv_file"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toStartOf="@+id/guideline"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@+id/ic_at"
+                                        app:layout_constraintVertical_bias="0.5" />
+
+                                    <TextView
+                                        android:id="@+id/txt_cv_file"
+                                        style="@style/Profile_Normal_TextView"
+                                        android:layout_width="0dp"
+                                        android:layout_height="16dp"
+                                        android:text="@string/kh_ng_y_u_c_u_cv"
+                                        android:textColor="@color/black"
+                                        app:layout_constraintBottom_toBottomOf="@+id/ic_file_cv"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintHorizontal_bias="0.0"
+                                        app:layout_constraintStart_toStartOf="@+id/guideline"
+                                        app:layout_constraintTop_toTopOf="@+id/ic_file_cv" />
+
+                                    <androidx.constraintlayout.widget.Guideline
+                                        android:id="@+id/guideline"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical"
+                                        app:layout_constraintGuide_percent="0.15" />
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/img_company_logo"
+                                android:layout_width="0dp"
+                                android:layout_height="100dp"
+                                android:layout_weight="2"
+                                android:clickable="true"
+                                android:src="@drawable/logo_tech_farm" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            style="@style/Profile_Title_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:text="Nội dung"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_job_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            style="@style/Profile_Title_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/y_u_c_u_c_ng_vi_c"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/lbl_job_title"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
-                                android:text="Intermediate Backend Developer (Golang)"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
+                                style="@style/Profile_Normal_TextView"
                                 android:layout_width="wrap_content"
-                                android:layout_height="187dp">
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="@string/_1_3_n_m_kinh_nghi_m"
+                                android:textColor="@color/black" />
 
-                                <ImageView
-                                    android:id="@+id/ic_company"
-                                    android:layout_width="47dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@drawable/verify_bg"
-                                    app:layout_constraintBottom_toTopOf="@+id/ic_money"
-                                    app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <TextView
-                                    android:id="@+id/txt_company_name"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:clickable="true"
-                                    android:text="Cong ty co phan cong nghe Techfram"
-                                    android:textAllCaps="true"
-                                    android:textColor="#0CABEC"
-                                    app:layout_constraintBottom_toBottomOf="@+id/ic_company"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                                    app:layout_constraintTop_toTopOf="@+id/ic_company"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <ImageView
-                                    android:id="@+id/ic_money"
-                                    android:layout_width="47dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@drawable/ic_money"
-                                    app:layout_constraintBottom_toTopOf="@+id/ic_location"
-                                    app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/ic_company"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <TextView
-                                    android:id="@+id/txt_salary"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:text=""
-                                    android:textStyle="bold"
-                                    app:layout_constraintBottom_toBottomOf="@+id/ic_money"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                                    app:layout_constraintTop_toTopOf="@+id/ic_money"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <ImageView
-                                    android:id="@+id/ic_location"
-                                    android:layout_width="47dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@drawable/ic_location"
-                                    app:layout_constraintBottom_toTopOf="@+id/ic_at"
-                                    app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/ic_money"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <TextView
-                                    android:id="@+id/txt_location"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:text="Quận 2, TP.Hồ Chí Minh"
-                                    app:layout_constraintBottom_toBottomOf="@+id/ic_location"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                                    app:layout_constraintTop_toTopOf="@+id/ic_location"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <ImageView
-                                    android:id="@+id/ic_at"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@drawable/ic_job_bag"
-                                    app:layout_constraintBottom_toTopOf="@+id/ic_file_cv"
-                                    app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/ic_location"
-                                    app:layout_constraintVertical_bias="0.5"
-                                    app:tint="@color/blue" />
-
-                                <TextView
-                                    android:id="@+id/txt_job_bag"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:text="Làm tại công ty"
-                                    app:layout_constraintBottom_toBottomOf="@+id/ic_at"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintHorizontal_bias="0.0"
-                                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                                    app:layout_constraintTop_toTopOf="@+id/ic_at"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <ImageView
-                                    android:id="@+id/ic_file_cv"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@drawable/ic_cv_file"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toStartOf="@+id/guideline"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@+id/ic_at"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <TextView
-                                    android:id="@+id/txt_cv_file"
-                                    android:layout_width="0dp"
-                                    android:layout_height="16dp"
-                                    android:text="Không yêu cầu CV"
-                                    app:layout_constraintBottom_toBottomOf="@+id/ic_file_cv"
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="@+id/guideline"
-                                    app:layout_constraintTop_toTopOf="@+id/ic_file_cv"
-                                    app:layout_constraintVertical_bias="0.5" />
-
-                                <androidx.constraintlayout.widget.Guideline
-                                    android:id="@+id/guideline"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    app:layout_constraintGuide_percent="0.15" />
-                            </androidx.constraintlayout.widget.ConstraintLayout>
+                            <TextView
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="@string/c_nh_n"
+                                android:textColor="@color/black" />
 
                         </LinearLayout>
 
-                        <ImageView
-                            android:id="@+id/img_company_logo"
-                            android:layout_width="0dp"
-                            android:layout_height="100dp"
-                            android:layout_weight="2"
-                            android:clickable="true"
-                            android:src="@drawable/logo_tech_farm" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@color/line_color" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:text="Nội dung"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txt_job_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text=""
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@color/line_color" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Yêu cầu công viêc"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:orientation="horizontal">
-
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:background="@drawable/text_badge"
-                            android:text="1 - 3 năm kinh nghiệm" />
+                            android:text="@string/c_p_nh_t_17_ph_t_tr_c"
+                            android:textColor="#25917B"
+                            android:textSize="12sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <!--                <TextView-->
+                        <!--                    android:layout_width="match_parent"-->
+                        <!--                    android:layout_height="wrap_content"-->
+                        <!--                    android:text="Tin đăng này được quản lý bởi"-->
+                        <!--                    android:textSize="16sp"-->
+                        <!--                    android:textStyle="bold" />-->
+
+                        <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+                        <!--                    android:layout_width="match_parent"-->
+                        <!--                    android:layout_height="70dp">-->
+
+                        <!--                    <ImageView-->
+                        <!--                        android:id="@+id/avatar_hr"-->
+                        <!--                        android:layout_width="30dp"-->
+                        <!--                        android:layout_height="30dp"-->
+                        <!--                        android:src="@drawable/logo_tech_farm"-->
+                        <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+                        <!--                        app:layout_constraintEnd_toStartOf="@+id/guideline2"-->
+                        <!--                        app:layout_constraintStart_toStartOf="parent"-->
+                        <!--                        app:layout_constraintTop_toTopOf="parent" />-->
+
+                        <!--                    <TextView-->
+                        <!--                        android:id="@+id/manager_job"-->
+                        <!--                        android:layout_width="345dp"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        android:text="HR DISION Tech"-->
+                        <!--                        app:layout_constraintBottom_toTopOf="@+id/companyNameTxt"-->
+                        <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--                        app:layout_constraintHorizontal_bias="0.0"-->
+                        <!--                        app:layout_constraintStart_toStartOf="@+id/guideline2"-->
+                        <!--                        app:layout_constraintTop_toTopOf="@+id/avatar_hr"-->
+                        <!--                        app:layout_constraintVertical_bias="0.5" />-->
+
+                        <!--                    <TextView-->
+                        <!--                        android:id="@+id/companyNameTxt"-->
+                        <!--                        android:layout_width="wrap_content"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        android:text="Online 2 ngay truoc"-->
+                        <!--                        android:textSize="12dp"-->
+                        <!--                        app:layout_constraintBottom_toBottomOf="@+id/avatar_hr"-->
+                        <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+                        <!--                        app:layout_constraintHorizontal_bias="0.0"-->
+                        <!--                        app:layout_constraintStart_toStartOf="@+id/guideline2"-->
+                        <!--                        app:layout_constraintTop_toBottomOf="@+id/manager_job"-->
+                        <!--                        app:layout_constraintVertical_bias="0.5" />-->
+
+                        <!--                    <androidx.constraintlayout.widget.Guideline-->
+                        <!--                        android:id="@+id/guideline2"-->
+                        <!--                        android:layout_width="wrap_content"-->
+                        <!--                        android:layout_height="wrap_content"-->
+                        <!--                        android:orientation="vertical"-->
+                        <!--                        app:layout_constraintGuide_percent="0.12" />-->
+
+
+                        <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:background="@drawable/text_badge"
-                            android:text="Cử nhân" />
+                            android:layout_marginTop="10dp"
+                            android:background="@color/white"
+                            android:orientation="vertical"
+                            android:padding="10dp">
+
+                            <TextView
+                                style="@style/Profile_Title_TextView"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:text="@string/th_ng_tin_c_ng_ty"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/btn_detail"
+                                android:layout_width="match_parent"
+                                android:layout_height="70dp"
+                                android:clickable="true">
+
+                                <ImageView
+                                    android:id="@+id/avatar_company"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:contentDescription="@string/todo"
+                                    android:src="@drawable/logo_tech_farm"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/company_name"
+                                    style="@style/Profile_Normal_TextView"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:text="@string/hr_dision_tech"
+                                    android:textColor="@color/black"
+                                    android:textSize="15sp"
+                                    app:layout_constraintBottom_toTopOf="@+id/txt_company_size"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintStart_toStartOf="@+id/guideline3"
+                                    app:layout_constraintTop_toTopOf="@+id/avatar_company"
+                                    app:layout_constraintVertical_bias="0.5"
+                                    tools:ignore="HardcodedText" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="319dp"
+                                    android:contentDescription="@string/todo"
+                                    android:src="@drawable/ic_click_detail"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="1.0"
+                                    app:layout_constraintStart_toEndOf="@+id/avatar_company"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:tint="@color/blue" />
+
+                                <TextView
+                                    android:id="@+id/txt_company_size"
+                                    style="@style/Profile_Normal_TextView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="10dp"
+                                    android:text="@string/computer_software_11_15_nh_n_vi_n"
+                                    android:textColor="@color/black"
+                                    android:textSize="13sp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/avatar_company"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintHorizontal_bias="0.0"
+                                    app:layout_constraintStart_toStartOf="@+id/guideline3"
+                                    app:layout_constraintTop_toBottomOf="@+id/company_name"
+                                    app:layout_constraintVertical_bias="0.5" />
+
+                                <androidx.constraintlayout.widget.Guideline
+                                    android:id="@+id/guideline3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    app:layout_constraintGuide_percent="0.12" />
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+                        </LinearLayout>
 
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Cập nhật 17 phút trước"
-                        android:textColor="#25917B"
-                        android:textSize="12sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@color/line_color" />
-
-                    <!--                <TextView-->
-                    <!--                    android:layout_width="match_parent"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:text="Tin đăng này được quản lý bởi"-->
-                    <!--                    android:textSize="16sp"-->
-                    <!--                    android:textStyle="bold" />-->
-
-                    <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-                    <!--                    android:layout_width="match_parent"-->
-                    <!--                    android:layout_height="70dp">-->
-
-                    <!--                    <ImageView-->
-                    <!--                        android:id="@+id/avatar_hr"-->
-                    <!--                        android:layout_width="30dp"-->
-                    <!--                        android:layout_height="30dp"-->
-                    <!--                        android:src="@drawable/logo_tech_farm"-->
-                    <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-                    <!--                        app:layout_constraintEnd_toStartOf="@+id/guideline2"-->
-                    <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                    <!--                        app:layout_constraintTop_toTopOf="parent" />-->
-
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/manager_job"-->
-                    <!--                        android:layout_width="345dp"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:text="HR DISION Tech"-->
-                    <!--                        app:layout_constraintBottom_toTopOf="@+id/companyNameTxt"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                        app:layout_constraintHorizontal_bias="0.0"-->
-                    <!--                        app:layout_constraintStart_toStartOf="@+id/guideline2"-->
-                    <!--                        app:layout_constraintTop_toTopOf="@+id/avatar_hr"-->
-                    <!--                        app:layout_constraintVertical_bias="0.5" />-->
-
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/companyNameTxt"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:text="Online 2 ngay truoc"-->
-                    <!--                        android:textSize="12dp"-->
-                    <!--                        app:layout_constraintBottom_toBottomOf="@+id/avatar_hr"-->
-                    <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                    <!--                        app:layout_constraintHorizontal_bias="0.0"-->
-                    <!--                        app:layout_constraintStart_toStartOf="@+id/guideline2"-->
-                    <!--                        app:layout_constraintTop_toBottomOf="@+id/manager_job"-->
-                    <!--                        app:layout_constraintVertical_bias="0.5" />-->
-
-                    <!--                    <androidx.constraintlayout.widget.Guideline-->
-                    <!--                        android:id="@+id/guideline2"-->
-                    <!--                        android:layout_width="wrap_content"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:orientation="vertical"-->
-                    <!--                        app:layout_constraintGuide_percent="0.12" />-->
-
-
-                    <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -374,310 +487,239 @@
                         android:padding="10dp">
 
                         <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:text="Thông tin công ty"
+                            android:text="@string/k_n_ng_y_u_c_u"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/btn_detail"
-                            android:layout_width="match_parent"
-                            android:layout_height="70dp"
-                            android:clickable="true">
-
-                            <ImageView
-                                android:id="@+id/avatar_company"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:src="@drawable/logo_tech_farm"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toStartOf="@+id/guideline3"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <TextView
-                                android:id="@+id/company_name"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:text="HR DISION Tech"
-                                android:textSize="15sp"
-                                app:layout_constraintBottom_toTopOf="@+id/txt_company_size"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                                app:layout_constraintTop_toTopOf="@+id/avatar_company"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="319dp"
-                                android:src="@drawable/ic_click_detail"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="1.0"
-                                app:layout_constraintStart_toEndOf="@+id/avatar_company"
-                                app:layout_constraintTop_toTopOf="parent"
-                                app:tint="@color/blue" />
-
-                            <TextView
-                                android:id="@+id/txt_company_size"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:text="Computer Software • 11-15 nhân viên"
-                                android:textSize="13dp"
-                                app:layout_constraintBottom_toBottomOf="@+id/avatar_company"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintHorizontal_bias="0.0"
-                                app:layout_constraintStart_toStartOf="@+id/guideline3"
-                                app:layout_constraintTop_toBottomOf="@+id/company_name"
-                                app:layout_constraintVertical_bias="0.5" />
-
-                            <androidx.constraintlayout.widget.Guideline
-                                android:id="@+id/guideline3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                app:layout_constraintGuide_percent="0.12" />
-
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Kỹ năng yêu cầu"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <LinearLayout
-                        android:id="@+id/skills_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:background="@drawable/text_badge"
-                            android:text="Lập trình API" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:background="@drawable/text_badge"
-                            android:text="PostgreQSL" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="10dp"
-                            android:background="@drawable/text_badge"
-                            android:text="Lập trình Back-End Web" />
-
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@color/line_color" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Mô tả công việc"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:text="Resiponsiblilities"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txt_responsibilities"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance."
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginVertical="10dp"
-                        android:text="Requirements"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/txt_requirements"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="14sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@color/line_color" />
-
-                    <LinearLayout
-                        android:id="@+id/get_benefits"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
                         <LinearLayout
-                            android:id="@+id/get_benefits_title"
+                            android:id="@+id/skills_layout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:visibility="gone">
+                            android:layout_marginVertical="10dp"
+                            android:orientation="horizontal">
 
                             <TextView
-                                android:layout_width="0dp"
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:layout_weight="8"
-                                android:text="Phúc lợi công việc"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="@string/l_p_tr_nh_api"
+                                android:textColor="@color/black" />
 
                             <TextView
-                                android:id="@+id/show_all_benefit"
-                                android:layout_width="0dp"
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:clickable="true"
-                                android:text="Xem tất cả"
-                                android:textColor="@color/blue" />
-                            "
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="@string/postgreqsl"
+                                android:textColor="@color/black" />
+
+                            <TextView
+                                style="@style/Profile_Normal_TextView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="10dp"
+                                android:background="@drawable/text_badge"
+                                android:text="@string/l_p_tr_nh_back_end_web"
+                                android:textColor="@color/black" />
 
                         </LinearLayout>
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/benefits_list"
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <TextView
+                            style="@style/Profile_Title_TextView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp">
+                            android:text="@string/m_t_c_ng_vi_c"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
-                        </androidx.recyclerview.widget.RecyclerView>
+                        <TextView
+                            style="@style/Profile_Title_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:text="@string/resiponsiblilities"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_responsibilities"
+                            style="@style/Profile_Normal_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/develop_code_test_and_deploy_new_features_with_a_primary_focus_on_golang_80_and_python_20_ensuring_adherence_to_api_standards_extensibility_robustness_and_optimal_performance"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            style="@style/Profile_Title_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp"
+                            android:text="@string/requirements"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txt_requirements"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="20dp"
+                            android:background="@color/line_color" />
+
+                        <LinearLayout
+                            android:id="@+id/get_benefits"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:id="@+id/get_benefits_title"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="10dp"
+                                    android:layout_weight="8"
+                                    android:text="@string/ph_c_l_i_c_ng_vi_c"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/show_all_benefit"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="2"
+                                    android:clickable="true"
+                                    android:text="@string/xem_t_t_c"
+                                    android:textColor="@color/blue" />
+                                "
+
+                            </LinearLayout>
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/benefits_list"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+                        </LinearLayout>
+
+
                     </LinearLayout>
 
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/white"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:text="Bí kíp xin việc An toàn"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="10dp"
+                        android:background="@color/white"
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
-                    <TextView
+                        <TextView
+                            style="@style/Profile_Title_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:text="@string/b_k_p_xin_vi_c_an_to_n"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            style="@style/Profile_Normal_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_shield"
+                            android:text="@string/kh_ng_cung_c_p_th_ng_tin_ng_n_h_ng_ho_c_th_t_n_d_ng_khi_ng_tuy_n_nh_tuy_n_d_ng_kh_ng_bao_gi_y_u_c_u_chi_ph_ng_tuy_n_ho_c_chi_ph_o_t_o" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_shield"
-                        android:text="KHÔNG cung cấp thông tin ngân hàng hoặc thẻ tín dụng khi ứng tuyển. Nhà tuyển dụng KHÔNG bao giờ yêu cầu chi phí ứng tuyển hoặc chi phí đào tạo" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:orientation="vertical"
-                    android:padding="10dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:layout_marginBottom="20dp"
-                        android:text="Viêc làm tương tự"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/related_jobs"
-                        android:layout_width="match_parent"
-                        android:layout_height="400dp" />
+                        <TextView
+                            style="@style/Profile_Title_TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="20dp"
+                            android:text="@string/vi_c_l_m_t_ng_t"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/related_jobs"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
-
-            </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+            </androidx.core.widget.NestedScrollView>
 
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/bottom_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/toolbar_showdow"
-            android:backgroundTint="@color/white"
-            android:elevation="4dp"
-            app:titleTextColor="@android:color/white">
-
-            <LinearLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/bottom_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/toolbar_showdow"
+                android:backgroundTint="@color/white"
+                android:elevation="4dp"
+                app:titleTextColor="@android:color/white">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_applied"
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="9"
-                    android:background="@drawable/border_radius_btn"
-                    android:text="Ứng tuyể ngay"
-                    android:textColor="@color/white" />
+                    android:orientation="horizontal">
 
-                <androidx.appcompat.widget.AppCompatImageButton
-                    android:id="@+id/btn_bookmark"
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="1.5"
-                    android:background="@drawable/ic_book_mark_2"
-                    android:text="" />
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btn_applied"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_weight="9"
+                        android:background="@drawable/border_radius_btn"
+                        android:text="@string/ng_tuy_n_ngay"
+                        android:textColor="@color/white" />
 
-    </LinearLayout>
+                    <androidx.appcompat.widget.AppCompatImageButton
+                        android:id="@+id/btn_bookmark"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="20dp"
+                        android:layout_weight="1.5"
+                        android:background="@drawable/ic_book_mark_2"
+                        android:text="" />
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+        </LinearLayout>
 
     </RelativeLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
