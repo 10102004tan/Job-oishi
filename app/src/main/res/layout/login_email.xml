@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,65 +8,73 @@
     tools:context=".Activities.LoginEmailActivity">
 
     <TextView
+        style="@style/Profile_Title_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Login as Job Seeker"
-        android:textSize="20sp"
-        android:textStyle="bold"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="24dp"
+        android:text="@string/login"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nhập email"
-        android:inputType="textEmailAddress"
         android:layout_marginBottom="12dp"
-        android:background="@drawable/edit_text_border" />
+        android:autofillHints=""
+        android:background="@drawable/input_outline"
+        android:hint="@string/nh_p_email"
+        android:inputType="textEmailAddress"
+        android:padding="16dp"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/email_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vui lòng nhập email"
+        android:layout_marginBottom="8dp"
+        android:text="@string/vui_l_ng_nh_p_email"
         android:textColor="#FF0000"
-        android:visibility="gone"
-        android:layout_marginBottom="8dp"/>
+        android:visibility="gone" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nhập mật khẩu"
-        android:inputType="textPassword"
         android:layout_marginBottom="12dp"
-        android:background="@drawable/edit_text_border" />
+        android:autofillHints=""
+        android:background="@drawable/input_outline"
+        android:hint="@string/nh_p_m_t_kh_u"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/password_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Vui lòng nhập mật khẩu"
+        android:layout_marginBottom="8dp"
+        android:text="@string/vui_l_ng_nh_p_m_t_kh_u"
         android:textColor="#FF0000"
-        android:visibility="gone"
-        android:layout_marginBottom="8dp"/>
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="LOGIN AS JOB SEEKER"
+        android:layout_marginBottom="24dp"
         android:backgroundTint="@android:color/holo_blue_dark"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="24dp" />
+        android:padding="16dp"
+        android:text="@string/login"
+        android:textColor="@android:color/white" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:layout_marginBottom="24dp">
+        android:orientation="horizontal">
 
         <View
             android:layout_width="0dp"
@@ -76,10 +83,11 @@
             android:background="#000" />
 
         <TextView
+            style="@style/Profile_Normal_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="HOẶC"
-            android:paddingHorizontal="8dp" />
+            android:paddingHorizontal="8dp"
+            android:text="@string/ho_c" />
 
         <View
             android:layout_width="0dp"
@@ -89,17 +97,19 @@
     </LinearLayout>
 
     <TextView
+        style="@style/Profile_Normal_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bạn chưa có tài khoản? "
         android:layout_gravity="center"
+        android:text="@string/b_n_ch_a_c_t_i_kho_n"
         android:textColor="@android:color/darker_gray" />
 
     <TextView
         android:id="@+id/sign_up"
+        style="@style/Profile_Normal_TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ĐĂNG KÝ NGAY"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:text="@string/ng_k_ngay"
+        android:textColor="@android:color/holo_blue_dark" />
 </LinearLayout>
