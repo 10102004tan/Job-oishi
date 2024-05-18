@@ -101,7 +101,6 @@ public class ProfileFragment extends Fragment {
         });
         return binding.getRoot();
     }
-
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
         InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
