@@ -28,7 +28,6 @@
                         android:layout_marginRight="10dp">
 
                         <ImageView
-                            android:id="@+id/myImageView"
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="#DDDDDD" />
@@ -60,7 +59,7 @@
                                 app:layout_constraintVertical_bias="0.5" />
 
                             <TextView
-                                android:id="@+id/lbl_company_name"
+                                android:id="@+id/l1"
                                 android:layout_width="0dp"
                                 android:layout_height="30dp"
                                 android:background="@color/dddddd"
@@ -83,7 +82,7 @@
                                 app:layout_constraintVertical_bias="0.5" />
 
                             <TextView
-                                android:id="@+id/lbl_quantity_people"
+                                android:id="@+id/l3"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:background="@color/dddddd"
@@ -106,7 +105,7 @@
                                 app:tint="@color/black" />
 
                             <TextView
-                                android:id="@+id/lbl_location"
+                                android:id="@+id/l2"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:background="@color/dddddd"
@@ -129,7 +128,7 @@
                                 app:tint="@color/black" />
 
                             <TextView
-                                android:id="@+id/lbl_field"
+                                android:id="@+id/l4"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:background="@color/dddddd"
@@ -152,7 +151,7 @@
                                 app:tint="@color/black" />
 
                             <TextView
-                                android:id="@+id/txt_verify_time"
+                                android:id="@+id/t5"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:background="@color/dddddd"
@@ -177,6 +176,16 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="7dp"
                     android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:background="@color/dddddd"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -224,6 +233,14 @@
                         android:layout_marginHorizontal="10dp"
                         android:orientation="vertical">
 
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp"
+                        android:background="@color/dddddd"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:orientation="vertical">
                     </LinearLayout>
                 </LinearLayout>
 

@@ -126,7 +126,8 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 editor.apply();
 
                                 // Log ra thông tin đã lưu
-                                // Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+                                 //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+
                                 // Chuyển sang màn hình RegisterMajorActivity
                                 Intent intent = new Intent(LoginEmailActivity.this, RegisterMajorActivity.class);
                                 intent.putExtra("caller", "LoginEmailActivity");
@@ -143,7 +144,6 @@ public class LoginEmailActivity extends AppCompatActivity {
                                         ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
                             }
                         }
-
                         @Override
                         public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
                             // Ghi nhật ký lỗi
