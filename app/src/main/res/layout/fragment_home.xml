@@ -13,6 +13,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
@@ -110,6 +111,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:orientation="vertical"
@@ -117,13 +119,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline4">
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/listJob"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="15dp" />
-
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/imageNoInternet"
                 android:layout_width="300dp"
@@ -136,6 +136,26 @@
                 app:lottie_rawRes="@raw/a404" />
         </LinearLayout>
 
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayoutMyJob"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:tabGravity="fill"
+            app:tabIndicatorAnimationMode="elastic"
+            app:tabSelectedTextColor="@color/black" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tabLayoutMyJob" />
+
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline4"
@@ -143,6 +163,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.2" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

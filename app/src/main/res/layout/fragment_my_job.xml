@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:title="Viec cua toi" />
+        app:title="Việc của tôi" />
 
     <View
         android:layout_width="match_parent"

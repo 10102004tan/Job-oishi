@@ -22,7 +22,7 @@
    <androidx.cardview.widget.CardView
        android:id="@+id/cardViewBottomNav"
        android:layout_width="match_parent"
-       android:layout_height="wrap_content"
+       android:layout_height="0dp"
        app:layout_constraintBottom_toBottomOf="parent"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintTop_toTopOf="@+id/guideline"
@@ -35,17 +35,18 @@
 
       <com.google.android.material.bottomnavigation.BottomNavigationView
           android:id="@+id/bottomNavigationView"
+          style="@style/BottomNavigationViewWithoutRipple"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@color/white"
           app:itemIconTint="@color/color_item_bottom_nav"
           app:itemTextColor="@color/color_item_bottom_nav"
           app:labelVisibilityMode="labeled"
+          android:layout_gravity="center_vertical"
           app:menu="@menu/navigation_bottom" />
 
 
    </androidx.cardview.widget.CardView>
-
 
 
    <androidx.constraintlayout.widget.Guideline
