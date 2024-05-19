@@ -2,14 +2,16 @@
 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eee"
-    android:id="@+id/swipeRefreshLayout"
     tools:context=".Fragments.SavedJobFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/listJob"
             android:layout_width="match_parent"
@@ -25,26 +27,26 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:visibility="gone"
-            app:lottie_rawRes="@raw/no_data"
-            app:lottie_autoPlay="true"
-            app:lottie_loop="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/no_data" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnFiter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:background="@drawable/circle_btn_bg"
-            android:drawableLeft="@drawable/bookmark_ic"
+            android:drawableStart="@drawable/bookmark_ic"
             android:drawablePadding="10dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:text="BO LOC"
+            android:text="@string/filter"
             android:textColor="@color/white"
-            android:layout_marginBottom="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

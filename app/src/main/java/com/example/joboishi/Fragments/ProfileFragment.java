@@ -55,11 +55,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-<<<<<<< HEAD
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerInternetBroadcastReceiver();
-        }
-
 
         binding.setting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,9 +64,6 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-=======
->>>>>>> 8d2aa36d0dc34db7ee1a942b3a9cbe1feaad46f9
         //bắt sự kiện cho boxProfile
         binding.boxProfile.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,53 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="20dp"
-    android:background="@drawable/background_bottom_sheet_change_language">
+    android:background="@drawable/background_bottom_sheet_change_language"
+    android:orientation="vertical"
+    android:padding="20dp">
 
 
-        <TextView
-            style="@style/Profile_Title_TextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="Delete My Account?" />
-        <TextView
-            android:paddingTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:text="Delection is permanent and connot be undone. "
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="All activities, e.g. job applications, will be gone."
-            />
+    <TextView
+        style="@style/Profile_Title_TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_my_account"
+        android:textSize="18sp" />
 
-        <TextView
-            android:paddingTop="40dp"
-            android:paddingBottom="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="If you previous or currently use Job Oishii, contact Customer Support for deletion."/>
+    <TextView
+        style="@style/Profile_Normal_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:text="@string/delection_is_permanent_and_connot_be_undone"
+        android:textSize="16sp" />
+
+    <TextView
+        style="@style/Profile_Normal_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/all_activities_e_g_job_applications_will_be_gone"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        style="@style/Profile_Normal_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="40dp"
+        android:paddingBottom="40dp"
+        android:text="@string/if_you_previous_or_currently_use_job_oishii_contact_customer_support_for_deletion" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_button"
-        android:text="DELETE MY ACCOUNT"
-        android:textColor="@color/white"
-        />
+        android:text="@string/delete_my_account_1"
+        android:textColor="@color/white" />
+
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_button_disable"
-        android:text="Cancel"
-        android:textColor="@color/blue"
-        />
+        android:text="@string/cancel"
+        android:textColor="@color/blue" />
 </LinearLayout>

@@ -21,6 +21,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
     private OnLoadMoreListener onLoadMoreListener;
     private boolean isLoading = false;
     private ArrayList<Integer> arrId;
+    private boolean isVisibleBookmark = true;
+    private boolean isEnableBookmark = true;
 
 
     public void setBookmark(boolean bookmark) {
@@ -37,6 +39,14 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
 
     public void setArrId(ArrayList<Integer> arrId) {
         this.arrId = arrId;
+    }
+
+    public void setVisibleBookmark(boolean visibleBookmark) {
+        isVisibleBookmark = visibleBookmark;
+    }
+
+    public void setEnableBookmark(boolean enableBookmark) {
+        isEnableBookmark = enableBookmark;
     }
 
     public JobAdapter(ArrayList<JobBasic> jobs, Context context) {
@@ -68,6 +78,8 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder>{
         holder.binding.published.setText(job.getPublished());
         holder.binding.bookmarkImage.setSelected(isBookmark);
         holder.binding.salaryTxt.setVisibility((job.isIs_salary_visible()) ? View.VISIBLE : View.GONE);
+        holder.binding.bookmarkImage.setVisibility((isVisibleBookmark) ? View.VISIBLE : View.GONE);
+        holder.binding.bookmarkImage.setEnabled(isEnableBookmark);
         Glide.with(context).load(job.getCompany_logo()).into(holder.binding.companyLogo);
         if (arrId != null){
             if (arrId.contains(job.getId())){
