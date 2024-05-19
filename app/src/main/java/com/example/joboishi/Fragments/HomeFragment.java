@@ -6,7 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
@@ -41,6 +41,8 @@ public class HomeFragment extends Fragment  {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
+
         /*ADD LISTENER FOR tablelayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -51,8 +53,6 @@ public class HomeFragment extends Fragment  {
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
-
                 isFirstTimeSelected = true;
             }
 
@@ -60,12 +60,11 @@ public class HomeFragment extends Fragment  {
             public void onTabReselected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (!isFirstTimeSelected){
-                    scrollRecyclerviewListener.setCurrentTabPosition(position);
+                    scrollRecyclerviewListener.setCurrentTabPosition(-1);
                 }
             }
         });
 
-        filterJob = new ArrayList<>(Arrays.asList("Android Developer", "Frontend Developer", "Backend Developer"));
         /*DONG BO TABLELAYOUT VOI VIEWPAGER*/
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -112,6 +111,17 @@ public class HomeFragment extends Fragment  {
                 selectFilterJob.setList(new ArrayList<>(Arrays.asList("Thành Phố Hồ Chí Minh", "TP. Hà Nội", "Đà Nẵng")));
             }
         });
+
+        binding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+
+                intent.putExtra("filterJob", new ArrayList<>(Arrays.asList("Android", "Front end", "Back end")));
+                startActivity(intent);
+            }
+        });
+
         return binding.getRoot();
     }
 
