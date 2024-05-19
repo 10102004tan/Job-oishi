@@ -1,5 +1,6 @@
 package com.example.joboishi.Api;
 
+import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.Models.JobSearch;
 
 import java.util.ArrayList;
@@ -9,29 +10,21 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface JobSearchAPI {
+
     public static String BASE_URL = APIURL.BASE_URL;
 
     @GET("api/jobs/search")
-    Call<ArrayList<JobSearch>> getListSearchJob(
+    Call<ArrayList<JobBasic>> getListSearchJob(
             @Query("q") String keyword,
+            @Query("remote") Boolean remote,
+            @Query("experience") String experience,
+            @Query("jobType") String jobType,
             @Query("page") int page,
             @Query("page_size") int pageSize
     );
 
-    @GET("api/jobs/searchremote")
-    Call<ArrayList<JobSearch>> getListSearchRmJob(
-            @Query("q") String keyword,
-            @Query("page") int page,
-            @Query("page_size") int pageSize
-    );
-
-    // Lấy bỏ sang Chọn ngành nghề
-    @GET("api/sjobs")
+    // Lấy sang Chọn ngành nghề
+    @GET("api/jobs")
     Call<ArrayList<JobSearch>> getListJobs();
 
-    @GET("api/jobs")
-    Call<ArrayList<JobSearch>> getListSearchJobAll(
-            @Query("page") int page,
-            @Query("page_size") int pageSize
-    );
 }

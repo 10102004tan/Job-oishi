@@ -90,7 +90,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
 
         // Khởi tạo Retrofit và JobSearchAPI
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(JobSearchAPI.BASE_URL) // Thay bằng base URL thực tế
+                .baseUrl(JobSearchAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jobSearchAPI = retrofit.create(JobSearchAPI.class);
@@ -112,7 +112,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
         registerMajorLayoutBinding.showListMajor.setAdapter(registerMajorAdapter);
 
 
-        getJobs(); // Gọi API để lấy danh sách công việc
+        getJobs();
 
         majorChosenAdapter = new SelectedJobAdapter(this, majorsChosen);
 

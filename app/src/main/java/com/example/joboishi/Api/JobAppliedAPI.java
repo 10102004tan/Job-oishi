@@ -8,7 +8,9 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface JobAppliedAPI{
+
     public static String BASE_URL = APIURL.BASE_URL;
+
     @Multipart
     @POST(BASE_URL + "api/applied")
     Call<ResponseBody> applied(

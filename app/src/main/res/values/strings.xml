@@ -185,7 +185,7 @@
     <string name="cancel_1">Cancel</string>
     <string name="lo_i_c_ng_vi_c">Loại Công Việc</string>
     <string name="kh_i_ph_c">Khôi phục</string>
-    <string name="p_d_ng">Áp dụng</string>
+    <string name="p_d_ng">Hủy</string>
     <string name="vi_c_l_m_t_ng_t">Viêc làm tương tự</string>
     <string name="ng_tuy_n_ngay">Ứng tuyển ngay</string>
     <string name="kh_ng_cung_c_p_th_ng_tin_ng_n_h_ng_ho_c_th_t_n_d_ng_khi_ng_tuy_n_nh_tuy_n_d_ng_kh_ng_bao_gi_y_u_c_u_chi_ph_ng_tuy_n_ho_c_chi_ph_o_t_o">KHÔNG cung cấp thông tin ngân hàng hoặc thẻ tín dụng khi ứng tuyển. Nhà tuyển dụng KHÔNG bao giờ yêu cầu chi phí ứng tuyển hoặc chi phí đào tạo</string>
