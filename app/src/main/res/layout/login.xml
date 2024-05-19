@@ -18,7 +18,7 @@
             android:layout_marginStart="150dp"
             android:layout_marginTop="-10dp"
             android:background="@drawable/z5365956487886_72a64f99e3311cf0b099b9308097c1fa"
-            android:contentDescription="@string/todo"></ImageView>
+            android:contentDescription="@string/todo" />
     </LinearLayout>
 
     <LinearLayout
@@ -76,21 +76,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="horizontal">
-            <!--            <LinearLayout-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_weight="1">-->
-            <!--                <ImageView-->
-            <!--                    android:id="@+id/btn_google_sign_in"-->
-            <!--                    android:layout_width="55dp"-->
-            <!--                    android:layout_height="55dp"-->
-            <!--                    android:layout_gravity="center"-->
-            <!--                    android:layout_marginLeft="130dp"-->
-            <!--                    android:background="@drawable/ic_google"-->
-            <!--                    android:onClick="signIn"-->
-            <!--                    android:layout_centerInParent="true">-->
-            <!--                </ImageView>-->
-            <!--            </LinearLayout>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

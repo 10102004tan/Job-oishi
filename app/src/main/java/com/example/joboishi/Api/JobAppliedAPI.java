@@ -13,6 +13,6 @@ public interface JobAppliedAPI{
     @POST(BASE_URL + "api/applied")
     Call<ResponseBody> applied(
             @Part("job_id") RequestBody job_id,
-            @Part("user_id") RequestBody user_id
+            @Part("user_id") RequestBody user_idz
     );
 }

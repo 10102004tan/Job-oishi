@@ -67,7 +67,9 @@ public class RegisterUserActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
                             Log.d("respone", response.toString());
-                            //Toast.makeText(RegisterUserActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
+                           Intent intent = new Intent(RegisterUserActivity.this, LoginEmailActivity.class);
+                           startActivity(intent);
+                           finish();
                         }
 
                         @Override
