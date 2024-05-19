@@ -43,13 +43,14 @@ public class ProfileFragment extends Fragment {
     private final int REQUEST_CODE_TO_PROFILE_ACTIVITY = 987709;
     private UserResponse userData = new UserResponse();
     private FragmentProfileBinding binding;
-    private int USER_ID = 7;
+    private int USER_ID = 0;
     private LoadingDialog loadingDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
+
 
         loadingDialog = new LoadingDialog(requireActivity());
         loadingDialog.show();

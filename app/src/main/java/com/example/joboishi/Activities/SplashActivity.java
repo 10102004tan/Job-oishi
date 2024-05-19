@@ -113,7 +113,6 @@ public class SplashActivity extends BaseActivity {
                                 });
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
-
             }
         });
     }
