@@ -160,6 +160,7 @@ public class SavedJobFragment extends BaseFragment {
     }
     @Override
     protected void handleNoInternet() {
+        //When no internet, disable bookmark
         adapter.setEnableBookmark(false);
         statusPreInternet = STATUS_NO_INTERNET;
         if (isFirst) {
@@ -192,6 +193,7 @@ public class SavedJobFragment extends BaseFragment {
 
     @Override
     protected void handleGoodInternet() {
+        //When internet is good, enable bookmark
         adapter.setEnableBookmark(true);
         statusPreInternet = STATUS_GOOD_INTERNET;
         if (isFirst) {
