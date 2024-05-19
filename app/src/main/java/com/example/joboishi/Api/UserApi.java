@@ -24,6 +24,9 @@ public interface UserApi {
 
     @POST("/api/user")
     Call<UserApiResponse> registerUser(@Body UserRegisterEmailRequest request);
+
+    @POST("/api/user/facebook")
+    Call<UserApiResponse> registerFacebookUser(@Body UserFacebookLoginRequest request);
   
     @POST("/api/user/login")
     Call<UserApiResponse> loginUser(@Body UserLoginEmailRequest request);

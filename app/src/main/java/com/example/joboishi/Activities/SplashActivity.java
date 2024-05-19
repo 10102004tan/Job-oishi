@@ -42,7 +42,6 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userEmail = sharedPref.getString("user_email", "ko");
         processingTokenFcm();
-
     }
 
     private void processingTokenFcm(){
@@ -77,16 +76,14 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && userEmail != null) {
-                   Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                   startActivity(intent);
+                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
                     finish();
                 } else if(userEmail == null) {
-                  startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                  finish();
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    finish();
                 }
-              else{
-                  // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
-                    Log.e("testsss", "Send FCM token failed with code: " + response.code());
+                else{
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
                 }
@@ -95,19 +92,19 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 binding.lottieAnimationView.pauseAnimation();
-               dialog =
-                new CuteDialog.withIcon(SplashActivity.this)
-                        .setIcon(R.drawable.logo)
-                        .setTitle("Lỗi")
-                        .hideCloseIcon(true)
-                        .setDescription("Có lỗi, vui lòng kiểm tra kết nối mạng và thử lại sau!")
-                        .setPositiveButtonText("Tải lại", v2 -> {
-                            binding.lottieAnimationView.playAnimation();
-                            processingTokenFcm();
-                        })
-                        .setNegativeButtonText("Thoát", v1 -> {
-                            finish();
-                        });
+                dialog =
+                        new CuteDialog.withIcon(SplashActivity.this)
+                                .setIcon(R.drawable.logo)
+                                .setTitle("Lỗi")
+                                .hideCloseIcon(true)
+                                .setDescription("Có lỗi, vui lòng kiểm tra kết nối mạng và thử lại sau!")
+                                .setPositiveButtonText("Tải lại", v2 -> {
+                                    binding.lottieAnimationView.playAnimation();
+                                    processingTokenFcm();
+                                })
+                                .setNegativeButtonText("Thoát", v1 -> {
+                                    finish();
+                                });
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
 

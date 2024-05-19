@@ -81,6 +81,7 @@ public class SavedJobFragment extends BaseFragment {
         adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
+        getJobsSaved();
         //Add event for adapter
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
@@ -91,12 +92,12 @@ public class SavedJobFragment extends BaseFragment {
             }
 
             @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 //Khong lam gi
             }
 
             @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
                 bookmarksRef.child("userId3").child("job"+job.getId()).removeValue();
             }
@@ -154,12 +155,13 @@ public class SavedJobFragment extends BaseFragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("test122",databaseError.getMessage());
             }
         });
     }
     @Override
     protected void handleNoInternet() {
+        //When no internet, disable bookmark
+        adapter.setEnableBookmark(false);
         statusPreInternet = STATUS_NO_INTERNET;
         if (isFirst) {
             binding.image.setVisibility(View.VISIBLE);
@@ -172,7 +174,7 @@ public class SavedJobFragment extends BaseFragment {
         }
 
         MotionToast.Companion.createToast(getActivity(), "😍",
-                "Không có kết nối mạng",
+                getString(R.string.kh_ng_c_k_t_n_i_m_ng),
                 MotionToastStyle.ERROR,
                 MotionToast.GRAVITY_BOTTOM,
                 MotionToast.LONG_DURATION,
@@ -182,7 +184,7 @@ public class SavedJobFragment extends BaseFragment {
     @Override
     protected void handleLowInternet() {
         MotionToast.Companion.createToast(getActivity(), "😍",
-                "Đang kết nối ...",
+                getString(R.string.ang_k_t_n_i),
                 MotionToastStyle.WARNING,
                 MotionToast.GRAVITY_BOTTOM,
                 MotionToast.LONG_DURATION,
@@ -191,6 +193,8 @@ public class SavedJobFragment extends BaseFragment {
 
     @Override
     protected void handleGoodInternet() {
+        //When internet is good, enable bookmark
+        adapter.setEnableBookmark(true);
         statusPreInternet = STATUS_GOOD_INTERNET;
         if (isFirst) {
             statusInternet = STATUS_GOOD_INTERNET;
@@ -201,13 +205,11 @@ public class SavedJobFragment extends BaseFragment {
                 binding.image.setVisibility(View.GONE);
                 binding.listJob.setVisibility(View.VISIBLE);
             }
-
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getJobsSaved();
     }
 }
