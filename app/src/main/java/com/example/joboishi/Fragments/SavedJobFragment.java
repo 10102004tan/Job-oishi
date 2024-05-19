@@ -81,6 +81,7 @@ public class SavedJobFragment extends BaseFragment {
         adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
+        getJobsSaved();
         //Add event for adapter
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
@@ -91,12 +92,12 @@ public class SavedJobFragment extends BaseFragment {
             }
 
             @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 //Khong lam gi
             }
 
             @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
                 bookmarksRef.child("userId3").child("job"+job.getId()).removeValue();
             }
@@ -210,8 +211,5 @@ public class SavedJobFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (statusInternet != STATUS_NO_INTERNET){
-            getJobsSaved();
-        }
     }
 }

@@ -1,13 +1,15 @@
 package com.example.joboishi.Activities;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,8 +23,19 @@ import com.example.joboishi.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterUserActivity extends AppCompatActivity {
+
+    private static final Pattern PASSWORD_UPPERCASE = Pattern.compile(".*[A-Z].*");
+    private static final Pattern PASSWORD_LOWERCASE = Pattern.compile(".*[a-z].*");
+    private static final Pattern PASSWORD_DIGIT = Pattern.compile(".*[0-9].*");
+    private static final Pattern PASSWORD_SPECIAL = Pattern.compile(".*[@#$%^&+=].*");
+    private static final Pattern PASSWORD_LENGTH = Pattern.compile(".{8,}");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,27 +68,109 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
                 if (firstname.isEmpty() || lastname.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                    Toast.makeText(RegisterUserActivity.this, "Vui lòng điền vào tất cả các trường", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Vui lòng điền vào tất cả các trường",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches() || !email.endsWith("@gmail.com")) {
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Vui lòng nhập @gmail.com",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                } else if (!PASSWORD_LENGTH.matcher(password).matches()) {
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Mật khẩu phải có ít nhất 8 ký tự",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                } else if (!PASSWORD_UPPERCASE.matcher(password).matches()) {
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Mật khẩu phải có ít nhất 1 chữ cái viết hoa",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                } else if (!PASSWORD_LOWERCASE.matcher(password).matches()) {
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Mật khẩu phải có ít nhất 1 chữ cái thường",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                } else if (!PASSWORD_DIGIT.matcher(password).matches()) {
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Mật khẩu phải có ít nhất 1 chữ số",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                } else if (!PASSWORD_SPECIAL.matcher(password).matches()) {
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Mật khẩu phải có ít nhất 1 ký tự đặc biệt (@#$%^&+=)",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
                 } else if (!password.equals(confirmPassword)) {
-                    Toast.makeText(RegisterUserActivity.this, "Mật khẩu không khớp", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(RegisterUserActivity.this,
+                            "Lỗi",
+                            "Mật khẩu không khớp",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
                 } else {
-
                     UserRegisterEmailRequest request = new UserRegisterEmailRequest(firstname, lastname, email, password);
-                    // Thực hiện đăng ký tài khoản (gửi dữ liệu lên server)
                     UserApi userApi = ApiClient.getUserAPI();
                     Call<UserApiResponse> callUser = userApi.registerUser(request);
                     callUser.enqueue(new Callback<UserApiResponse>() {
                         @Override
-                        public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
-                            Log.d("respone", response.toString());
-                           Intent intent = new Intent(RegisterUserActivity.this, LoginEmailActivity.class);
-                           startActivity(intent);
-                           finish();
+                        public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
+                            Log.d("response", response.toString());
+                            if (response.isSuccessful()) {
+                                MotionToast.Companion.createToast(RegisterUserActivity.this,
+                                        "Thành công",
+                                        "Đã đăng ký tài khoản thành công",
+                                        MotionToastStyle.SUCCESS,
+                                        MotionToast.GRAVITY_BOTTOM,
+                                        MotionToast.LONG_DURATION,
+                                        ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                                Intent intent = new Intent(RegisterUserActivity.this, LoginEmailActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }else {
+                                MotionToast.Companion.createToast(RegisterUserActivity.this,
+                                        "Thất bại",
+                                        "Emai đã tồn tại !!!",
+                                        MotionToastStyle.ERROR,
+                                        MotionToast.GRAVITY_BOTTOM,
+                                        MotionToast.LONG_DURATION,
+                                        ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
+                            }
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
-                            Log.d("respone", t.toString());
+                        public void onFailure(Call<UserApiResponse> call, Throwable t) {
+                            Log.d("response", t.toString());
+                            MotionToast.Companion.createToast(RegisterUserActivity.this,
+                                    "Lỗi",
+                                    "Đăng ký tài khoản thất bại",
+                                    MotionToastStyle.ERROR,
+                                    MotionToast.GRAVITY_BOTTOM,
+                                    MotionToast.LONG_DURATION,
+                                    ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
                         }
                     });
                 }

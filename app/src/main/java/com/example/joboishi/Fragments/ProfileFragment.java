@@ -24,6 +24,8 @@ import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserResponse;
+import com.example.joboishi.Activities.SettingActivity;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.FragmentProfileBinding;
@@ -123,7 +125,18 @@ public class ProfileFragment extends Fragment {
         });
 
 
+
+         binding.setting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Chuyển đến màn hình đăng xuất
+                Intent intent = new Intent(getActivity(), SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+  
         //bắt sự kiện cho boxProfile
+
         binding.boxProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
