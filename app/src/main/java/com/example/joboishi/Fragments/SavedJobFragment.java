@@ -113,6 +113,8 @@ public class SavedJobFragment extends BaseFragment {
                 getJobsSaved();
                 if (statusInternet == STATUS_NO_INTERNET){
                     binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
                 }
             }
         });
@@ -152,12 +154,13 @@ public class SavedJobFragment extends BaseFragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("test122",databaseError.getMessage());
             }
         });
     }
     @Override
     protected void handleNoInternet() {
+        //When no internet, disable bookmark
+        adapter.setEnableBookmark(false);
         statusPreInternet = STATUS_NO_INTERNET;
         if (isFirst) {
             binding.image.setVisibility(View.VISIBLE);
@@ -166,42 +169,49 @@ public class SavedJobFragment extends BaseFragment {
             statusInternet = STATUS_NO_INTERNET;
             binding.swipeRefreshLayout.setRefreshing(false);
             isFirst = false;
-            new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
-                    .setTitle("Không có kết nối mạng")
-                    .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                    .setCancelable(false)
-                    .setGravity(Gravity.BOTTOM).show();
             ;
         }
+
+        MotionToast.Companion.createToast(getActivity(), "😍",
+                getString(R.string.kh_ng_c_k_t_n_i_m_ng),
+                MotionToastStyle.ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
     }
 
     @Override
     protected void handleLowInternet() {
-        binding.image.setVisibility(View.VISIBLE);
+        MotionToast.Companion.createToast(getActivity(), "😍",
+                getString(R.string.ang_k_t_n_i),
+                MotionToastStyle.WARNING,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
     }
 
     @Override
     protected void handleGoodInternet() {
+        //When internet is good, enable bookmark
+        adapter.setEnableBookmark(true);
         statusPreInternet = STATUS_GOOD_INTERNET;
         if (isFirst) {
             statusInternet = STATUS_GOOD_INTERNET;
             isFirst = false;
         }
         else{
-            binding.image.setVisibility(View.GONE);
-            binding.listJob.setVisibility(View.VISIBLE);
-            MotionToast.Companion.createToast(getActivity(), "😍",
-                    "Kết nối mạng đã được khôi phục",
-                    MotionToastStyle.SUCCESS,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+            if (statusInternet == STATUS_NO_INTERNET){
+                binding.image.setVisibility(View.GONE);
+                binding.listJob.setVisibility(View.VISIBLE);
+            }
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getJobsSaved();
+        if (statusInternet != STATUS_NO_INTERNET){
+            getJobsSaved();
+        }
     }
 }

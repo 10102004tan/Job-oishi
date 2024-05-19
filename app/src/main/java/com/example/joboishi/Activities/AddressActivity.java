@@ -1,27 +1,43 @@
 package com.example.joboishi.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.joboishi.Adapters.CityAdapter;
 import com.example.joboishi.Adapters.CityChosenAdpater;
+import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.JobCriteriaApiResponse;
+import com.example.joboishi.Api.JobCriteriaRequest;
+import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Models.CityMajors;
 import com.example.joboishi.Models.RegisterMajors;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.AddressLayoutBinding;
 
 import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class AddressActivity extends AppCompatActivity {
 
@@ -31,6 +47,9 @@ public class AddressActivity extends AppCompatActivity {
     CityAdapter cityAdapter;
     CityChosenAdpater cityChosenAdpater;
     private AddressLayoutBinding addressLayoutBinding;
+    private ArrayList<String> majors = new ArrayList<>();
+    private int USER_ID = 0;
+    private LoadingDialog loadingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +60,17 @@ public class AddressActivity extends AppCompatActivity {
 
         // Get View
         Button btnDone = findViewById(R.id.btnDone);
+        loadingDialog = new LoadingDialog(this);
+
+        // Lấy giá trị từ SharedPreferences
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        USER_ID = sharedPref.getInt("user_id", 0);
+
+        if (USER_ID == 0) {
+            Intent intent = new Intent(AddressActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Get data from intent, from Job criteria Activity
         Intent intent = getIntent();
@@ -49,13 +79,15 @@ public class AddressActivity extends AppCompatActivity {
         assert caller != null;
         if (caller.equals("JobCriteriaActivity")) {
             btnDone.setText(R.string.btn_save_label);
-        }
-        // Get data from intent, from Job criteria Activity
-        ArrayList<String> city = (ArrayList<String>) intent.getSerializableExtra("cities");
-        assert city != null;
-        if (!city.isEmpty()) {
-            listCityChosen.clear();
-            listCityChosen.addAll(city);
+            // Get data from intent, from Job criteria Activity
+            ArrayList<String> city = (ArrayList<String>) intent.getSerializableExtra("cities");
+            assert city != null;
+            if (!city.isEmpty()) {
+                listCityChosen.clear();
+                listCityChosen.addAll(city);
+            }
+        } else if (caller.equals("RegisterMajorActivity")) {
+            majors = (ArrayList<String>) intent.getSerializableExtra("majorsChosen");
         }
 
 
@@ -158,6 +190,61 @@ public class AddressActivity extends AppCompatActivity {
                     resultIntent.putExtra("cities", listCityChosen);
                     setResult(RESULT_OK, resultIntent);
                     finish();
+                } else if (caller.equals("RegisterMajorActivity")) {
+                    loadingDialog.show();
+                    StringBuilder jobPositions = new StringBuilder();
+                    StringBuilder cities = new StringBuilder();
+
+
+                    for (int i = 0; i < majors.size(); i++) {
+                        if (i == majors.size() - 1) {
+                            jobPositions.append(majors.get(i));
+                        } else {
+                            jobPositions.append(majors.get(i)).append(",");
+                        }
+                    }
+
+                    for (int i = 0; i < listCityChosen.size(); i++) {
+                        if (i == listCityChosen.size() - 1) {
+                            cities.append(listCityChosen.get(i));
+                        } else {
+                            cities.append(listCityChosen.get(i)).append(",");
+                        }
+                    }
+
+
+                    JobCriteriaRequest request = new JobCriteriaRequest();
+                    request.setUser_id(USER_ID);
+                    request.setJob_location(String.valueOf(cities));
+                    request.setJob_position(String.valueOf(jobPositions));
+
+
+                    UserApi userApi = ApiClient.getUserAPI();
+                    Call<JobCriteriaApiResponse> callUser = userApi.updateJobCriteria(request);
+                    callUser.enqueue(new Callback<JobCriteriaApiResponse>() {
+                        @Override
+                        public void onResponse(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Response<JobCriteriaApiResponse> response) {
+                            if (response.isSuccessful()) {
+                                loadingDialog.cancel();
+                                Intent intentHome = new Intent(AddressActivity.this, HomeActivity.class);
+                                startActivity(intentHome);
+                                finish();
+                            } else {
+                                MotionToast.Companion.createToast(AddressActivity.this, "Thất bại",
+                                        "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau",
+                                        MotionToastStyle.SUCCESS,
+                                        MotionToast.GRAVITY_BOTTOM,
+                                        MotionToast.LONG_DURATION,
+                                        ResourcesCompat.getFont(AddressActivity.this, R.font.helvetica_regular));
+                                // Toast.makeText(JobCriteriaActivity.this, "Đã xảy ra lỗi trong quá trình xử lý, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<JobCriteriaApiResponse> call, @NonNull Throwable t) {
+                            Log.d("error", t.toString());
+                        }
+                    });
                 }
             }
         });

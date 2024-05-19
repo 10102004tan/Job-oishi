@@ -9,7 +9,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface JobSearchAPI {
-    public static String BASE_URL = "http://10.0.2.2:3001";
+    public static String BASE_URL = APIURL.BASE_URL;
 
     @GET("api/jobs/search")
     Call<ArrayList<JobSearch>> getListSearchJob(
@@ -26,7 +26,7 @@ public interface JobSearchAPI {
     );
 
     // Lấy bỏ sang Chọn ngành nghề
-    @GET("api/jobs")
+    @GET("api/sjobs")
     Call<ArrayList<JobSearch>> getListJobs();
 
     @GET("api/jobs")

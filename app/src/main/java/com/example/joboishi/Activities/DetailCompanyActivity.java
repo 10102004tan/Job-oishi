@@ -49,12 +49,13 @@ public class DetailCompanyActivity extends AppCompatActivity {
     String company_id;
     private InternetBroadcastReceiver internetBroadcastReceiver;
     private IntentFilter intentFilter;
-    private final  int STATUS_NO_INTERNET = 0;
-    private final  int STATUS_LOW_INTERNET = 1;
-    private final  int STATUS_GOOD_INTERNET = 2;
+    private final int STATUS_NO_INTERNET = 0;
+    private final int STATUS_LOW_INTERNET = 1;
+    private final int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +89,8 @@ public class DetailCompanyActivity extends AppCompatActivity {
 //        binding.jobsOfCompany.setAdapter(adapter);
 
         company_id = getIntent().getIntExtra("COMPANY_ID", -1) + "";
-        getDetailCompany(company_id,  new DetailCompanyCallBack() {
+        Log.d("test", "Company id: " + company_id);
+        getDetailCompany(company_id, new DetailCompanyCallBack() {
             @Override
             public void onGetCompanyLoaded(Company company) {
                 //Show layout
@@ -96,49 +98,98 @@ public class DetailCompanyActivity extends AppCompatActivity {
                 binding.companyShimmer.setVisibility(View.GONE);
                 binding.companyLayout.setVisibility(View.VISIBLE);
 
-                //Company name
-                binding.lblCompanyName.setText(company.getDisplay_name());
-                //Company Address
-                binding.lblLocation.setText(company.getAddress().get(0).getProvince());
-                //Company size
-                binding.lblQuantityPeople.setText(company.getCompany_size());
-
-                //Company  logo
-                Glide.with(DetailCompanyActivity.this)
-                        .load(company.getImage_logo())
-                        .into(binding.myImageView)
-                ;
-
-//               //Get About Company
-                binding.lblAboutCompany.setText(company.getDisplay_name());
-
-                //Get Company description
-                SpannableStringBuilder description = processStringWithBullet(company.getDescription().trim());
-                binding.lblDesctiption.setText(description);
-
-
-                //Get Office Address
-                String addressString = "";
-                for (Address address: company.getAddress()) {
-                    addressString += address.getStreet() + ", " + address.getDistrict() + ", " + address.getProvince() + "\n";
+                // Company name
+                if (company.getDisplay_name() != null && !company.getDisplay_name().isEmpty()) {
+                    binding.lblCompanyName.setText(company.getDisplay_name());
                 }
-                SpannableStringBuilder spannableStringBuilder = processStringWithBullet(addressString.trim());
-                binding.lblAddresses.setText(spannableStringBuilder);
 
-                //Get website
-                binding.lblWebsite.setText(company.getWebsite());
+                // Company Address
+                if (company.getAddress() != null && !company.getAddress().isEmpty()) {
+                    binding.lblLocation.setText(company.getAddress().get(0).getProvince());
+                }
+
+                // Company size
+                if (company.getCompany_size() != null && !company.getCompany_size().isEmpty()) {
+                    binding.lblQuantityPeople.setText(company.getCompany_size());
+                }
+
+                // Company field
+                StringBuilder industriesBuilder = new StringBuilder();
+                if (company.getIndustries_arr() != null && !company.getIndustries_arr().isEmpty()) {
+                    int industriesCount = company.getIndustries_arr().size();
+                    // Iterate through the industries list
+                    for (int i = 0; i < industriesCount; i++) {
+                        String industry = company.getIndustries_arr().get(i);
+                        if (i > 0) {
+                            industriesBuilder.append(", ");
+                        }
+                        industriesBuilder.append(industry);
+
+                        // If there are more than 3 elements, break the loop after the third element
+                        if (i == 2) {
+                            industriesBuilder.append("...");
+                            break;
+                        }
+                    }
+                }
+                // Convert the StringBuilder to a String
+                String industries = industriesBuilder.toString();
+                // Set the text to the label
+                binding.lblField.setText(industries);
+
+                // Company logo
+                if (company.getImage_logo() != null && !company.getImage_logo().isEmpty()) {
+                    Glide.with(DetailCompanyActivity.this)
+                            .load(company.getImage_logo())
+                            .into(binding.myImageView);
+                }
+
+                // Get About Company
+                if (company.getDisplay_name() != null && !company.getDisplay_name().isEmpty()) {
+                    binding.lblAboutCompany.setText(company.getDisplay_name());
+                }
+
+                // Get Company description
+                if (company.getDescription() != null && !company.getDescription().trim().isEmpty()) {
+                    SpannableStringBuilder description = processStringWithBullet(company.getDescription().trim());
+                    binding.lblDesctiption.setText(description);
+                }
 
 
-                //Get Galaries image
-                if(company.getImage_galleries() != null && company.getImage_galleries().size() > 0) {
+                // Get Office Address
+                if (company.getAddress() != null && !company.getAddress().isEmpty()) {
+                    StringBuilder addressStringBuilder = new StringBuilder();
+                    for (Address address : company.getAddress()) {
+                        if (address.getStreet() != null && address.getDistrict() != null && address.getProvince() != null) {
+                            addressStringBuilder.append(address.getStreet())
+                                    .append(", ")
+                                    .append(address.getDistrict())
+                                    .append(", ")
+                                    .append(address.getProvince())
+                                    .append("\n");
+                        }
+                    }
+                    String addressString = addressStringBuilder.toString().trim();
+                    if (!addressString.isEmpty()) {
+                        SpannableStringBuilder spannableStringBuilder = processStringWithBullet(addressString);
+                        binding.lblAddresses.setText(spannableStringBuilder);
+                    }
+                }
+
+                // Get website
+                if (company.getWebsite() != null && !company.getWebsite().isEmpty()) {
+                    binding.lblWebsite.setText(company.getWebsite());
+                }
+
+                // Get Galleries image
+                if (company.getImage_galleries() != null && !company.getImage_galleries().isEmpty()) {
                     binding.imageGalleriesItem.setVisibility(View.VISIBLE);
                     ImageDescCompanyAdapter adapter = new ImageDescCompanyAdapter(company.getImage_galleries(), DetailCompanyActivity.this);
                     LinearLayoutManager layoutManager = new LinearLayoutManager(DetailCompanyActivity.this);
                     layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
                     binding.gralariesImage.setLayoutManager(layoutManager);
                     binding.gralariesImage.setAdapter(adapter);
-                }
-                else {
+                } else {
                     binding.imageGalleriesItem.setVisibility(View.GONE);
                 }
 
@@ -149,11 +200,11 @@ public class DetailCompanyActivity extends AppCompatActivity {
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet){
+                if (statusPreInternet != statusInternet) {
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
-                if (statusInternet == STATUS_NO_INTERNET){
+                if (statusInternet == STATUS_NO_INTERNET) {
                     binding.swipeRefreshLayout.setRefreshing(false);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
@@ -172,17 +223,20 @@ public class DetailCompanyActivity extends AppCompatActivity {
         call.enqueue(new Callback<Company>() {
             @Override
             public void onResponse(Call<Company> call, Response<Company> response) {
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     Company company = response.body();
                     assert company != null;
                     callBack.onGetCompanyLoaded(company);
 
                 }
+                else {
+                    Log.d("test", "Lỗi không thể phản hồi công ty này ");
+                }
             }
 
             @Override
             public void onFailure(Call<Company> call, Throwable t) {
-
+                Log.d("test", "Lỗi không thể đọc công ty này ");
             }
         });
 
@@ -194,7 +248,7 @@ public class DetailCompanyActivity extends AppCompatActivity {
     }
 
     //Ham xu ly chuoi thanh cac dau cham dau dong
-    private SpannableStringBuilder processStringWithBullet(String longDescription){
+    private SpannableStringBuilder processStringWithBullet(String longDescription) {
         String arr[] = longDescription.split("\n");
         //lưu khoảng cách giữa ký tự đầu dòng và nội dung
         int bulletGap = (int) getResources().getDisplayMetrics().density * 15;
@@ -252,8 +306,7 @@ public class DetailCompanyActivity extends AppCompatActivity {
                 if (isFirst) {
                     statusInternet = STATUS_GOOD_INTERNET;
                     isFirst = false;
-                }
-                else{
+                } else {
                     binding.image.setVisibility(View.GONE);
                     binding.main.setVisibility(View.VISIBLE);
                     MotionToast.Companion.createToast(DetailCompanyActivity.this, "😍",
@@ -268,7 +321,7 @@ public class DetailCompanyActivity extends AppCompatActivity {
         intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
 
-        Log.d("testtttt","tetssss");
+        Log.d("testtttt", "tetssss");
     }
 
 }

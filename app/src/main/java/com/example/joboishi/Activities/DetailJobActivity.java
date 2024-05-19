@@ -105,13 +105,13 @@ public class DetailJobActivity extends AppCompatActivity {
             }
         });
 
-        // Lợi ích recycler view
+        // Benefits recycler view
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this);
         layoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
 
 
         //Lay du lieu tu job api
-//        jobId = "2032881";
+        //jobId = "2032881";
         jobId = getIntent().getIntExtra("JOB_ID", -1) + "";
         if (jobId.equals("-1")) {
             // Không tìm thấy JOB_ID, xử lý lỗi
@@ -129,79 +129,106 @@ public class DetailJobActivity extends AppCompatActivity {
 
 //                Log.d("test", job.getContent());
 
-                //Responsibilities
-                String longDescription = job.getResponsibilities();
-                SpannableStringBuilder ssb = processStringWithBullet(longDescription.trim());
-                binding.txtResponsibilities.setText(ssb);
-
-                //Requirement
-                SpannableStringBuilder requirement = processStringWithBullet(job.getRequirements().trim());
-                binding.txtRequirements.setText(requirement);
-                //Title job
-                binding.lblJobTitle.setText(job.getTitle());
-                //Logo company
-                Glide.with(DetailJobActivity.this)
-                        .load(job.getCompany().getImage_logo())
-                        .into(binding.imgCompanyLogo)
-                ;
-                //Company name
-                binding.txtCompanyName.setText(job.getCompany().getDisplay_name());
-
-                //Job Salary
-                if(!job.getIs_salary_visible()) {
-                    binding.txtSalary.setText("Công ty bảo mật thông tin này");
-                }
-                else {
-                    binding.txtSalary.setText(job.getSalary_value());
+                // Responsibilities
+                if (job.getResponsibilities() != null) {
+                    String longDescription = job.getResponsibilities().trim();
+                    SpannableStringBuilder ssb = processStringWithBullet(longDescription);
+                    binding.txtResponsibilities.setText(ssb);
                 }
 
-                //Company location
-                binding.txtLocation.setText(job.getCompany().getAddress().get(0).getDistrict() + ", " + job.getCompany().getAddress().get(0).getProvince());
-                //Job content
-                binding.txtJobContent.setText(job.getContent());
+                // Requirements
+                if (job.getRequirements() != null) {
+                    SpannableStringBuilder requirement = processStringWithBullet(job.getRequirements().trim());
+                    binding.txtRequirements.setText(requirement);
+                }
 
+                // Job Title
+                if (job.getTitle() != null) {
+                    binding.lblJobTitle.setText(job.getTitle());
+                }
 
-                //Skills
+                // Company Logo
+                if (job.getCompany().getImage_logo() != null) {
+                    Glide.with(DetailJobActivity.this)
+                            .load(job.getCompany().getImage_logo())
+                            .into(binding.imgCompanyLogo);
+                }
+
+                // Company Name
+                if (job.getCompany() != null && job.getCompany().getDisplay_name() != null) {
+                    binding.txtCompanyName.setText(job.getCompany().getDisplay_name());
+                }
+
+                // Job Salary
+                    if (!job.getIs_salary_visible()) {
+                        binding.txtSalary.setText("Công ty bảo mật thông tin này");
+                    } else {
+                        binding.txtSalary.setText(job.getSalary_value());
+                    }
+
+                // Company Location
+                if (job.getCompany() != null && !job.getCompany().getAddress().isEmpty()) {
+                    String district = job.getCompany().getAddress().get(0).getDistrict();
+                    String province = job.getCompany().getAddress().get(0).getProvince();
+                    if (district != null && province != null) {
+                        binding.txtLocation.setText(district + ", " + province);
+                    }
+                }
+
+                // Job Content
+                if (job.getContent() != null) {
+                    binding.txtJobContent.setText(job.getContent().trim());
+                }
+
+                // Skills
                 // Xóa tất cả các TextView hiện có từ LinearLayout
                 binding.skillsLayout.removeAllViews();
-
-                // Thêm các TextView mới
-                for (String item : job.getSkills()) {
-                    TextView textView = new TextView(DetailJobActivity.this);
-                    textView.setLayoutParams(new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                    ));
-                    textView.setText(item);
-                    textView.setBackgroundResource(R.drawable.text_badge);
-                    textView.setPadding(15, 5, 15, 5); // Thêm padding nếu cần
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
-                    params.setMargins(0, 0, 20, 0); // Khoảng cách giữa các TextView
-                    textView.setLayoutParams(params);
-                    binding.skillsLayout.addView(textView); // Thêm TextView vào LinearLayout
+                if (job.getSkills() != null && !job.getSkills().isEmpty()) {
+                    // Thêm các TextView mới
+                    for (String item : job.getSkills()) {
+                        if (item != null) {
+                            TextView textView = new TextView(DetailJobActivity.this);
+                            textView.setLayoutParams(new LinearLayout.LayoutParams(
+                                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT
+                            ));
+                            textView.setText(item);
+                            textView.setBackgroundResource(R.drawable.text_badge);
+                            textView.setPadding(15, 5, 15, 5); // Thêm padding nếu cần
+                            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) textView.getLayoutParams();
+                            params.setMargins(0, 0, 20, 0); // Khoảng cách giữa các TextView
+                            textView.setLayoutParams(params);
+                            binding.skillsLayout.addView(textView); // Thêm TextView vào LinearLayout
+                        }
+                    }
                 }
 
-
-                //Benefits
-                if(job.getBenefit() != null && job.getBenefit().size() > 0) {
+                // Benefits
+                if (job.getBenefit() != null && !job.getBenefit().isEmpty()) {
                     binding.getBenefits.setVisibility(View.VISIBLE);
                     binding.getBenefitsTitle.setVisibility(View.VISIBLE);
-                    BenefitAdapter benefitAdapter = new BenefitAdapter(DetailJobActivity.this,job.getBenefit());
+                    BenefitAdapter benefitAdapter = new BenefitAdapter(DetailJobActivity.this, job.getBenefit());
                     binding.benefitsList.setLayoutManager(layoutManager1);
                     binding.benefitsList.setAdapter(benefitAdapter);
-                }
-                else {
+                } else {
                     binding.getBenefits.setVisibility(View.GONE);
                     binding.getBenefitsTitle.setVisibility(View.GONE);
                 }
 
-                //Get Company logo
-                binding.companyName.setText(job.getCompany().getDisplay_name());
-                binding.txtCompanySize.setText(job.getCompany().getCompany_size());
-                Glide.with(DetailJobActivity.this)
-                        .load(job.getCompany().getImage_logo())
-                        .into(binding.avatarCompany)
-                ;
+                // Get Company logo
+                if (job.getCompany() != null) {
+                    if (job.getCompany().getDisplay_name() != null) {
+                        binding.companyName.setText(job.getCompany().getDisplay_name());
+                    }
+                    if (job.getCompany().getCompany_size() != null) {
+                        binding.txtCompanySize.setText(job.getCompany().getCompany_size());
+                    }
+                    if (job.getCompany().getImage_logo() != null) {
+                        Glide.with(DetailJobActivity.this)
+                                .load(job.getCompany().getImage_logo())
+                                .into(binding.avatarCompany);
+                    }
+                }
 
                 //Get Detail Company's Job
                 //Bat su kiem chuyen sanng chi tiet cong ty
@@ -279,7 +306,8 @@ public class DetailJobActivity extends AppCompatActivity {
     //Ham gọi API
     private void getDetailJob(String jobId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
-//        Log.d("test", DetailJobAPI.BASE_URL);
+        Log.d("test", DetailJobAPI.BASE_URL);
+        Log.d("test", jobId);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailJobAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
