@@ -1,60 +1,141 @@
 package com.example.joboishi.Fragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.example.joboishi.Activities.JobCriteriaActivity;
+import com.example.joboishi.Activities.LoginActivity;
 import com.example.joboishi.Activities.ProfileActivity;
 import com.example.joboishi.Activities.SettingActivity;
-import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
+import com.example.joboishi.Activities.UploadFileActivity;
+import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.UserApi;
+import com.example.joboishi.Api.UserApiResponse;
+import com.example.joboishi.Api.UserResponse;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.FragmentProfileBinding;
-import com.thecode.aestheticdialogs.AestheticDialog;
-import com.thecode.aestheticdialogs.DialogStyle;
-import com.thecode.aestheticdialogs.DialogType;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import www.sanju.motiontoast.MotionToast;
-import www.sanju.motiontoast.MotionToastStyle;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
 
-    private final int STATUS_NO_INTERNET = 0;
-    private final int STATUS_LOW_INTERNET = 1;
-    private final int STATUS_GOOD_INTERNET = 2;
+    private final int REQUEST_CODE_TO_PROFILE_ACTIVITY = 987709;
+    private UserResponse userData = new UserResponse();
     private FragmentProfileBinding binding;
-    private boolean isFirst = true;
-    private int statusInternet = -1;
-    private int statusPreInternet = -1;
 
+    private int USER_ID = 0;
+    private LoadingDialog loadingDialog;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerInternetBroadcastReceiver();
+
+
+        loadingDialog = new LoadingDialog(requireActivity());
+        // loadingDialog.show();
+
+
+        // Lấy giá trị từ SharedPreferences
+        SharedPreferences sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        USER_ID = sharedPref.getInt("user_id", 0);
+        if (USER_ID == 0) {
+            Intent intent = new Intent(this.getActivity(), LoginActivity.class);
+            startActivity(intent);
         }
 
+        // Get user data from api
+        UserApi userApi = ApiClient.getUserAPI();
+        Log.d("USER_ID", USER_ID + "");
+        Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
+        callUser.enqueue(new Callback<UserApiResponse>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    Log.d("TEST", response.body().toString());
+
+                    // Check if user exists
+                    if (response.body().getId() != 0) {
+                        Log.d("TEST", response.body().getFirstname());
+                        userData.setId(response.body().getId());
+                        userData.setFirstName(response.body().getFirstname());
+                        userData.setPhone(response.body().getPhone());
+                        userData.setLastName(response.body().getLastname());
+                        userData.setEducation(response.body().getEducation());
+                        userData.setBirth(response.body().getBirth());
+                        userData.setGender(response.body().getGender());
+                        userData.setPhotoUrl(response.body().getPhotoUrl());
+                        userData.setTimeStartingWorking(response.body().getTimeStartingWork());
+                        userData.setEmail(response.body().getEmail());
+                        userData.setCountry(response.body().getCountry());
+                        userData.setCity(response.body().getCity());
+                        userData.setProvince(response.body().getProvince());
+
+
+                        binding.usernameTextview.setText(userData.getFirstName() + " " + userData.getLastName());
+                        if (userData.getPhone() != null) {
+                            binding.userPhone.setText(userData.getPhone());
+                            binding.userPhone.setVisibility(View.VISIBLE);
+                        } else {
+                            binding.userPhone.setVisibility(View.GONE);
+                        }
+
+                        Glide.with(requireActivity())
+                                .load(userData.getPhotoUrl())
+                                .error(R.drawable.avatar_thinking_svgrepo_com)
+                                .into(binding.userAvatar);
+
+                        // Dismiss dialog when api call done
+                        loadingDialog.cancel();
+                    } else {
+                        // Back to login screen if not user
+                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        startActivity(intent);
+                    }
+                } else {
+                    Log.d("User_Data_Error", "ERROR");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                Log.d("User_Data_Error", t.toString());
+            }
+        });
 
         binding.setting.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,13 +150,13 @@ public class ProfileFragment extends Fragment {
         binding.boxProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Chuyển đến màn hình ProfileActivity
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(intent);
+                intent.putExtra("user_data", userData);
+                intent.putExtra("caller", "ProfileFragment");
+                startActivityForResult(intent, REQUEST_CODE_TO_PROFILE_ACTIVITY);
             }
         });
 
-        // bắt sự kiện cho boxJobCriteria
         binding.boxJobCriteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,78 +170,81 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfileActivity.class);
-                startActivity(intent);
+                intent.putExtra("user_data", userData);
+                intent.putExtra("caller", "ProfileFragment");
+                startActivityForResult(intent, REQUEST_CODE_TO_PROFILE_ACTIVITY);
             }
         });
-
 
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        registerInternetBroadcastReceiver();
-                    }
-                    isFirst = true;
-                }
-                if (statusInternet == STATUS_NO_INTERNET) {
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
 
         });
+
+        // button go to upload cv screen
+        binding.btnUploadCv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), UploadFileActivity.class);
+                startActivity(intent);
+            }
+        });
+
         return binding.getRoot();
     }
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private void registerInternetBroadcastReceiver() {
-        InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
-        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
+
+    private void getTotalBookmarkByUserId(int userId) {
+
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId" + userId); // Thay "userId1" bằng ID người dùng thực tế
+        bookmarksRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void noInternet() {
-                statusPreInternet = STATUS_NO_INTERNET;
-                if (isFirst) {
-                    binding.main.setVisibility(View.GONE);
-                    binding.image.setVisibility(View.VISIBLE);
-                    binding.image.setAnimation(R.raw.a404);
-                    binding.image.playAnimation();
-                    statusInternet = STATUS_NO_INTERNET;
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    isFirst = false;
-                    new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
-                            .setTitle("Không có kết nối mạng")
-                            .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                            .setCancelable(false)
-                            .setGravity(Gravity.BOTTOM).show();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long totalBookmarks = dataSnapshot.getChildrenCount();
+                binding.totalBookmark.setText(String.valueOf(totalBookmarks));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi
+                Log.e("Firebase", "Error getting bookmark count", databaseError.toException());
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getTotalBookmarkByUserId(USER_ID);
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_TO_PROFILE_ACTIVITY && resultCode == getActivity().RESULT_OK) {
+
+            if (data != null) {
+                UserResponse updatedUserData = (UserResponse) data.getSerializableExtra("data_user_updated");
+                if (updatedUserData != null) {
+                    userData = updatedUserData;
+                    binding.usernameTextview.setText(userData.getFirstName() + " " + userData.getLastName());
+                    if (userData.getPhone() != null) {
+                        binding.userPhone.setText(userData.getPhone());
+                        binding.userPhone.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.userPhone.setVisibility(View.GONE);
+                    }
+
+                    Glide.with(requireActivity())
+                            .load(userData.getPhotoUrl())
+                            .error(R.drawable.avatar_thinking_svgrepo_com)
+                            .into(binding.userAvatar);
                 }
             }
-
-            @Override
-            public void lowInternet() {
-                binding.image.setVisibility(View.VISIBLE);
-                binding.main.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void goodInternet() {
-                statusPreInternet = STATUS_GOOD_INTERNET;
-                if (isFirst) {
-                    statusInternet = STATUS_GOOD_INTERNET;
-                    isFirst = false;
-                } else {
-                    binding.image.setVisibility(View.GONE);
-                    binding.main.setVisibility(View.VISIBLE);
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Kết nối mạng đã được khôi phục",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                }
-            }
-        };
-
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+        }
     }
 }

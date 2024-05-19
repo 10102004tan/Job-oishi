@@ -1,6 +1,7 @@
 package com.example.joboishi.Activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -145,6 +146,8 @@ public class JobCriteriaActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         });

@@ -2,27 +2,14 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="JobCriteriaActivity">
+      <entry key="HomeActivity">
         <State />
       </entry>
-      <entry key="ProfileActivity">
+      <entry key="LoginEmailActivity">
         <State />
       </entry>
       <entry key="app">
-        <State>
-          <targetSelectedWithDropDown>
-            <Target>
-              <type value="QUICK_BOOT_TARGET" />
-              <deviceKey>
-                <Key>
-                  <type value="VIRTUAL_DEVICE_PATH" />
-                  <value value="C:\Users\ACER\.android\avd\Pixel_6_API_29.avd" />
-                </Key>
-              </deviceKey>
-            </Target>
-          </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-05-17T09:17:48.761261600Z" />
-        </State>
+        <State />
       </entry>
     </value>
   </component>

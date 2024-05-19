@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        app:title="Viec cua toi" />
+        app:title="Việc của tôi" />
 
     <View
         android:layout_width="match_parent"
@@ -23,10 +23,12 @@
         android:id="@+id/tabLayoutMyJob"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/white"
+        app:tabBackground="@drawable/tab_indecator"
         app:tabGravity="fill"
         app:tabIndicatorAnimationMode="elastic"
-        app:tabSelectedTextColor="@color/black" />
+        app:tabIndicatorGravity="stretch"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/white" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPagerMyJob"

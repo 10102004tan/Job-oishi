@@ -2,6 +2,7 @@ package com.example.joboishi.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,7 @@ public class SavedJobFragment extends BaseFragment {
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private IJobsService iJobsService;
+    private int userId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -75,30 +77,35 @@ public class SavedJobFragment extends BaseFragment {
         binding = FragmentSavedJobBinding.inflate(inflater, container, false);
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", 0);
+
         iJobsService = retrofit.create(IJobsService.class);
         jobs = new ArrayList<>();
         adapter = new JobAdapter(jobs,getContext());
         adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
+        getJobsSaved();
         //Add event for adapter
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
             public void onClickJob(int id) {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
-                intent.putExtra("id",id);
+                intent.putExtra("JOB_ID",id);
                 startActivity(intent);
             }
 
             @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 //Khong lam gi
             }
 
             @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-                bookmarksRef.child("userId3").child("job"+job.getId()).removeValue();
+                bookmarksRef.child("userId"+userId).child("job"+job.getId()).removeValue();
             }
         });
 
@@ -113,6 +120,8 @@ public class SavedJobFragment extends BaseFragment {
                 getJobsSaved();
                 if (statusInternet == STATUS_NO_INTERNET){
                     binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.image.setAnimation(R.raw.a404);
+                    binding.image.playAnimation();
                 }
             }
         });
@@ -126,7 +135,7 @@ public class SavedJobFragment extends BaseFragment {
         binding.image.setVisibility(View.VISIBLE);
         binding.image.setAnimation(R.raw.fetch_api_loading);
         binding.image.playAnimation();
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId"+userId);
         bookmarksRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -152,12 +161,13 @@ public class SavedJobFragment extends BaseFragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("test122",databaseError.getMessage());
             }
         });
     }
     @Override
     protected void handleNoInternet() {
+        //When no internet, disable bookmark
+        adapter.setEnableBookmark(false);
         statusPreInternet = STATUS_NO_INTERNET;
         if (isFirst) {
             binding.image.setVisibility(View.VISIBLE);
@@ -166,42 +176,42 @@ public class SavedJobFragment extends BaseFragment {
             statusInternet = STATUS_NO_INTERNET;
             binding.swipeRefreshLayout.setRefreshing(false);
             isFirst = false;
-            new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
-                    .setTitle("Không có kết nối mạng")
-                    .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                    .setCancelable(false)
-                    .setGravity(Gravity.BOTTOM).show();
             ;
         }
+
+        MotionToast.Companion.createToast(getActivity(), "😍",
+                getString(R.string.kh_ng_c_k_t_n_i_m_ng),
+                MotionToastStyle.ERROR,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
     }
 
     @Override
     protected void handleLowInternet() {
-        binding.image.setVisibility(View.VISIBLE);
+        MotionToast.Companion.createToast(getActivity(), "😍",
+                getString(R.string.ang_k_t_n_i),
+                MotionToastStyle.WARNING,
+                MotionToast.GRAVITY_BOTTOM,
+                MotionToast.LONG_DURATION,
+                ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
     }
 
     @Override
     protected void handleGoodInternet() {
+        //When internet is good, enable bookmark
+        adapter.setEnableBookmark(true);
         statusPreInternet = STATUS_GOOD_INTERNET;
         if (isFirst) {
             statusInternet = STATUS_GOOD_INTERNET;
             isFirst = false;
         }
         else{
-            binding.image.setVisibility(View.GONE);
-            binding.listJob.setVisibility(View.VISIBLE);
-            MotionToast.Companion.createToast(getActivity(), "😍",
-                    "Kết nối mạng đã được khôi phục",
-                    MotionToastStyle.SUCCESS,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
+            if (statusInternet == STATUS_NO_INTERNET){
+                binding.image.setVisibility(View.GONE);
+                binding.listJob.setVisibility(View.VISIBLE);
+            }
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getJobsSaved();
-    }
 }

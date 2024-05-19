@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="10dp"
     app:cardElevation="@dimen/cardview_default_radius"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="@color/white"
     app:cardPreventCornerOverlap="true"
-    android:layout_marginBottom="5dp"
-    android:layout_height="wrap_content">
+    app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/job"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingStart="14dp"
-        android:paddingEnd="14dp"
         android:paddingTop="10dp"
-        android:paddingBottom="14dp"
-        >
+        android:paddingEnd="14dp"
+        android:paddingBottom="14dp">
 
         <TextView
             android:id="@+id/jobTitleTxt"
+            style="@style/Profile_Title_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Back-End Developer"
@@ -32,6 +32,7 @@
 
         <TextView
             android:id="@+id/salaryTxt"
+            style="@style/Profile_Title_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="d 30-40 Tr"
@@ -47,17 +48,18 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="10dp"
+            android:src="@drawable/company_ic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/jobTitleTxt"
-            android:src="@drawable/company_ic" />
+            app:layout_constraintTop_toBottomOf="@+id/jobTitleTxt" />
 
         <TextView
             android:id="@+id/companyNameTxt"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:textColor="@color/dark"
             android:text="FPT Software"
+            android:textColor="@color/dark"
             android:textSize="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/imageView"
             app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -68,17 +70,18 @@
             android:id="@+id/companyLogo"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:scaleType="fitCenter"
             android:src="@drawable/mtp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/companyNameTxt"
             app:riv_border_color="#eee"
             app:riv_border_width="1dip"
-            android:layout_marginTop="20dp"
             app:riv_corner_radius="99dip" />
 
         <TextView
             android:id="@+id/published"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="5dp"
@@ -100,6 +103,7 @@
 
         <TextView
             android:id="@+id/sortAddressesTxt"
+            style="@style/Profile_Normal_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"

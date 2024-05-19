@@ -8,9 +8,11 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -47,6 +49,8 @@ public class RegisterMajorActivity extends AppCompatActivity {
 
         // Get View
         AppCompatButton btnNext = registerMajorLayoutBinding.btnNextAdress;
+        TextView toolbarTitle = findViewById(R.id.toolbar_text_title);
+        ImageButton btnBackToolBar = findViewById(R.id.btn_toolbar_back);
 
 
         // Get data from intent, from Job criteria Activity
@@ -56,14 +60,18 @@ public class RegisterMajorActivity extends AppCompatActivity {
         assert caller != null;
         if (caller.equals("JobCriteriaActivity")) {
             btnNext.setText(R.string.btn_save_label);
+            ArrayList<String> major = (ArrayList<String>) intent.getSerializableExtra("majors");
+            assert major != null;
+            if (!major.isEmpty()) {
+                majorsChosen.clear();
+                majorsChosen.addAll(major);
+            }
+        } else if (caller.equals("LoginEmailActivity")) {
+            btnNext.setText(R.string.continute);
+            toolbarTitle.setVisibility(View.GONE);
+            btnBackToolBar.setVisibility(View.GONE);
         }
 
-        ArrayList<String> major = (ArrayList<String>) intent.getSerializableExtra("majors");
-        assert major != null;
-        if (!major.isEmpty()) {
-            majorsChosen.clear();
-            majorsChosen.addAll(major);
-        }
 
         EditText input = registerMajorLayoutBinding.inputMajor;
 
@@ -87,7 +95,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
 
         // Khởi tạo Retrofit và JobSearchAPI
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(JobSearchAPI.BASE_URL) // Thay bằng base URL thực tế
+                .baseUrl(JobSearchAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jobSearchAPI = retrofit.create(JobSearchAPI.class);
@@ -109,7 +117,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
         registerMajorLayoutBinding.showListMajor.setAdapter(registerMajorAdapter);
 
 
-        getJobs(); // Gọi API để lấy danh sách công việc
+        getJobs();
 
         majorChosenAdapter = new SelectedJobAdapter(this, majorsChosen);
 
@@ -130,15 +138,18 @@ public class RegisterMajorActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (hasMajorsChosen()) {
                     // Handle mul screen here
-                    assert caller != null;
                     if (caller.equals("JobCriteriaActivity")) {
                         Intent resultIntent = new Intent();
                         resultIntent.putExtra("majorsChosen", majorsChosen);
                         setResult(RESULT_OK, resultIntent);
                         finish();
-                    } else {
+                    } else if (caller.equals("LoginEmailActivity")) {
+                        // Handle update job criteria selected later
+
                         Intent intent = new Intent(RegisterMajorActivity.this, AddressActivity.class);
                         intent.putExtra("majorsChosen", majorsChosen);
+                        intent.putExtra("caller", "RegisterMajorActivity");
+                        intent.putExtra("is_first_login", true);
                         startActivity(intent);
                     }
                 }
@@ -165,6 +176,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateChosenCountTextView() {
         TextView countChosenAllow = registerMajorLayoutBinding.countChosenAllow;
         if (majorsChosen != null) {
@@ -184,7 +196,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
         Call<ArrayList<JobSearch>> call = jobSearchAPI.getListJobs();
         call.enqueue(new Callback<ArrayList<JobSearch>>() {
             @Override
-            public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
+            public void onResponse(@NonNull Call<ArrayList<JobSearch>> call, @NonNull Response<ArrayList<JobSearch>> response) {
                 if (response.isSuccessful()) {
                     majors = response.body();
                     registerMajorAdapter.updateData(majors); // Cập nhật dữ liệu cho adapter
@@ -195,7 +207,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ArrayList<JobSearch>> call, Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<JobSearch>> call, @NonNull Throwable t) {
                 Log.d("testaaa", "onFailure: " + t.getMessage());
             }
         });
@@ -239,10 +251,11 @@ public class RegisterMajorActivity extends AppCompatActivity {
                 break;
             }
         }
+
         updateButtonBackground();
     }
 
-    // Lọc
+    // Filter
     private void filter(String text) {
         ArrayList<JobSearch> filteredList = new ArrayList<>();
 

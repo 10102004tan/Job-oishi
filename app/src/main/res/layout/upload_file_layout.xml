@@ -1,59 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
     android:orientation="vertical">
 
+    <!-- Toolbar -->
+    <include
+        android:id="@+id/include"
+        layout="@layout/toolbar" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:textSize="18dp"
         android:textStyle="bold"
         android:layout_marginBottom="20dp"
+
         android:text="Hồ sơ ứng tuyển (CV)"
         />
 
-    <androidx.appcompat.widget.AppCompatButton
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmer_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="154dp"
+            android:background="@drawable/btn_upload"
+            android:orientation="vertical" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <LinearLayout
         android:id="@+id/btn_upload"
         android:layout_width="match_parent"
         android:layout_height="154dp"
         android:background="@drawable/btn_upload"
-        android:textColor="@color/blue"
-        android:text="Chọn File" />
-
-    <androidx.cardview.widget.CardView
-        android:layout_marginTop="30dp"
-        style="@style/CardStyle">
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        android:clickable="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:text="Chọn (CV)">
+        <TextView
+            android:id="@+id/lbl_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:text="Your CV: "
-                android:textSize="15sp"
-                android:textStyle="bold"/>
-            <TextView
-                android:id="@+id/lbl_file_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="9"
-                android:layout_marginLeft="10dp"
-                android:textStyle="bold"
-                android:textColor="@color/blue"
-                android:textSize="17sp"/>
-        </LinearLayout>
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            android:textSize="16sp"
+            android:text="Chọn CV của bạn"/>
+    </LinearLayout>
 
 
-    </androidx.cardview.widget.CardView>
-
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_file_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_upload"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        >
 
         <TextView
+            android:id="@+id/lbl_file_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="NguenVanoang.pdfh"
+            android:textAllCaps="false"
+            android:textColor="@color/blue"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/lbl_file_info"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <TextView
+            android:id="@+id/lbl_file_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="124kb • Update 19/5/2024"
+            android:textAllCaps="false"
+            android:textColor="@color/gray"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/lbl_file_name"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/lbl_file_name"
+            app:layout_constraintTop_toBottomOf="@+id/lbl_file_name"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ImageView
+            android:id="@+id/btn_delete_cv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:clickable="true"
+            android:src="@drawable/ic_delete_cv"
+            app:layout_constraintBottom_toBottomOf="@+id/lbl_file_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/lbl_file_name"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.89" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
             android:id="@+id/lbl_description"
             android:layout_marginTop="25dp"
             android:padding="10dp"
@@ -68,20 +137,20 @@
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:textSize="14dp"
-            android:text="(Định dạng PDF, dung lượng tối đa 5MB"/>
+            android:text="(Định dạng PDF, dung lượng tối đa 5MB)"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:gravity="bottom"
         android:layout_marginBottom="30dp">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_push"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_outline"
-            android:textColor="@color/blue"
+            android:background="@drawable/button_selector"
+            android:enabled="false"
             android:text="Lưu" />
     </LinearLayout>
 

@@ -3,6 +3,7 @@ package com.example.joboishi.Activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,11 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.joboishi.Api.UserFcmAPI;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.R;
+import com.example.joboishi.abstracts.BaseActivity;
+import com.example.joboishi.databinding.SplashLayoutBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import io.github.cutelibs.cutedialog.CuteDialog;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,20 +29,28 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressLint("CustomSplashScreen")
-public class SplashActivity extends AppCompatActivity {
-    private SharedPreferences sharedPreferences;
+public class SplashActivity extends BaseActivity {
     private UserFcmAPI userFcmAPI;
     private String userEmail;
+
+    private SplashLayoutBinding binding;
+    private int statusInternet = 0;
     private int userId;
+    private CuteDialog.withIcon dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash_layout);
+        binding = SplashLayoutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        userEmail = sharedPref.getString("user_email", null);
+        userEmail = sharedPref.getString("user_email", "ko");
         userId = sharedPref.getInt("user_id", 0);
-        // boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", true); // Mặc định là false
+        processingTokenFcm();
+    }
+
+    private void processingTokenFcm() {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -71,20 +84,49 @@ public class SplashActivity extends AppCompatActivity {
                 if (response.isSuccessful() && userId != 0) {
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
-                } else if (userId == 0) {
+                    finish();
+                } else if(userId == 0) {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
-
-                } else {
-                    // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
-                    Log.e("testsss", "Send FCM token failed with code: " + response.code());
+                }
+                else{
+//                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+//                    startActivity(intent);
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("testsss", "Send FCM token failed", t);
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                binding.lottieAnimationView.pauseAnimation();
+                dialog =
+                        new CuteDialog.withIcon(SplashActivity.this)
+                                .setIcon(R.drawable.logo)
+                                .setTitle("Lỗi")
+                                .hideCloseIcon(true)
+                                .setDescription(statusInternet == 0 ? "Không có kết nối mạng" : "Đã xảy ra lỗi, vui lòng thử laị sau")
+                                .setPositiveButtonText("Tải lại", v2 -> {
+                                    binding.lottieAnimationView.playAnimation();
+                                    processingTokenFcm();
+                                })
+                                .setNegativeButtonText("Thoát", v1 -> {
+                                    finish();
+                                });
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
             }
         });
+    }
+    @Override
+    protected void handleNoInternet() {
+        statusInternet = 0;
+    }
+
+    @Override
+    protected void handleLowInternet() {
+    }
+
+    @Override
+    protected void handleGoodInternet() {
+        statusInternet = 1;
     }
 }
