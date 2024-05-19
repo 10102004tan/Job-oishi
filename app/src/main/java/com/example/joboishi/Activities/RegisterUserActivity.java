@@ -1,7 +1,5 @@
 package com.example.joboishi.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +8,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
@@ -65,13 +66,13 @@ public class RegisterUserActivity extends AppCompatActivity {
                     Call<UserApiResponse> callUser = userApi.registerUser(request);
                     callUser.enqueue(new Callback<UserApiResponse>() {
                         @Override
-                        public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
+                        public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                             Log.d("respone", response.toString());
                             //Toast.makeText(RegisterUserActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
-                        public void onFailure(Call<UserApiResponse> call, Throwable t) {
+                        public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
                             Log.d("respone", t.toString());
                         }
                     });
