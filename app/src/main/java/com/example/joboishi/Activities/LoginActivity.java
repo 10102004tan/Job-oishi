@@ -2,14 +2,20 @@ package com.example.joboishi.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.UserApi;
+import com.example.joboishi.Api.UserFacebookLoginRequest;
+import com.example.joboishi.Api.UserLoginEmailRequest;
+import com.example.joboishi.Api.UserApiResponse;
+import com.example.joboishi.Api.UserRegisterEmailRequest;
 import com.example.joboishi.R;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -23,11 +29,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 import java.util.Arrays;
 
@@ -35,7 +42,6 @@ public class LoginActivity extends AppCompatActivity {
     CallbackManager callbackManager;
     FirebaseAuth mAuth;
     FirebaseUser user;
-    FirebaseDatabase database;
     public String TAG = "uilover";
 
     @Override
@@ -51,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
 
         // Khởi tạo nút đăng nhập Facebook
         callbackManager = CallbackManager.Factory.create();
@@ -88,41 +93,67 @@ public class LoginActivity extends AppCompatActivity {
                         // Đăng nhập thành công, cập nhật UI với thông tin người dùng đã đăng nhập
                         user = mAuth.getCurrentUser();
                         if (user != null) {
-                            updateUserInformation(user);
+                            // Gửi dữ liệu đăng nhập lên API
+                            sendUserInfoToApi(user.getDisplayName(), user.getEmail(), ""); // Không cần mật khẩu cho đăng nhập bằng Facebook
+                            MotionToast.Companion.createToast(LoginActivity.this, "Thành công",
+                                    "Đã đăng nhập thành công.",
+                                    MotionToastStyle.SUCCESS,
+                                    MotionToast.GRAVITY_BOTTOM,
+                                    MotionToast.LONG_DURATION,
+                                    ResourcesCompat.getFont(LoginActivity.this, R.font.helvetica_regular));
                         }
                     } else {
                         // Nếu đăng nhập thất bại, hiển thị thông báo tới người dùng.
                         Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Xác thực thất bại.", Toast.LENGTH_SHORT).show();
+                        MotionToast.Companion.createToast(LoginActivity.this, "Lỗi",
+                                "Đã đăng nhập thất bại. Vui lòng thử lại sau.",
+                                MotionToastStyle.ERROR,
+                                MotionToast.GRAVITY_BOTTOM,
+                                MotionToast.LONG_DURATION,
+                                ResourcesCompat.getFont(LoginActivity.this, R.font.helvetica_regular));
                     }
                 });
     }
 
-    private void updateUserInformation(FirebaseUser user) {
-        String currentUserUID = user.getUid();
-        DatabaseReference userRef = database.getReference("users").child(currentUserUID);
-        String email = user.getEmail();
-        String fullname = user.getDisplayName();
-        String number = user.getPhoneNumber();
+    //gửi dữ liệu lên api
+    private void sendUserInfoToApi(String fullname ,String email, String password) {
+        // Lấy instance của interface UserApi từ ApiClient
+        UserApi userApi = ApiClient.getUserAPI();
 
-        userRef.child("fullname").setValue(fullname);
-        userRef.child("number").setValue(number);
-        userRef.child("email").setValue(email);
+        // Tạo đối tượng UserLoginEmailRequest với email và mật khẩu
+        UserFacebookLoginRequest user = new UserFacebookLoginRequest(fullname,email, password);
 
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Gọi phương thức loginUser và truyền đối tượng user vào
+        Call<UserApiResponse> call = userApi.registerFacebookUser(user);
+        call.enqueue(new Callback<UserApiResponse>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild("fullname")) {
+            public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
+                if (response.isSuccessful()) {
+                    // Xử lý thành công, ví dụ: hiển thị thông báo cho người dùng
+                    MotionToast.Companion.createToast(LoginActivity.this, "Thành công",
+                            "Đã đăng nhập thành công.",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(LoginActivity.this, R.font.helvetica_regular));
+
                     Intent intent = new Intent(LoginActivity.this, RegisterMajorActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Lỗi: Thông tin người dùng không đầy đủ.", Toast.LENGTH_SHORT).show();
+                    // Xử lý lỗi, ví dụ: hiển thị thông báo lỗi
+                    MotionToast.Companion.createToast(LoginActivity.this, "Lỗi",
+                            "Đã đăng nhập thất bại. Vui lòng thử lại sau.",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(LoginActivity.this, R.font.helvetica_regular));
                 }
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "Database error: " + databaseError.getMessage());
+            public void onFailure(Call<UserApiResponse> call, Throwable t) {
+                // Xử lý lỗi khi gọi API, ví dụ: hiển thị thông báo lỗi
+                Toast.makeText(LoginActivity.this, "Đã xảy ra lỗi khi gửi yêu cầu đăng nhập!", Toast.LENGTH_SHORT).show();
             }
         });
     }

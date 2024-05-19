@@ -94,7 +94,7 @@ public class HomeFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (!isFirstTimeSelected){
-                    scrollRecyclerviewListener.setCurrentTabPosition(-1);
+                    scrollRecyclerviewListener.setCurrentTabPosition(position);
                 }
             }
         });

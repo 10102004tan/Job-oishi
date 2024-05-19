@@ -23,7 +23,7 @@ import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
-import com.example.joboishi.Models.JobSearch;
+import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
 import com.example.joboishi.abstracts.PaginationScrollListener;
 import com.example.joboishi.databinding.SearchResultLayoutBinding;
@@ -46,7 +46,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
 
     private SearchResultLayoutBinding binding;
     private TextInputEditText input;
-    private ArrayList<JobSearch> listSearchJob = new ArrayList<>();
+    private ArrayList<JobBasic> listSearchJob = new ArrayList<>();
     private JobSearchAdapter adapter;
     private SearchOptionAdapter optionAdapter;
     private RecyclerView recyclerView;
@@ -95,7 +95,17 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         if (input.getText().length() > 0) {
             kword = input.getText().toString();
         }
+        adapter = new JobSearchAdapter(listSearchJob, SearchResultActivity.this);
+        adapter.setiClickViewDetail(new JobSearchAdapter.iClickItem() {
+            @Override
+            public void clickViewDetail(int id) {
+                Intent intent = new Intent(SearchResultActivity.this, DetailJobActivity.class);
+                intent.putExtra("JOB_ID", id);
+                startActivity(intent);
+            }
+        });
 
+        recyclerView.setAdapter(adapter);
 
         DesignerToast.Success(getBaseContext(), input.getText().toString(), Gravity.CENTER, Toast.LENGTH_SHORT);
 
@@ -184,9 +194,9 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         adapter.addFooterLoading();
 
         jobSearchAPI.getListSearchJob(input.getText().toString(), isRemote, experience, jobType, currentPage, pageSize)
-                .enqueue(new Callback<ArrayList<JobSearch>>() {
+                .enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
-                    public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
+                    public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                         adapter.removeFooterLoading();
 
                         if (response.isSuccessful() && response.body() != null) {
@@ -208,7 +218,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                     }
 
                     @Override
-                    public void onFailure(Call<ArrayList<JobSearch>> call, Throwable t) {
+                    public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                         adapter.removeFooterLoading();
                         isLoading = false;
                         Log.d("error", t.getMessage() + "");
@@ -218,10 +228,10 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
 
     private void performJobSearch(String key, int page) {
         progressBar.setVisibility(View.VISIBLE);
-        jobSearchAPI.getListSearchJob(key ,isRemote, experience, jobType, page, pageSize).enqueue(new Callback<ArrayList<JobSearch>>() {
+        jobSearchAPI.getListSearchJob(key ,isRemote, experience, jobType, page, pageSize).enqueue(new Callback<ArrayList<JobBasic>>() {
 
             @Override
-            public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
+            public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     DesignerToast.Success(getBaseContext(), response.isSuccessful() + " số lượng " + response.body().size() + " từ khoas " + key + " remote=" + isRemote +" nawmexp="+ experience+ " loại=" + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
@@ -229,7 +239,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                     if (page == 1) {
                         listSearchJob.clear(); // Clear the list for new searches
                         listSearchJob.addAll(response.body());
-                        if (listSearchJob.isEmpty()) {
+                        if (listSearchJob.isEmpty() || listSearchJob.size() == 0 || listSearchJob == null) {
                             showNoDataAnimation();
                         } else {
                             hideNoDataAnimation();
@@ -250,7 +260,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
             }
 
             @Override
-            public void onFailure(Call<ArrayList<JobSearch>> call, Throwable t) {
+            public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 Log.d("error", t.getMessage() + "");
             }

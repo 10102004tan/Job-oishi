@@ -1,36 +1,21 @@
 package com.example.joboishi.Fragments;
-import android.content.Context;
-import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
-import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
-import com.example.joboishi.Fragments.BottomSheetDialog.FilterJobFragment;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
 import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentAppliedJobBinding;
-import com.example.joboishi.databinding.FragmentMyJobBinding;
-import com.example.joboishi.databinding.FragmentSavedJobBinding;
 import com.google.gson.Gson;
-import com.thecode.aestheticdialogs.AestheticDialog;
-import com.thecode.aestheticdialogs.DialogStyle;
-import com.thecode.aestheticdialogs.DialogType;
 
 import java.util.ArrayList;
 
@@ -46,7 +31,6 @@ public class AppliedJobFragment extends BaseFragment {
 
     private FragmentAppliedJobBinding binding;
     private ArrayList<JobBasic> jobs;
-    FilterJobBSDFragment filterJobBottomSheet;
     private IJobsService iJobsService;
     private  JobAdapter adapter;
     private boolean isFirst = true;
@@ -61,20 +45,12 @@ public class AppliedJobFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         binding = FragmentAppliedJobBinding.inflate(inflater, container, false);
         jobs = new ArrayList<>();
-        filterJobBottomSheet = FilterJobBSDFragment.newInstance();
         adapter = new JobAdapter(jobs,getContext());
         adapter.setVisibleBookmark(false);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
         getJobsApplied();
 
-        //Processing bottom sheet dialog filter
-        binding.btnFiter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filterJobBottomSheet.show(getActivity().getSupportFragmentManager(), filterJobBottomSheet.getTag());
-            }
-        });
 
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

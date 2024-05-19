@@ -14,7 +14,7 @@ public interface JobSearchAPI {
     public static String BASE_URL = APIURL.BASE_URL;
 
     @GET("api/jobs/search")
-    Call<ArrayList<JobSearch>> getListSearchJob(
+    Call<ArrayList<JobBasic>> getListSearchJob(
             @Query("q") String keyword,
             @Query("remote") Boolean remote,
             @Query("experience") String experience,
@@ -23,7 +23,7 @@ public interface JobSearchAPI {
             @Query("page_size") int pageSize
     );
 
-    // Lấy bỏ sang Chọn ngành nghề
+    // Lấy sang Chọn ngành nghề
     @GET("api/jobs")
     Call<ArrayList<JobSearch>> getListJobs();
 

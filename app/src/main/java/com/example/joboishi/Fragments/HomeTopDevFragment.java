@@ -91,8 +91,6 @@ public class HomeTopDevFragment extends BaseFragment {
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
         getJobs();
-
-
         //refresh
         //Add event for swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -116,6 +114,7 @@ public class HomeTopDevFragment extends BaseFragment {
         });
 
         //processing add bookmark
+
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
             public void onClickJob(int id) {
@@ -124,15 +123,17 @@ public class HomeTopDevFragment extends BaseFragment {
                 startActivity(intent);
             }
             @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
+                job.setBookmarked(true);
+                adapter.notifyItemChanged(pos);
                 saveJobToBookmarks(job);
-                bookmarkImage.setSelected(true);
             }
 
             @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
+                job.setBookmarked(false);
+                adapter.notifyItemChanged(pos);
                 removeJobBookmark(3, job.getId());
-                bookmarkImage.setSelected(false);
             }
         });
         //processing load more
