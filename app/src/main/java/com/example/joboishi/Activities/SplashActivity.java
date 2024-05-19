@@ -76,14 +76,14 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful() && userEmail != null) {
-                   Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                   startActivity(intent);
+                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
                     finish();
                 } else if(userEmail == null) {
-                  startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                  finish();
+                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    finish();
                 }
-              else{
+                else{
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
                 }
@@ -92,19 +92,19 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 binding.lottieAnimationView.pauseAnimation();
-               dialog =
-                new CuteDialog.withIcon(SplashActivity.this)
-                        .setIcon(R.drawable.logo)
-                        .setTitle("Lỗi")
-                        .hideCloseIcon(true)
-                        .setDescription("Có lỗi, vui lòng kiểm tra kết nối mạng và thử lại sau!")
-                        .setPositiveButtonText("Tải lại", v2 -> {
-                            binding.lottieAnimationView.playAnimation();
-                            processingTokenFcm();
-                        })
-                        .setNegativeButtonText("Thoát", v1 -> {
-                            finish();
-                        });
+                dialog =
+                        new CuteDialog.withIcon(SplashActivity.this)
+                                .setIcon(R.drawable.logo)
+                                .setTitle("Lỗi")
+                                .hideCloseIcon(true)
+                                .setDescription("Có lỗi, vui lòng kiểm tra kết nối mạng và thử lại sau!")
+                                .setPositiveButtonText("Tải lại", v2 -> {
+                                    binding.lottieAnimationView.playAnimation();
+                                    processingTokenFcm();
+                                })
+                                .setNegativeButtonText("Thoát", v1 -> {
+                                    finish();
+                                });
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
 
