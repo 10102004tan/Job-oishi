@@ -96,7 +96,6 @@ public class LoginEmailActivity extends AppCompatActivity {
                 // Kiểm tra nếu email hoặc mật khẩu trống
                 if (email.isEmpty() || password.isEmpty()) {
                     // Hiển thị thông báo lỗi nếu có ô nhập liệu rỗng
-                    // Toast.makeText(LoginEmailActivity.this, "Vui lòng nhập email và mật khẩu", Toast.LENGTH_SHORT).show();
                     MotionToast.Companion.createToast(LoginEmailActivity.this, "Lỗi",
                             "Vui lòng nhập email và mật khẩu",
                             MotionToastStyle.ERROR,
@@ -128,6 +127,12 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 // Log ra thông tin đã lưu
                                  //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
 
+                                MotionToast.Companion.createToast(LoginEmailActivity.this, "Thành công",
+                                        "Đã đăng nhập thành công.",
+                                        MotionToastStyle.SUCCESS,
+                                        MotionToast.GRAVITY_BOTTOM,
+                                        MotionToast.LONG_DURATION,
+                                        ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
                                 // Chuyển sang màn hình RegisterMajorActivity
                                 Intent intent = new Intent(LoginEmailActivity.this, RegisterMajorActivity.class);
                                 intent.putExtra("caller", "LoginEmailActivity");
@@ -135,9 +140,8 @@ public class LoginEmailActivity extends AppCompatActivity {
                             } else {
                                 // Xử lý lỗi nếu có
                                 Log.e("LoginError", "Đăng nhập không thành công");
-                                // Toast.makeText(LoginEmailActivity.this, "Đăng nhập không thành công. Vui lòng thử lại sau.", Toast.LENGTH_SHORT).show();
                                 MotionToast.Companion.createToast(LoginEmailActivity.this, "Lỗi",
-                                        "Đăng nhập không thành công. Vui lòng thử lại sau",
+                                        "Thông tin tài khoản không chính xác. Vui lòng thử lại sau",
                                         MotionToastStyle.ERROR,
                                         MotionToast.GRAVITY_BOTTOM,
                                         MotionToast.LONG_DURATION,
