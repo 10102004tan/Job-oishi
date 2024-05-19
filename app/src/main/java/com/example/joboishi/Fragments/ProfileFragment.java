@@ -1,14 +1,21 @@
 package com.example.joboishi.Fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +34,11 @@ import com.example.joboishi.Activities.SettingActivity;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.FragmentProfileBinding;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
@@ -36,21 +48,14 @@ import www.sanju.motiontoast.MotionToastStyle;
 
 public class ProfileFragment extends Fragment {
 
-    private final int STATUS_NO_INTERNET = 0;
-    private final int STATUS_LOW_INTERNET = 1;
-    private final int STATUS_GOOD_INTERNET = 2;
     private FragmentProfileBinding binding;
-    private boolean isFirst = true;
-    private int statusInternet = -1;
-    private int statusPreInternet = -1;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
+<<<<<<< HEAD
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerInternetBroadcastReceiver();
         }
@@ -65,6 +70,8 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+=======
+>>>>>>> 8d2aa36d0dc34db7ee1a942b3a9cbe1feaad46f9
         //bắt sự kiện cho boxProfile
         binding.boxProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,8 +81,6 @@ public class ProfileFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-        // bắt sự kiện cho boxJobCriteria
         binding.boxJobCriteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,70 +102,33 @@ public class ProfileFragment extends Fragment {
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (statusPreInternet != statusInternet) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        registerInternetBroadcastReceiver();
-                    }
-                    isFirst = true;
-                }
-                if (statusInternet == STATUS_NO_INTERNET) {
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
 
         });
         return binding.getRoot();
     }
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
-    private void registerInternetBroadcastReceiver() {
-        InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
-        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
-            @Override
-            public void noInternet() {
-                statusPreInternet = STATUS_NO_INTERNET;
-                if (isFirst) {
-                    binding.main.setVisibility(View.GONE);
-                    binding.image.setVisibility(View.VISIBLE);
-                    binding.image.setAnimation(R.raw.a404);
-                    binding.image.playAnimation();
-                    statusInternet = STATUS_NO_INTERNET;
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    isFirst = false;
-                    new AestheticDialog.Builder(getActivity(), DialogStyle.CONNECTIFY, DialogType.ERROR)
-                            .setTitle("Không có kết nối mạng")
-                            .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                            .setCancelable(false)
-                            .setGravity(Gravity.BOTTOM).show();
-                }
-            }
 
-            @Override
-            public void lowInternet() {
-                binding.image.setVisibility(View.VISIBLE);
-                binding.main.setVisibility(View.GONE);
-            }
+    private void getTotalBookmarkByUserId(int userId){
 
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId"+userId); // Thay "userId1" bằng ID người dùng thực tế
+        bookmarksRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void goodInternet() {
-                statusPreInternet = STATUS_GOOD_INTERNET;
-                if (isFirst) {
-                    statusInternet = STATUS_GOOD_INTERNET;
-                    isFirst = false;
-                } else {
-                    binding.image.setVisibility(View.GONE);
-                    binding.main.setVisibility(View.VISIBLE);
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Kết nối mạng đã được khôi phục",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                long totalBookmarks = dataSnapshot.getChildrenCount();
+                binding.totalBookmark.setText(String.valueOf(totalBookmarks));
             }
-        };
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi
+                Log.e("Firebase", "Error getting bookmark count", databaseError.toException());
+            }
+        });
+    }
 
-        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        getActivity().registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+    @Override
+    public void onResume() {
+        super.onResume();
+        getTotalBookmarkByUserId(3);
     }
 }

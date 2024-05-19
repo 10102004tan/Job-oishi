@@ -12,10 +12,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.joboishi.Api.UserFcmAPI;
 import com.example.joboishi.R;
+import com.example.joboishi.databinding.SplashLayoutBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import io.github.cutelibs.cutedialog.CuteDialog;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,14 +32,23 @@ public class SplashActivity extends AppCompatActivity {
     private String userEmail;
     private int userId;
 
+    private SplashLayoutBinding binding;
+    private  CuteDialog.withIcon dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.splash_layout);
+        binding = SplashLayoutBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userEmail = sharedPref.getString("user_email", null);
         userId = sharedPref.getInt("user_id", 0);
         // boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", true); // Mặc định là false
+        userEmail = sharedPref.getString("user_email", "ko");
+        processingTokenFcm();
+
+    }
+
+    private void processingTokenFcm(){
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -46,10 +57,10 @@ public class SplashActivity extends AppCompatActivity {
                             return;
                         }
                         String token = task.getResult();
+                        userId = 2;
                         // Lưu token vào db
-                        sendRegistrationToServer(userId, token, userEmail);
-                    }
-                });
+                        sendRegistrationToServer(userId,token,userEmail);
+                    }});
     }
 
     // Phương thức gửi token đã được tách ra và tối ưu
@@ -73,17 +84,39 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                 } else if (userId == 0) {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
-
-                } else {
-                    // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
-                    Log.e("testsss", "Send FCM token failed with code: " + response.code());
+                    if (response.isSuccessful() && userEmail != null) {
+                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else if (userEmail == null) {
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        finish();
+                    } else {
+                        // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
+                        Log.e("testsss", "Send FCM token failed with code: " + response.code());
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("testsss", "Send FCM token failed", t);
+                binding.lottieAnimationView.pauseAnimation();
+               dialog =
+                new CuteDialog.withIcon(SplashActivity.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Lỗi")
+                        .hideCloseIcon(true)
+                        .setDescription("Có lỗi, vui lòng kiểm tra kết nối mạng và thử lại sau!")
+                        .setPositiveButtonText("Tải lại", v2 -> {
+                            binding.lottieAnimationView.playAnimation();
+                            processingTokenFcm();
+                        })
+                        .setNegativeButtonText("Thoát", v1 -> {
+                            finish();
+                        });
+                dialog.setCanceledOnTouchOutside(false);
+                dialog.show();
+
             }
         });
     }
