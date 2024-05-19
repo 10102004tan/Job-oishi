@@ -126,39 +126,7 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
 
-                            <ImageView
-                                style="@style/Profile_Normal_TextView"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center"
-                                android:layout_marginTop="10dp"
-                                android:background="@drawable/bag_4_svgrepo_com" />
-
-                            <TextView
-                                style="@style/Profile_Normal_TextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="@string/_0"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                style="@style/Profile_Normal_TextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:text="Ứng tuyển"
-                                android:textColor="@color/grey"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="1dp"

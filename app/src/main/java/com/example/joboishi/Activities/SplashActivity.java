@@ -110,7 +110,7 @@ public class SplashActivity extends BaseActivity {
                                 });
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
-
+                Log.d("test11", t.getMessage());
             }
         });
     }
