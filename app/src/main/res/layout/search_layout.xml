@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
 
-    android:background="@color/white"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".Activities.SearchActivity">
 
     <RelativeLayout
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp">
 
         <!-- Nút Back -->
         <ImageButton
@@ -38,7 +38,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
-            android:hint="Tìm theo vị trí công việc, công ty"
+            android:hint="@string/t_m_theo_v_tr_c_ng_vi_c"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -46,66 +46,73 @@
             app:startIconDrawable="@drawable/ic_search">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:background="@drawable/background_input"
                 android:id="@+id/input_major"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_input"
                 android:drawablePadding="10dp"
                 android:imeOptions="actionDone"
                 android:singleLine="true" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/grey"
-        />
+        android:background="@color/grey" />
+
     <LinearLayout
-        android:padding="20dp"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <TextView
+                style="@style/Profile_Title_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/inter_semibold"
                 android:layout_marginTop="10dp"
-                android:textSize="18sp"
-                android:text="Tìm kiếm gần đây"/>
+                android:fontFamily="@font/inter_semibold"
+                android:text="@string/t_m_ki_m_g_n_y"
+                android:textSize="18sp" />
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDelRecentSearches"
+                style="@style/Profile_Normal_TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@color/transparent"
+                android:text="@string/x_a"
                 android:textAllCaps="false"
                 android:textColor="@color/blue"
-                android:background="@color/transparent"
-                android:text="Xóa"/>
+                tools:ignore="RelativeOverlap" />
         </RelativeLayout>
+
         <ListView
             android:id="@+id/listRecentSearches"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
+
         <TextView
+            style="@style/Profile_Title_TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/inter_semibold"
             android:layout_marginTop="10dp"
-            android:textSize="18sp"
-            android:text="Từ khóa cần thử"/>
+            android:fontFamily="@font/inter_semibold"
+            android:text="@string/t_kh_a_c_n_th"
+            android:textSize="18sp" />
 
-            <ListView
-                android:id="@+id/keyToTries"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-               />
-
+        <ListView
+            android:id="@+id/keyToTries"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
 
     </LinearLayout>

@@ -39,12 +39,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = SplashLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-
-//        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-//        userEmail = sharedPref.getString("user_email", "chien@gmail.com");
-//        processingTokenFcm();
-
+        SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userEmail = sharedPref.getString("user_email", "ko");
+        processingTokenFcm();
     }
 
     private void processingTokenFcm(){

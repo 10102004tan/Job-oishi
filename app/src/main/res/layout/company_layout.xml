@@ -184,7 +184,7 @@
                                 android:id="@+id/txt_verify_time"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="Verified tháng 11 2023"
+                                android:text="Đã xác thực"
                                 app:layout_constraintBottom_toBottomOf="@+id/ic_verify"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="@+id/guideline"
@@ -227,6 +227,25 @@
                                 android:id="@+id/lbl_desctiption"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btn_view_more"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/transparent"
+                                android:textAllCaps="false"
+                                android:visibility="gone"
+                                android:textColor="@color/blue"
+                                android:text="View more"/>
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btn_clear"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/transparent"
+                                android:textAllCaps="false"
+                                android:textColor="@color/blue"
+                                android:visibility="gone"
+                                android:text="Thu gọn"/>
 
                         </LinearLayout>
 
@@ -309,7 +328,9 @@
 
                     </androidx.cardview.widget.CardView>
 
-                    <androidx.cardview.widget.CardView style="@style/CardStyle">
+                    <androidx.cardview.widget.CardView
+                        style="@style/CardStyle"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -318,7 +339,7 @@
 
                             <TextView
                                 style="@style/TextViewTitle"
-                                android:text="Vệc đang đăng tuyển" />
+                                android:text="Vệc đan đăng tuyển" />
 
                             <View
                                 android:layout_width="match_parent"

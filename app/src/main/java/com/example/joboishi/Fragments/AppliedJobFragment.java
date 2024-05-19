@@ -27,6 +27,7 @@ import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentAppliedJobBinding;
 import com.example.joboishi.databinding.FragmentMyJobBinding;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
+import com.google.gson.Gson;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
@@ -61,10 +62,11 @@ public class AppliedJobFragment extends BaseFragment {
         binding = FragmentAppliedJobBinding.inflate(inflater, container, false);
         jobs = new ArrayList<>();
         filterJobBottomSheet = FilterJobBSDFragment.newInstance();
-
         adapter = new JobAdapter(jobs,getContext());
+        adapter.setVisibleBookmark(false);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
+        getJobsApplied();
 
         //Processing bottom sheet dialog filter
         binding.btnFiter.setOnClickListener(new View.OnClickListener() {
@@ -82,9 +84,14 @@ public class AppliedJobFragment extends BaseFragment {
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
-                getJobsApplied();
-                if (statusInternet == STATUS_NO_INTERNET){
+                if (statusPreInternet == STATUS_NO_INTERNET){
                     binding.swipeRefreshLayout.setRefreshing(false);
+                    binding.listJob.setVisibility(View.GONE);
+                    binding.image.setVisibility(View.VISIBLE);
+                }
+                else{
+                    getJobsApplied();
+                    binding.listJob.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -99,7 +106,6 @@ public class AppliedJobFragment extends BaseFragment {
     private void getJobsApplied(){
         if (isFirstLoading){
             binding.image.setVisibility(View.VISIBLE);
-
             binding.image.setAnimation(R.raw.fetch_api_loading);
             binding.image.playAnimation();
             isFirstLoading = false;
@@ -107,7 +113,7 @@ public class AppliedJobFragment extends BaseFragment {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
-        Call<ArrayList<JobBasic>> call = iJobsService.getJobApplied();
+        Call<ArrayList<JobBasic>> call = iJobsService.getJobApplied(1);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
@@ -124,6 +130,8 @@ public class AppliedJobFragment extends BaseFragment {
                         binding.image.setVisibility(View.GONE);
                     }
                     adapter.updateData(jobs);
+                    Gson gson = new Gson();
+                    String json = gson.toJson(response.body());
                 }
             }
             @Override
@@ -137,6 +145,7 @@ public class AppliedJobFragment extends BaseFragment {
     protected void handleNoInternet() {
         statusPreInternet = STATUS_NO_INTERNET;
         if (isFirst) {
+            binding.listJob.setVisibility(View.GONE);
             binding.image.setVisibility(View.VISIBLE);
             binding.image.setAnimation(R.raw.a404);
             binding.image.playAnimation();
