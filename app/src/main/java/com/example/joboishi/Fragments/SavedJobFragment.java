@@ -92,12 +92,12 @@ public class SavedJobFragment extends BaseFragment {
             }
 
             @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 //Khong lam gi
             }
 
             @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage) {
+            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
                 bookmarksRef.child("userId3").child("job"+job.getId()).removeValue();
             }
