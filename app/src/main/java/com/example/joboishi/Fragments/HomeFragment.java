@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import com.example.joboishi.Adapters.ViewPagerHomeFragmentAdapter;
 
 import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.HomeViewModel;
-import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
 import com.example.joboishi.databinding.FragmentHomeBinding;
 import com.google.android.material.tabs.TabLayout;
 
@@ -30,7 +28,7 @@ public class HomeFragment extends Fragment  {
 
 
     private FragmentHomeBinding binding;
-    private ScrollRecyclerviewListener scrollRecyclerviewListener;
+    private HomeViewModel homeViewModel;
     private boolean isFirstTimeSelected = true;
     private SelectFilterJob selectFilterJob =  new SelectFilterJob();
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
@@ -56,7 +54,7 @@ public class HomeFragment extends Fragment  {
             public void onTabReselected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (!isFirstTimeSelected){
-                    scrollRecyclerviewListener.setCurrentTabPosition(-1);
+                    homeViewModel.setCurrentTabPosition(-1);
                 }
             }
         });
@@ -77,8 +75,7 @@ public class HomeFragment extends Fragment  {
 
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false);
-        scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
-
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         //viewpager2
         ViewPagerHomeFragmentAdapter viewPagerHomeAdapter = new ViewPagerHomeFragmentAdapter(this);
         binding.viewPager.setUserInputEnabled(false);

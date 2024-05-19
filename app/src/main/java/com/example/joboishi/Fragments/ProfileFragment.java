@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -48,6 +49,7 @@ import www.sanju.motiontoast.MotionToastStyle;
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
+    private int userId;
 
 
     @Override
@@ -59,6 +61,9 @@ public class ProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
+        //get user id
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", 0);
         binding.setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +131,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getTotalBookmarkByUserId(3);
+        getTotalBookmarkByUserId(userId);
     }
 }
