@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,8 @@ import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
+import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.vdx.designertoast.DesignerToast;
 
@@ -72,6 +75,13 @@ public class SelectFilterJob extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        if(fragment != null) {
+            fragment = getFragment();
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment, fragment).commit();
+        }
+
+        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         TextView lblTitleFilter = view.findViewById(R.id.lbl_title_filter);
         lblTitleFilter.setText(titleFilter);
 
@@ -87,8 +97,9 @@ public class SelectFilterJob extends BottomSheetDialogFragment {
         recyclerViewAdapter.setItemClickListener(new SimpleStringRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(SimpleStringRecyclerViewAdapter.MyHolder holder) {
-                selectedValue = list.get(holder.getPos());
 
+                selectedValue = list.get(holder.getPos());
+                homeViewModel.setSelectedValue(selectedValue);
                 onCloseDialog();
             }
         });

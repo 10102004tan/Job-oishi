@@ -1,6 +1,8 @@
 package com.example.joboishi.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
 import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentHomeTopDevBinding;
@@ -56,10 +59,15 @@ public class HomeTopDevFragment extends BaseFragment {
     private ArrayList<Integer> arrId;
 
     private FragmentHomeTopDevBinding binding;
+    private int userId;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), s -> {
+            Log.d("test111", "String value " + s);
+        });
         ScrollRecyclerviewListener scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
         scrollRecyclerviewListener.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
@@ -74,9 +82,12 @@ public class HomeTopDevFragment extends BaseFragment {
         // Inflate the layout for this fragment
         binding = FragmentHomeTopDevBinding.inflate(inflater, container, false);
 
+        //get user id
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", 0);
         //get All array id bookmark
         arrId = new ArrayList<>();
-        getAllIdBookmark(3);
+        getAllIdBookmark(userId);
 
         //Start init
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
@@ -107,7 +118,7 @@ public class HomeTopDevFragment extends BaseFragment {
                 }
                 else{
                     getJobs();
-                    getAllIdBookmark(3);
+                    getAllIdBookmark(userId);
                     binding.listJob.setVisibility(View.VISIBLE);
                 }
             }
@@ -133,7 +144,7 @@ public class HomeTopDevFragment extends BaseFragment {
             public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 job.setBookmarked(false);
                 adapter.notifyItemChanged(pos);
-                removeJobBookmark(3, job.getId());
+                removeJobBookmark(userId, job.getId());
             }
         });
         //processing load more
@@ -142,7 +153,7 @@ public class HomeTopDevFragment extends BaseFragment {
             public void onLoadMore() {
                 page+=1;
                 Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
-                Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page, 10);
+                Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
                     public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
@@ -177,10 +188,12 @@ public class HomeTopDevFragment extends BaseFragment {
                     binding.imageNoInternet.setVisibility(View.GONE);
                     adapter.updateData(jobList);
                 }
+                Log.d("test11",jobList.size()+"");
             }
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                 binding.swipeRefreshLayout.setRefreshing(false);
+                Log.d("test11",t.getMessage());
             }
         });
     }

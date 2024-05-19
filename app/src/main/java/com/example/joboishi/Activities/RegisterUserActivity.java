@@ -18,6 +18,7 @@ import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserRegisterEmailRequest;
 import com.example.joboishi.R;
 
+import io.github.cutelibs.cutedialog.CuteDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -130,6 +131,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                             MotionToast.LONG_DURATION,
                             ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
                 } else {
+                    Log.d("register", "register");
                     UserRegisterEmailRequest request = new UserRegisterEmailRequest(firstname, lastname, email, password);
                     UserApi userApi = ApiClient.getUserAPI();
                     Call<UserApiResponse> callUser = userApi.registerUser(request);
@@ -138,16 +140,21 @@ public class RegisterUserActivity extends AppCompatActivity {
                         public void onResponse(Call<UserApiResponse> call, Response<UserApiResponse> response) {
                             Log.d("response", response.toString());
                             if (response.isSuccessful()) {
-                                MotionToast.Companion.createToast(RegisterUserActivity.this,
-                                        "Thành công",
-                                        "Đã đăng ký tài khoản thành công",
-                                        MotionToastStyle.SUCCESS,
-                                        MotionToast.GRAVITY_BOTTOM,
-                                        MotionToast.LONG_DURATION,
-                                        ResourcesCompat.getFont(RegisterUserActivity.this, R.font.helvetica_regular));
-                                Intent intent = new Intent(RegisterUserActivity.this, LoginEmailActivity.class);
-                                startActivity(intent);
-                                finish();
+                                CuteDialog.withIcon
+                                dialog =
+                                        new CuteDialog.withIcon(RegisterUserActivity.this)
+                                                .setIcon(R.drawable.logo)
+                                                .setTitle("Thông báo")
+                                                .hideCloseIcon(true)
+                                                .setDescription("Đăng kí tài khoản thành công")
+                                                .setNegativeButtonText("Đăng nhập", v1 -> {
+                                                    Intent intent = new Intent(RegisterUserActivity.this, LoginEmailActivity.class);
+                                                    startActivity(intent);
+                                                    finish();
+                                                });
+                                dialog.setCanceledOnTouchOutside(false);
+                                dialog.show();
+
                             }else {
                                 MotionToast.Companion.createToast(RegisterUserActivity.this,
                                         "Thất bại",
@@ -161,7 +168,6 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<UserApiResponse> call, Throwable t) {
-                            Log.d("response", t.toString());
                             MotionToast.Companion.createToast(RegisterUserActivity.this,
                                     "Lỗi",
                                     "Đăng ký tài khoản thất bại",
