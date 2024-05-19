@@ -141,7 +141,7 @@ public class HomeTopDevFragment extends BaseFragment {
             public void onLoadMore() {
                 page+=1;
                 Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
-                Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page);
+                Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page, 10);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
                     public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
@@ -163,8 +163,10 @@ public class HomeTopDevFragment extends BaseFragment {
     }
 
     private void getJobs() {
+        binding.imageNoInternet.setAnimation(R.raw.fetch_api_loading);
+        binding.imageNoInternet.playAnimation();
         binding.imageNoInternet.setVisibility(View.VISIBLE);
-        Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page);
+        Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page,1);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
@@ -173,17 +175,14 @@ public class HomeTopDevFragment extends BaseFragment {
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.imageNoInternet.setVisibility(View.GONE);
                     adapter.updateData(jobList);
-                    Log.d("testss",jobList.size()+"");
                 }
             }
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                 binding.swipeRefreshLayout.setRefreshing(false);
-                Log.d("testss",t.getMessage());
             }
         });
     }
-
     @Override
     protected void handleNoInternet() {
         statusPreInternet = STATUS_NO_INTERNET;
