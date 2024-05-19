@@ -1,5 +1,6 @@
 package com.example.joboishi.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.example.joboishi.Activities.SearchActivity;
 import com.example.joboishi.Adapters.ViewPagerHomeFragmentAdapter;
 
 import com.example.joboishi.R;
@@ -38,6 +40,8 @@ public class HomeFragment extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
 
         /*ADD LISTENER FOR tablelayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -107,6 +111,17 @@ public class HomeFragment extends Fragment  {
                 selectFilterJob.setList(new ArrayList<>(Arrays.asList("Thành Phố Hồ Chí Minh", "TP. Hà Nội", "Đà Nẵng")));
             }
         });
+
+        binding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+
+                intent.putExtra("filterJob", new ArrayList<>(Arrays.asList("Android", "Front end", "Back end")));
+                startActivity(intent);
+            }
+        });
+
         return binding.getRoot();
     }
 

@@ -1,14 +1,16 @@
 package com.example.joboishi.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.joboishi.Models.JobSearch;
+import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.databinding.ItemLoadingBinding;
 import com.example.joboishi.databinding.JobItemHolderBinding;
 
@@ -20,16 +22,22 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static final int TYPE_ITEM = 1;
     private static final int TYPE_LOADING = 2;
 
-    private ArrayList<JobSearch> jobs;
+    private ArrayList<JobBasic> jobs;
     private Context context;
     private boolean isLoadingAdd;
 
-    public void setData(ArrayList<JobSearch> jobs) {
+    public void setData(ArrayList<JobBasic> jobs) {
         this.jobs = jobs;
         notifyDataSetChanged();
     }
 
-    public JobSearchAdapter(ArrayList<JobSearch> jobs, Context context) {
+    private iClickItem iClickViewDetail;
+
+    public void setiClickViewDetail(iClickItem iClickViewDetail) {
+        this.iClickViewDetail = iClickViewDetail;
+    }
+
+    public JobSearchAdapter(ArrayList<JobBasic> jobs, Context context) {
         this.jobs = jobs;
         this.context = context;
     }
@@ -56,36 +64,50 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof JobViewHolder) {
             JobViewHolder jobViewHolder = (JobViewHolder) holder;
-            JobSearch job = jobs.get(position);
-            jobViewHolder.binding.companyNameTxt.setText(job.getCompany_name());
-            jobViewHolder.binding.jobTitleTxt.setText(job.getTitle());
-            jobViewHolder.binding.sortAddressesTxt.setText(job.getSort_addresses());
-            jobViewHolder.binding.published.setText(job.getPublished());
-            Glide.with(context).load(job.getCompany_logo()).into(jobViewHolder.binding.companyLogo);
+            JobBasic job = jobs.get(position);
+            jobViewHolder.bind(job); // Bind the job object
         } else if (holder instanceof LoadingViewHolder) {
-
+            // Handle the loading view holder binding if necessary
         }
     }
 
     @Override
     public int getItemCount() {
-        if (jobs != null) {
-            return jobs.size();
-        }
-        return 0;
+        return jobs.size();
     }
 
     public class JobViewHolder extends RecyclerView.ViewHolder {
         private JobItemHolderBinding binding;
+        private JobBasic job;
 
         public JobViewHolder(@NonNull JobItemHolderBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+//            this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    if (iClickViewDetail != null && job != null) {
+//                        iClickViewDetail.clickViewDetail(job.getId());
+//                    } else {
+//                        Log.d("test", "Interface or job is null" + iClickViewDetail.toString() + " " + job.getId());
+//                    }
+//                }
+//            });
+        }
+
+        public void bind(JobBasic job) {
+            this.job = job;
+            binding.companyNameTxt.setText(job.getCompany_name());
+            binding.jobTitleTxt.setText(job.getTitle());
+            binding.sortAddressesTxt.setText(job.getSort_addresses());
+            binding.published.setText(job.getPublished());
+            binding.bookmarkImage.setVisibility(View.GONE);
+            Glide.with(context).load(job.getCompany_logo()).into(binding.companyLogo);
         }
     }
 
     public class LoadingViewHolder extends RecyclerView.ViewHolder {
-
         private ItemLoadingBinding binding;
 
         public LoadingViewHolder(@NonNull ItemLoadingBinding binding) {
@@ -96,7 +118,8 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void addFooterLoading() {
         isLoadingAdd = true;
-        jobs.add(new JobSearch());
+        jobs.add(null);
+        notifyItemInserted(jobs.size() - 1);
     }
 
     public void removeFooterLoading() {
@@ -108,4 +131,7 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+    public interface iClickItem {
+        void clickViewDetail(int id);
+    }
 }
