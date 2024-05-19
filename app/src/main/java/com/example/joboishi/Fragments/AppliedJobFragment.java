@@ -8,6 +8,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class AppliedJobFragment extends BaseFragment {
         binding = FragmentAppliedJobBinding.inflate(inflater, container, false);
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getInt("user_id", 0);
+        userId = sharedPreferences.getInt("user_id", 1);
         jobs = new ArrayList<>();
         adapter = new JobAdapter(jobs,getContext());
         adapter.setVisibleBookmark(false);
@@ -65,6 +66,7 @@ public class AppliedJobFragment extends BaseFragment {
             public void onClickJob(int id) {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
                 intent.putExtra("JOB_ID",id);
+                Log.d("JOB_ID", String.valueOf(id));
                 startActivity(intent);
             }
 
@@ -133,6 +135,10 @@ public class AppliedJobFragment extends BaseFragment {
                         binding.image.setVisibility(View.GONE);
                     }
                     adapter.updateData(jobs);
+
+                    Gson gson = new Gson();
+                    String json = gson.toJson( response.body());
+                    Log.d("JOBS",json);
                 }
             }
             @Override

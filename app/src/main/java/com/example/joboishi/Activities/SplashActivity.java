@@ -36,7 +36,8 @@ public class SplashActivity extends BaseActivity {
     private SplashLayoutBinding binding;
     private int statusInternet = 0;
     private int userId;
-    private  CuteDialog.withIcon dialog;
+    private CuteDialog.withIcon dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +50,7 @@ public class SplashActivity extends BaseActivity {
         processingTokenFcm();
     }
 
-    private void processingTokenFcm(){
+    private void processingTokenFcm() {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -59,8 +60,9 @@ public class SplashActivity extends BaseActivity {
                         }
                         String token = task.getResult();
                         // Lưu token vào db
-                        sendRegistrationToServer(userId,token,userEmail);
-                    }});
+                        sendRegistrationToServer(userId, token, userEmail);
+                    }
+                });
     }
 
     // Phương thức gửi token đã được tách ra và tối ưu
@@ -94,7 +96,7 @@ public class SplashActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 binding.lottieAnimationView.pauseAnimation();
                 dialog =
                         new CuteDialog.withIcon(SplashActivity.this)
@@ -111,6 +113,8 @@ public class SplashActivity extends BaseActivity {
                                 });
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
+                //them log
+                Log.d("test11",t.getMessage());
 
             }
         });

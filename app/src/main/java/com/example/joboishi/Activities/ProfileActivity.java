@@ -61,9 +61,9 @@ public class ProfileActivity extends AppCompatActivity {
     private final int STATUS_NO_INTERNET = 0;
     private final int STATUS_LOW_INTERNET = 1;
     private final int STATUS_GOOD_INTERNET = 2;
-    private final UserResponse userData = new UserResponse();
     private final int REQUEST_CODE_TO_EDIT_PROFILE_ACTIVITY = 9191;
     LinearLayout indicatorLayout;
+    private UserResponse userData = new UserResponse();
     private int USER_ID = 0;
     private int currentPosition = 0;
     private Intent profileIntent;
@@ -79,8 +79,9 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView userGender;
     private TextView userEdu;
     private TextView userExperience;
+    private String caller = null;
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint({"NotifyDataSetChanged", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +101,8 @@ public class ProfileActivity extends AppCompatActivity {
         });
 
         // Show loading while fetching data
-        loadingDialog = new LoadingDialog(this);
-        loadingDialog.show();
+        // loadingDialog = new LoadingDialog(this);
+        // loadingDialog.show();
 
         // Lấy giá trị từ SharedPreferences
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
@@ -127,6 +128,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileRecyclerViewData.add(new InforProfileAdd("Trình độ học vấn của bạn", "Thêm trình độ học vấn để nhà tuyển dụng dễ dàng tìm thấy bạn thấy", "Thêm trình độ học vấn", ProfileRecyclerViewAdapter.EDU_ICON));
         profileRecyclerViewData.add(new InforProfileAdd("Trường học gần đây", "Thêm học vấn để nhà tuyển dụng cân nhắc dễ dàng hơn", "Thêm học vẫn", ProfileRecyclerViewAdapter.EDU_ICON));
         profileRecyclerViewData.add(new InforProfileAdd("Top kỹ năng của bạn", "Cho nhà tuyển dụng thấy khả năng của bạn như thế nào", "Thêm kĩ năng", ProfileRecyclerViewAdapter.SKILL_ICON));
+
 
         // Get recycler view
         RecyclerView recyclerView = findViewById(R.id.profile_recycler_view);
@@ -184,6 +186,7 @@ public class ProfileActivity extends AppCompatActivity {
                 profileIntent = new Intent(ProfileActivity.this, EditProfileActivity.class);
                 profileIntent.putExtra("user_data", userData);
                 startActivityForResult(profileIntent, REQUEST_CODE_TO_EDIT_PROFILE_ACTIVITY);
+
             }
         });
 
@@ -192,7 +195,15 @@ public class ProfileActivity extends AppCompatActivity {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
+                if (caller.equals("ProfileFragment")) {
+                    Intent intent = new Intent();
+                    intent.putExtra("data_user_updated", userData);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    finish();
+                }
             }
         });
 
@@ -213,77 +224,40 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        // Get user info throw api by user id
-        // Get user data from api
-        UserApi userApi = ApiClient.getUserAPI();
-        Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
-        callUser.enqueue(new Callback<UserApiResponse>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    // Check if user exists
-                    if (response.body().getId() != 0) {
-                        userData.setId(response.body().getId());
-                        userData.setFirstName(response.body().getFirstname());
-                        userData.setLastName(response.body().getLastname());
-                        userData.setEducation(response.body().getEducation());
-                        userData.setBirth(response.body().getBirth());
-                        userData.setGender(response.body().getGender());
-                        userData.setPhotoUrl(response.body().getPhotoUrl());
-                        userData.setTimeStartingWorking(response.body().getTimeStartingWork());
-                        userData.setEmail(response.body().getEmail());
-                        userData.setCountry(response.body().getCountry());
-                        userData.setCity(response.body().getCity());
-                        userData.setProvince(response.body().getProvince());
 
-                        Glide.with(getBaseContext())
-                                .load(userData.getPhotoUrl())
-                                .error(R.drawable.avatar_thinking_svgrepo_com)
-                                .into(userAvatar);
+        // Get data from intent
+        profileIntent = getIntent();
+        userData = (UserResponse) profileIntent.getSerializableExtra("user_data");
+        caller = (String) profileIntent.getSerializableExtra("caller");
 
-                        userName.setText(userData.getFirstName() + " " + userData.getLastName());
+        if (userData != null) {
+            Glide.with(getBaseContext())
+                    .load(userData.getPhotoUrl())
+                    .error(R.drawable.avatar_thinking_svgrepo_com)
+                    .into(userAvatar);
 
+            userName.setText(userData.getFirstName() + " " + userData.getLastName());
 
-                        if (userData.getCity() != null) {
-                            userLocation.setText(userData.getCity());
-                        }
-
-                        if (userData.getGender() != null) {
-                            userGender.setText(userData.getGender());
-                        }
-
-                        if (userData.getEducation() != null) {
-                            userEdu.setText(userData.getEducation());
-                        }
-
-                        if (userData.getBirth() != null) {
-                            userBirth.setText(userData.getBirth());
-                        }
-
-                        if (userData.getTimeStartingWorking() != null) {
-                            userExperience.setText(userData.getTimeStartingWorking());
-                        }
-
-                        // Dismiss dialog when api call done
-                        loadingDialog.cancel();
-                    } else {
-                        // Back to login screen if not user
-                        Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                } else {
-                    Log.d("User_Data_Error", "ERROR");
-                }
+            if (userData.getCity() != null) {
+                userLocation.setText(userData.getCity());
             }
 
-            @Override
-            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
-                Log.d("User_Data_Error", t.toString());
+            if (userData.getGender() != null) {
+                userGender.setText(userData.getGender());
             }
-        });
+
+            if (userData.getEducation() != null) {
+                userEdu.setText(userData.getEducation());
+            }
+
+            if (userData.getBirth() != null) {
+                userBirth.setText(userData.getBirth());
+            }
+
+            if (userData.getTimeStartingWorking() != null) {
+                userExperience.setText(userData.getTimeStartingWorking());
+            }
+        }
     }
 
     // Update indicator
@@ -429,7 +403,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     }
 
                                     // Dismiss dialog when api call done
-                                    loadingDialog.cancel();
+                                    // loadingDialog.cancel();
                                 } else {
                                     // Back to login screen if not user
                                     Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);

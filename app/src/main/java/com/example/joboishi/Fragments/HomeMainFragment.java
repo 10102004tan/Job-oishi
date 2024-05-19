@@ -22,7 +22,7 @@ import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
-import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentHomeMainBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,8 +60,8 @@ public class HomeMainFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ScrollRecyclerviewListener scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
-        scrollRecyclerviewListener.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
+        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();
             }
