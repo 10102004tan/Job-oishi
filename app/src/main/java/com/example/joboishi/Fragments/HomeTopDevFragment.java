@@ -24,6 +24,7 @@ import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
 import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentHomeTopDevBinding;
@@ -63,6 +64,10 @@ public class HomeTopDevFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), s -> {
+            Log.d("test111", "String value " + s);
+        });
         ScrollRecyclerviewListener scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
         scrollRecyclerviewListener.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {

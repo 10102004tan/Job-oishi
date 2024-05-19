@@ -17,9 +17,13 @@ import android.view.ViewGroup;
 import com.example.joboishi.Adapters.ViewPagerHomeFragmentAdapter;
 
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
 import com.example.joboishi.databinding.FragmentHomeBinding;
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HomeFragment extends Fragment  {
 
@@ -28,10 +32,13 @@ public class HomeFragment extends Fragment  {
     private FragmentHomeBinding binding;
     private ScrollRecyclerviewListener scrollRecyclerviewListener;
     private boolean isFirstTimeSelected = true;
+    private SelectFilterJob selectFilterJob =  new SelectFilterJob();
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         /*ADD LISTENER FOR tablelayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -83,7 +90,31 @@ public class HomeFragment extends Fragment  {
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText(R.string.job_oishi));
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText(R.string.top_dev));
 
+        binding.btnShowType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+                selectFilterJob.setTitleFilter("Tiêu chí công việc");
+                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Phù hợp nhất", "Lương cao")));
+            }
+        });
+
+        binding.btnLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+                selectFilterJob.setTitleFilter("Đia điểm");
+                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Thành Phố Hồ Chí Minh", "TP. Hà Nội", "Đà Nẵng")));
+            }
+        });
         return binding.getRoot();
+    }
+
+    private void showDialog() {
+        myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
+        myBottomSheetDialogFragment.setFragment(selectFilterJob);
+        myBottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
+
     }
 
 }
