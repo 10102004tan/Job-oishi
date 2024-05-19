@@ -23,5 +23,6 @@ public interface IJobsService {
     Call<ArrayList<JobBasic>> getListJobs(@Query("page") int page, @Query("user_id") int user_id);
     @POST("api/applied-job")
     Call<ArrayList<JobBasic>> getJobApplied(@Query("id") int id);
-
+    @POST("api/applied-total")
+    Call<Integer> getTotalJobsApplied(@Query("id") int id);
 }

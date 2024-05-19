@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
@@ -33,6 +34,7 @@ import com.example.joboishi.Activities.ProfileActivity;
 import com.example.joboishi.Activities.SettingActivity;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.databinding.FragmentProfileBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
