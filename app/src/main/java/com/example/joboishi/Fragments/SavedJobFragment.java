@@ -160,6 +160,7 @@ public class SavedJobFragment extends BaseFragment {
     }
     @Override
     protected void handleNoInternet() {
+        adapter.setEnableBookmark(false);
         statusPreInternet = STATUS_NO_INTERNET;
         if (isFirst) {
             binding.image.setVisibility(View.VISIBLE);
@@ -191,6 +192,7 @@ public class SavedJobFragment extends BaseFragment {
 
     @Override
     protected void handleGoodInternet() {
+        adapter.setEnableBookmark(true);
         statusPreInternet = STATUS_GOOD_INTERNET;
         if (isFirst) {
             statusInternet = STATUS_GOOD_INTERNET;
@@ -201,13 +203,14 @@ public class SavedJobFragment extends BaseFragment {
                 binding.image.setVisibility(View.GONE);
                 binding.listJob.setVisibility(View.VISIBLE);
             }
-
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getJobsSaved();
+        if (statusInternet != STATUS_NO_INTERNET){
+            getJobsSaved();
+        }
     }
 }
