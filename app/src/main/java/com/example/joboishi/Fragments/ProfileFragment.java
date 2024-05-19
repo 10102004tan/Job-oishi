@@ -65,7 +65,6 @@ public class ProfileFragment extends Fragment {
 
         // Get user data from api
         UserApi userApi = ApiClient.getUserAPI();
-        Log.d("USER_ID", USER_ID + "");
         Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
         callUser.enqueue(new Callback<UserApiResponse>() {
             @SuppressLint("SetTextI18n")
@@ -73,11 +72,9 @@ public class ProfileFragment extends Fragment {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    Log.d("TEST", response.body().toString());
 
                     // Check if user exists
                     if (response.body().getId() != 0) {
-                        Log.d("TEST", response.body().getFirstname());
                         userData.setId(response.body().getId());
                         userData.setFirstName(response.body().getFirstname());
                         userData.setPhone(response.body().getPhone());
