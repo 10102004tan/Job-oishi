@@ -199,7 +199,7 @@ public class AddressActivity extends AppCompatActivity {
                     setResult(RESULT_OK, resultIntent);
                     finish();
                 } else if (caller.equals("RegisterMajorActivity")) {
-                    // loadingDialog.show();
+                    loadingDialog.show();
                     StringBuilder jobPositions = new StringBuilder();
                     StringBuilder cities = new StringBuilder();
 

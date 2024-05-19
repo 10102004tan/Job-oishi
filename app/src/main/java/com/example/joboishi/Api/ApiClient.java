@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiClient {
     static final String COUNTRY_URL = "https://restcountries.com/v3.1/";
     static final String PROVINCE_URL = "https://vietnam-administrative-division-json-server-swart.vercel.app/";
-    static final String USER_URL = APIURL.BASE_URL + "api/user/";
+    static final String USER_URL = "http://10.0.2.2:3001/api/user/";
 
 
     public static Retrofit getApiClient(String apiUrl) {
