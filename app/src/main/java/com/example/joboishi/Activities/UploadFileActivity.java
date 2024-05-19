@@ -25,11 +25,13 @@ import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.joboishi.Api.UploadAPI;
 import com.example.joboishi.Models.RealPathUtil;
+import com.example.joboishi.Models.data.FileCV;
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.UploadFileLayoutBinding;
 
@@ -42,6 +44,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -52,6 +57,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UploadFileActivity extends AppCompatActivity {
 
@@ -62,6 +68,8 @@ public class UploadFileActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> launcher;
     private FileContent file = new FileContent();
+    private String userID = "111";
+    private long LIMIT_SIZE = 500000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +81,31 @@ public class UploadFileActivity extends AppCompatActivity {
         //Init progress dialog
         mProgressDialog = new ProgressDialog(UploadFileActivity.this);
         mProgressDialog.setMessage("Please waite...");
+
+        //Shimmer
+        binding.shimmerUpload.startShimmerAnimation();
+        binding.shimmerUpload.setVisibility(View.VISIBLE);
+        binding.btnUpload.setVisibility(View.INVISIBLE);
+
+        // Change toolbar title
+        TextView textTitle = findViewById(R.id.toolbar_text_title);
+        textTitle.setText("Upload CV");
+
+        // Button back in toolbar
+        ImageButton btnBack = findViewById(R.id.btn_toolbar_back);
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        String formattedDateTime = now.format(formatter);
+
+        //Lấy cv của người dùng (nếu có)
+        callAPIGetFile(userID);
 
         launcher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -90,14 +123,28 @@ public class UploadFileActivity extends AppCompatActivity {
 
                             // Get the file name from the URI
                             file = getFileContentFromUri(uri);
-                            binding.lblFileName.setText(file.fileName);
+
+                            //Set infor
+
 
                             if (!file.typeFile.equalsIgnoreCase("pdf")) {
                                 showDialog("File được chọn không đúng định dạng!", false);
                                 binding.btnPush.setEnabled(false);
-                                Log.d("test", file.typeFile);
+//                                Log.d("test", file.typeFile);
+
                             } else {
-                                binding.btnPush.setEnabled(true);
+                                if(file.getFileSize() <= LIMIT_SIZE) {
+                                    binding.btnPush.setEnabled(true);
+                                    String fileInfor = formatFileSize(file.getFileSize()) + "• Upload " + formattedDateTime;
+                                    binding.lblFileName.setText(file.fileName);
+                                    binding.lblFileInfo.setText(fileInfor);
+                                    binding.btnUpload.setVisibility(View.GONE);
+                                    binding.layoutFileInfo.setVisibility(View.VISIBLE);
+                                }
+                                else {
+                                    showDialog("File được chọn Vượt quá 5MB!", false);
+                                    binding.btnPush.setEnabled(false);
+                                }
                             }
 
                         }
@@ -113,14 +160,28 @@ public class UploadFileActivity extends AppCompatActivity {
             }
         });
 
+        binding.btnDeleteCv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callAPIDeleteFile(userID);
+            }
+        });
+
         binding.btnPush.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                callAPIUploadFile();
+                callAPIUploadFile(userID, file.getFileName(), formatFileSize(file.getFileSize()), formattedDateTime);
+//                Log.d("test",file.toString());
                 Log.d("test", "is upload");
 
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
     }
 
@@ -152,7 +213,7 @@ public class UploadFileActivity extends AppCompatActivity {
         launcher.launch(intent);
     }
 
-    private void callAPIUploadFile() {
+    private void callAPIUploadFile(String user_id, String file_name, String file_size, String upload_at) {
         mProgressDialog.show();
         if (mUri != null) {
             try {
@@ -174,8 +235,11 @@ public class UploadFileActivity extends AppCompatActivity {
                 RequestBody requestBodyFile = RequestBody.create(MediaType.parse("multipart/form-data"), bytes);
                 MultipartBody.Part filePart = MultipartBody.Part.createFormData("pdf", "file_name", requestBodyFile);
 
-                // Tạo request body cho user_id
-                RequestBody requestBodyUserId = RequestBody.create(MediaType.parse("multipart/form-data"), "7");
+                // Tạo request body
+                RequestBody requestBodyUserId = RequestBody.create(MediaType.parse("text/plain"), user_id);
+                RequestBody requestBodyFileName = RequestBody.create(MediaType.parse("text/plain"), file_name);
+                RequestBody requestBodyFileSize = RequestBody.create(MediaType.parse("text/plain"), file_size);
+                RequestBody requestBodyUploadAt = RequestBody.create(MediaType.parse("text/plain"), upload_at);
 
                 // Tạo Retrofit instance
                 Retrofit retrofit = new Retrofit.Builder()
@@ -186,23 +250,21 @@ public class UploadFileActivity extends AppCompatActivity {
                 UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
 
                 // Gửi yêu cầu tải lên
-                Call<ResponseBody> call = uploadAPI.uploadFile(filePart, requestBodyUserId);
-                // Tiếp tục xử lý phản hồi như bạn đã làm trước đó
+                Call<ResponseBody> call = uploadAPI.uploadFile(filePart, requestBodyUserId, requestBodyFileName, requestBodyFileSize, requestBodyUploadAt);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> callback, Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
                             mProgressDialog.dismiss();
+                            binding.btnUpload.setVisibility(View.GONE);
+                            binding.btnPush.setEnabled(false);
 
                             Log.d("test", "Response");
                             try {
                                 JSONObject jsonObject = new JSONObject(response.body().string());
-                                String message = jsonObject.getString("message");
+                                String message = jsonObject.getString("name");
                                 showDialog(message, true);
-                                binding.btnPush.setVisibility(View.GONE);
-                                binding.btnUpdateCv.setVisibility(View.VISIBLE);
-                                binding.btnDeleteCv.setVisibility(View.VISIBLE);
-//                                Log.d("test", "File: " + message);
+                                Log.d("test", "File api: " + message);
                             } catch (JSONException | IOException e) {
                                 e.printStackTrace();
                             }
@@ -229,10 +291,101 @@ public class UploadFileActivity extends AppCompatActivity {
         }
     }
 
-    // Method to get the file name from the URI
+    //Ham get file theo user_id
+    public void callAPIGetFile(String user_id) {
+        Log.d("test", user_id);
+        Log.d("test", UploadAPI.BASE_URL);
+        //Tạo retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UploadAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        // Tạo instance của ApiService từ Retrofit
+        UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
+        // Gửi yêu cầu tải lên
+        Call<FileCV> call = uploadAPI.getFile(user_id);
+        call.enqueue(new Callback<FileCV>() {
+            @Override
+            public void onResponse(Call<FileCV> call, Response<FileCV> response) {
+                if(response.isSuccessful()) {
+                    FileCV fileCV = response.body();
+                    //Shimmer
+                    binding.shimmerUpload.stopShimmerAnimation();
+                    binding.shimmerUpload.setVisibility(View.GONE);
+                    binding.layoutFileInfo.setVisibility(View.VISIBLE);
+
+                    binding.lblFileName.setText(fileCV.getFileName());
+                    String fileInfor = fileCV.getFileSize() + " • Upload " + fileCV.getUploadAt();
+                    binding.lblFileInfo.setText(fileInfor);
+                    binding.btnUpload.setVisibility(View.GONE);
+                    Log.d("test", "Lấy dữ liệu thành công");
+
+                }
+                else {
+                    //Shimmer
+                    binding.shimmerUpload.stopShimmerAnimation();
+                    binding.shimmerUpload.setVisibility(View.GONE);
+                    binding.btnUpload.setVisibility(View.VISIBLE);
+                    Log.d("test", "Lấy thông tin thất bại" + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<FileCV> call, Throwable t) {
+                //Shimmer
+                binding.shimmerUpload.stopShimmerAnimation();
+                binding.shimmerUpload.setVisibility(View.GONE);
+//                binding.btnUpload.setVisibility(View.VISIBLE);
+                Log.d("test", "Failure Lấy thông tin thất bại");
+                t.printStackTrace();
+            }
+        });
+    }
+
+//  //Ham delete file
+    public void callAPIDeleteFile(String user_id){
+        mProgressDialog.show();
+        //Tạo retrofit
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(UploadAPI.BASE_URL)
+                .build();
+        // Tạo instance của ApiService từ Retrofit
+        UploadAPI uploadAPI = retrofit.create(UploadAPI.class);
+        // Gửi yêu cầu tải lên
+        Call<ResponseBody> call = uploadAPI.deleteFile(user_id);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if(response.isSuccessful()){
+                    mProgressDialog.dismiss();
+                    binding.layoutFileInfo.setVisibility(View.GONE);
+                    binding.btnUpload.setVisibility(View.VISIBLE);
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        String message = jsonObject.getString("message");
+                        showDialog(message, true);
+//                        Log.d("test", "File api: " + message);
+                    } catch (JSONException | IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d("test", "Xóa tệp thất bại: " + response.message());
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("test", "Failure Xóa tệp thất bại");
+            }
+        });
+    }
+
+    // Hàm lấy thông tin từ file uri
     private FileContent getFileContentFromUri(Uri uri) {
         String fileName = "";
         String fileExtension = "";
+        long fileSize = 0;
         FileContent fileContent = new FileContent();
 
         // Lấy tên tệp từ Uri
@@ -240,6 +393,7 @@ public class UploadFileActivity extends AppCompatActivity {
             try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     fileName = cursor.getString(cursor.getColumnIndexOrThrow(OpenableColumns.DISPLAY_NAME));
+                    fileSize = cursor.getLong(cursor.getColumnIndexOrThrow(OpenableColumns.SIZE));
                 }
             }
         }
@@ -252,6 +406,7 @@ public class UploadFileActivity extends AppCompatActivity {
 
         fileContent.setFileName(fileName);
         fileContent.setTypeFile(fileExtension);
+        fileContent.setFileSize(fileSize);
 
         return fileContent;
     }
@@ -296,8 +451,17 @@ public class UploadFileActivity extends AppCompatActivity {
     private class FileContent {
         private String fileName;
         private String typeFile;
+        private long fileSize;
 
         public FileContent() {
+        }
+
+        public long getFileSize() {
+            return fileSize;
+        }
+
+        public void setFileSize(long fileSize) {
+            this.fileSize = fileSize;
         }
 
         public String getFileName() {
@@ -321,7 +485,28 @@ public class UploadFileActivity extends AppCompatActivity {
             return "FileContent{" +
                     "fileName='" + fileName + '\'' +
                     ", typeFile='" + typeFile + '\'' +
+                    ", fileSize=" + fileSize +
                     '}';
+        }
+    }
+
+    //Format file size
+    private String formatFileSize(long size){
+        final long KB = 1024;
+        final long MB = KB * KB;
+        final long GB = MB * MB;
+
+        if(size < KB) {
+            return size + " bytes";
+        }
+        else if (size < MB) {
+            return String.format("%.2f KB", (float) size / KB);
+        }
+        else if (size < MB) {
+            return String.format("%.2f MB", (float) size / MB);
+        }
+        else {
+            return String.format("%.2f GB", (float) size / GB);
         }
     }
 }

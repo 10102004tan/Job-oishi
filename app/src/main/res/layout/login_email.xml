@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".Activities.LoginEmailActivity">
+    tools:context=".Activities.LoginEmailActivity"
+    android:background="@color/white">
 
     <TextView
         style="@style/Profile_Title_TextView"

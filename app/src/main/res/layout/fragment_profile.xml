@@ -5,7 +5,8 @@
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.HomeActivity">
+    tools:context=".Activities.HomeActivity"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -91,6 +92,7 @@
                     android:layout_weight="1">
 
                     <ImageView
+                        android:id="@+id/setting"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_gravity="center"
@@ -157,7 +159,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="@string/chat_ng_tuy_n"
+                                android:text="Ứng tuyển"
                                 android:textColor="@color/grey"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
@@ -234,7 +236,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="bottom"
-                                android:layout_marginStart="130dp"
+                                android:layout_marginStart="140dp"
                                 android:background="@drawable/star_svgrepo_com_color"
                                 android:contentDescription="@string/todo" />
 
@@ -437,7 +439,7 @@
                             android:id="@+id/boxJobCriteria"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="3"
+                            android:layout_weight="4"
                             android:baselineAligned="false"
                             android:clickable="true"
                             android:gravity="center"
