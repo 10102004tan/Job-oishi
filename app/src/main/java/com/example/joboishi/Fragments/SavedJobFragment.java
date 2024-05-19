@@ -81,6 +81,7 @@ public class SavedJobFragment extends BaseFragment {
         adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
+        getJobsSaved();
         //Add event for adapter
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
@@ -210,8 +211,5 @@ public class SavedJobFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (statusInternet != STATUS_NO_INTERNET){
-            getJobsSaved();
-        }
     }
 }
