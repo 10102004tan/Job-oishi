@@ -24,7 +24,7 @@ import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
-import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentHomeTopDevBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,8 +63,11 @@ public class HomeTopDevFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ScrollRecyclerviewListener scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
-        scrollRecyclerviewListener.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
+        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), s -> {
+            Log.d("test111", "String value " + s);
+        });
+        homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();
             }
@@ -131,7 +134,7 @@ public class HomeTopDevFragment extends BaseFragment {
             public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 job.setBookmarked(true);
                 adapter.notifyItemChanged(pos);
-                saveJobToBookmarks(job);
+                saveJobToBookmarks(job,userId);
             }
 
             @Override
@@ -234,9 +237,8 @@ public class HomeTopDevFragment extends BaseFragment {
         }
     }
 
-    private void saveJobToBookmarks(JobBasic job) {
+    private void saveJobToBookmarks(JobBasic job,int userId) {
         DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-        String userId = "3"; // Lấy user ID từ SharedPreferences hoặc nơi lưu trữ khác
         bookmarksRef.child("userId"+userId).child("job"+job.getId()).setValue(job)
                 .addOnSuccessListener(aVoid -> {
                     MotionToast.Companion.createToast(getActivity(), "😍",

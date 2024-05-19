@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.HomeActivity"
-    android:background="@color/white">
+    tools:context=".Activities.HomeActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,33 +21,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/background"
+                android:background="@color/white"
                 android:baselineAligned="false"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
                     tools:ignore="NestedWeights">
 
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/image"
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/user_avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:contentDescription="@string/todo"
-                        android:padding="10dp" />
+                        android:scaleType="fitCenter"
+                        app:riv_corner_radius="30dip"
+                        app:riv_mutate_background="true"
+                        app:riv_oval="true" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="8"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    tools:ignore="NestedWeights">
 
 
                     <LinearLayout
@@ -64,7 +66,7 @@
                             android:backgroundTint="@android:color/transparent"
                             android:text="Đình Châu"
                             android:textSize="23sp"
-                            android:textStyle="bold"></TextView>
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -72,13 +74,14 @@
                         android:layout_height="wrap_content">
 
                         <TextView
+                            android:id="@+id/user_phone"
                             style="@style/Profile_Normal_TextView"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:backgroundTint="@android:color/transparent"
-                            android:text="099999999"
-                            android:textSize="18sp"></TextView>
+                            android:text="@string/_099999999"
+                            android:textSize="18sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -119,12 +122,14 @@
                     android:layout_weight="3"
                     android:orientation="horizontal"
                     app:cardCornerRadius="10dp"
-                    app:cardElevation="10dp">
+                    app:cardElevation="3dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/white"
                         android:orientation="horizontal">
+
 
 
 
@@ -179,8 +184,9 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="20dp"
                     android:layout_weight="5"
+                    android:background="@color/white"
                     app:cardCornerRadius="10dp"
-                    app:cardElevation="10dp">
+                    app:cardElevation="3dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -197,7 +203,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="bottom"
-                                android:layout_marginStart="140dp"
+                                android:layout_marginStart="130dp"
                                 android:background="@drawable/star_svgrepo_com_color"
                                 android:contentDescription="@string/todo" />
 
@@ -245,11 +251,11 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="20dp"
+                                android:layout_marginTop="10dp"
                                 android:layout_marginBottom="10dp"
                                 android:background="@drawable/button_outline"
                                 android:text="@string/ho_n_thi_n_h_s"
-                                android:textColor="@color/blue"
-                                android:layout_marginTop="10dp">
+                                android:textColor="@color/blue">
 
                             </androidx.appcompat.widget.AppCompatButton>
 
@@ -271,6 +277,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:background="@color/white"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -282,6 +289,7 @@
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="horizontal">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
@@ -296,6 +304,7 @@
                                     android:background="@drawable/note_text_svgrepo_com"
                                     android:contentDescription="@string/todo" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
@@ -304,24 +313,25 @@
                                 <TextView
                                     style="@style/Profile_Normal_TextView"
                                     android:layout_width="0dp"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="15dp"
                                     android:layout_weight="2"
                                     android:text="@string/h_s_c_nh_n"
-                                    tools:ignore="NestedWeights"
-                                    android:layout_marginStart="15dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginTop="10dp"/>
+                                    tools:ignore="NestedWeights" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1">
+
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:background="@drawable/ic_next"
-                                    android:contentDescription="@string/todo"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/next_svgrepo_com"
+                                    android:contentDescription="@string/todo" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -332,6 +342,7 @@
                             android:background="@color/grey" />
 
                         <LinearLayout
+                            android:id="@+id/btn_upload_cv"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="3"
@@ -339,44 +350,49 @@
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="horizontal">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 tools:ignore="NestedWeights">
+
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:background="@drawable/upload_square_svgrepo_com"
-                                    android:contentDescription="@string/todo"
                                     android:layout_gravity="center"
-                                    android:layout_marginStart="10dp"/>
+                                    android:layout_marginStart="10dp"
+                                    android:background="@drawable/upload_square_svgrepo_com"
+                                    android:contentDescription="@string/todo" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="8">
+                                android:layout_weight="8"
+                                android:gravity="center">
 
                                 <TextView
                                     style="@style/Profile_Normal_TextView"
                                     android:layout_width="0dp"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginStart="15dp"
-                                    android:layout_marginTop="15dp"
                                     android:layout_weight="2"
                                     android:text="@string/cv"
                                     tools:ignore="NestedWeights" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1">
+
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:background="@drawable/ic_next"
-                                    android:contentDescription="@string/todo"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/next_svgrepo_com"
+                                    android:contentDescription="@string/todo" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -385,28 +401,33 @@
                             android:layout_height="1dp"
                             android:layout_gravity="center"
                             android:background="@color/grey" />
+
                         <LinearLayout
                             android:id="@+id/boxJobCriteria"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="4"
+                            android:layout_weight="3"
                             android:baselineAligned="false"
                             android:clickable="true"
                             android:gravity="center"
                             android:orientation="horizontal">
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
+                                android:gravity="center"
                                 tools:ignore="NestedWeights">
+
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:background="@drawable/location_arrow_svgrepo_com"
-                                    android:contentDescription="@string/todo"
+                                    android:layout_marginStart="10dp"
                                     android:layout_marginTop="5dp"
-                                    android:layout_marginStart="10dp"/>
+                                    android:background="@drawable/location_arrow_svgrepo_com"
+                                    android:contentDescription="@string/todo" />
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
@@ -417,6 +438,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="2"
+                                    android:gravity="center"
                                     android:orientation="vertical"
                                     tools:ignore="NestedWeights,UselessParent">
 
@@ -452,16 +474,18 @@
 
                                 </LinearLayout>
                             </LinearLayout>
+
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1">
+
                                 <ImageView
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
-                                    android:background="@drawable/ic_next"
-                                    android:contentDescription="@string/todo"
-                                    android:layout_gravity="center" />
+                                    android:layout_gravity="center"
+                                    android:background="@drawable/next_svgrepo_com"
+                                    android:contentDescription="@string/todo" />
                             </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
