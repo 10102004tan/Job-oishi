@@ -65,7 +65,7 @@ public class OptionExperienceFragment extends Fragment {
         recyclerView = view.findViewById(R.id.list_option_type_job);
         btnClose = view.findViewById(R.id.btn_close_dialog);
         btnDone = view.findViewById(R.id.btn_done);
-        btnReset = view.findViewById(R.id.btn_reset);
+        btnReset = view.findViewById(R.id.btnReset);
 
         btnClose.setOnClickListener(v -> {
             MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
@@ -88,14 +88,16 @@ public class OptionExperienceFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(position -> {
+
             selectedOption = listOption.get(position);
+            listener.onOptionSelected(selectedOption, POS);
             DesignerToast.Success(getActivity(), selectedOption  + POS, Gravity.CENTER, Toast.LENGTH_SHORT);
         });
 
         btnDone.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onOptionSelected(selectedOption, POS);
-            }
+//            if (listener != null) {
+//                listener.onOptionSelected(selectedOption, POS);
+//            }
             MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
             if (bottomSheetFragment != null) {
                 bottomSheetFragment.dismiss();
@@ -109,7 +111,7 @@ public class OptionExperienceFragment extends Fragment {
                 listener.onOptionSelected(selectedOption, POS);
             }
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.remove("selectedJobType");
+            editor.remove("OptionExperiencePos");
             editor.apply();
             adapter.clearSavedSelectedPosition(getContext());
             DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);

@@ -22,4 +22,5 @@
     <color name="default_color">#A19E9E</color>
     <color name="selected_color">#1d7ca3</color>
     <color name="dddddd">#DDDDDD</color>
+    <color name="tab_color">#0abde3</color>
 </resources>

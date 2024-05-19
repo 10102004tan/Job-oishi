@@ -72,6 +72,7 @@ public class HomeFragment extends Fragment {
 
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Job Oishii"));
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Top Dev"));
+        binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
 
 
         /*ADD LISTENER FOR tablayout*/
@@ -84,6 +85,8 @@ public class HomeFragment extends Fragment {
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
+
                 isFirstTimeSelected = true;
             }
 

@@ -6,12 +6,14 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.joboishi.R;
 import com.example.joboishi.databinding.OptionTypeJobItemBinding;
+
 import java.util.ArrayList;
 
 public class OptionJobTypeAdapter extends RecyclerView.Adapter<OptionJobTypeAdapter.MyViewHolder> {
@@ -19,8 +21,8 @@ public class OptionJobTypeAdapter extends RecyclerView.Adapter<OptionJobTypeAdap
     private Activity context;
     private ArrayList<String> listOption = new ArrayList<>();
     private int selectedPosition = RecyclerView.NO_POSITION;
-    private static final String PREF_NAME = "OptionTypeJobPrefs";
-    private static final String SELECTED_POSITION_KEY = "selectedPosition";
+    private static final String PREF_NAME = "OptionJobTypePrefs";
+    private static final String SELECTED_POSITION_KEY = "OptionJobTypePos";
 
     public ArrayList<String> getListOption() {
         return listOption;
@@ -50,7 +52,7 @@ public class OptionJobTypeAdapter extends RecyclerView.Adapter<OptionJobTypeAdap
         String optionName = listOption.get(position);
         holder.optionTypeJobItemBinding.name.setText(optionName);
 
-        // Change background and text color based on selection state
+//        // Change background and text color based on selection state
         if (selectedPosition == position) {
             holder.optionTypeJobItemBinding.name.setBackgroundResource(R.drawable.background_item_selected);
             holder.optionTypeJobItemBinding.name.setTextColor(ContextCompat.getColor(context, R.color.selected_color));
@@ -58,6 +60,7 @@ public class OptionJobTypeAdapter extends RecyclerView.Adapter<OptionJobTypeAdap
             holder.optionTypeJobItemBinding.name.setBackgroundResource(R.drawable.background_item_chosen);
             holder.optionTypeJobItemBinding.name.setTextColor(ContextCompat.getColor(context, R.color.default_color));
         }
+
     }
 
     @Override
@@ -78,15 +81,22 @@ public class OptionJobTypeAdapter extends RecyclerView.Adapter<OptionJobTypeAdap
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        // Notify item click
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(position);
+                        if (selectedPosition == position) {
+                            // Deselect the item if it's already selected
+                            notifyItemChanged(selectedPosition);
+                            selectedPosition = RecyclerView.NO_POSITION;
+                            clearSavedSelectedPosition(context);
+                        } else {
+                            // Notify item click
+                            if (onItemClickListener != null) {
+                                onItemClickListener.onItemClick(position);
+                            }
+                            // Update selected position
+                            notifyItemChanged(selectedPosition);
+                            selectedPosition = position;
+                            notifyItemChanged(selectedPosition);
+                            saveSelectedPosition(context, selectedPosition);
                         }
-                        // Update selected position
-                        notifyItemChanged(selectedPosition);
-                        selectedPosition = position;
-                        notifyItemChanged(selectedPosition);
-                        saveSelectedPosition(context, selectedPosition);
                     }
                 }
             });
@@ -114,5 +124,6 @@ public class OptionJobTypeAdapter extends RecyclerView.Adapter<OptionJobTypeAdap
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(SELECTED_POSITION_KEY);
         editor.apply();
+        selectedPosition = RecyclerView.NO_POSITION;
     }
 }

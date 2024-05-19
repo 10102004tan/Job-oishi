@@ -34,7 +34,7 @@ public class OptionTypeJobFragment extends Fragment {
     private TextView title;
     private ImageButton btnClose;
     private AppCompatButton btnDone;
-    private AppCompatButton btnReset;
+    private Button btnReset;
     private OnOptionSelectedListener listener;
     private String selectedOption;
 
@@ -64,7 +64,7 @@ public class OptionTypeJobFragment extends Fragment {
         recyclerView = view.findViewById(R.id.list_option_type_job);
         btnClose = view.findViewById(R.id.btn_close_dialog);
         btnDone = view.findViewById(R.id.btn_done);
-        btnReset = view.findViewById(R.id.btn_reset);
+        btnReset = view.findViewById(R.id.btnReset);
         btnClose.setOnClickListener(v -> {
             MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
             if (bottomSheetFragment != null) {
@@ -86,18 +86,17 @@ public class OptionTypeJobFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.setOnItemClickListener(position -> {
+
             selectedOption = listOption.get(position);
-            DesignerToast.Success(getActivity(), selectedOption, Gravity.CENTER, Toast.LENGTH_SHORT);
+            listener.onOptionSelected(selectedOption, POS);
+            DesignerToast.Success(getActivity(), selectedOption  + POS, Gravity.CENTER, Toast.LENGTH_SHORT);
+
         });
 
         btnDone.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onOptionSelected(selectedOption, POS);
-            }
             MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
-            if (bottomSheetFragment != null) {
-                bottomSheetFragment.dismiss();
-            }
+            bottomSheetFragment.dismiss();
+
         });
 
         btnReset.setOnClickListener(v -> {
@@ -106,7 +105,7 @@ public class OptionTypeJobFragment extends Fragment {
                 listener.onOptionSelected(selectedOption, POS);
             }
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.remove("selectedJobType");
+            editor.remove("OptionJobTypePos");
             editor.apply();
             adapter.clearSavedSelectedPosition(getContext());
             DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);

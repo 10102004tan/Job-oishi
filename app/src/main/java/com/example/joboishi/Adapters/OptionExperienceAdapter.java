@@ -22,7 +22,7 @@ public class OptionExperienceAdapter extends RecyclerView.Adapter<OptionExperien
     private ArrayList<String> listOption = new ArrayList<>();
     private int selectedPosition = RecyclerView.NO_POSITION;
     private static final String PREF_NAME = "OptionExperiencePrefs";
-    private static final String SELECTED_POSITION_KEY = "selectedPosition";
+    private static final String SELECTED_POSITION_KEY = "OptionExperiencePos";
 
     public ArrayList<String> getListOption() {
         return listOption;
@@ -56,10 +56,12 @@ public class OptionExperienceAdapter extends RecyclerView.Adapter<OptionExperien
         if (selectedPosition == position) {
             holder.optionTypeJobItemBinding.name.setBackgroundResource(R.drawable.background_item_selected);
             holder.optionTypeJobItemBinding.name.setTextColor(ContextCompat.getColor(context, R.color.selected_color));
-        } else {
+        }
+        else {
             holder.optionTypeJobItemBinding.name.setBackgroundResource(R.drawable.background_item_chosen);
             holder.optionTypeJobItemBinding.name.setTextColor(ContextCompat.getColor(context, R.color.default_color));
         }
+
     }
 
     @Override
@@ -80,15 +82,22 @@ public class OptionExperienceAdapter extends RecyclerView.Adapter<OptionExperien
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        // Notify item click
-                        if (onItemClickListener != null) {
-                            onItemClickListener.onItemClick(position);
+                        if (selectedPosition == position) {
+                            // Deselect the item if it's already selected
+                            notifyItemChanged(selectedPosition);
+                            selectedPosition = RecyclerView.NO_POSITION;
+                            clearSavedSelectedPosition(context);
+                        } else {
+                            // Notify item click
+                            if (onItemClickListener != null) {
+                                onItemClickListener.onItemClick(position);
+                            }
+                            // Update selected position
+                            notifyItemChanged(selectedPosition);
+                            selectedPosition = position;
+                            notifyItemChanged(selectedPosition);
+                            saveSelectedPosition(context, selectedPosition);
                         }
-                        // Update selected position
-                        notifyItemChanged(selectedPosition);
-                        selectedPosition = position;
-                        notifyItemChanged(selectedPosition);
-                        saveSelectedPosition(context, selectedPosition);
                     }
                 }
             });
@@ -116,5 +125,6 @@ public class OptionExperienceAdapter extends RecyclerView.Adapter<OptionExperien
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(SELECTED_POSITION_KEY);
         editor.apply();
+        selectedPosition = RecyclerView.NO_POSITION;
     }
 }

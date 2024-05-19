@@ -105,20 +105,21 @@
         </LinearLayout>
 
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutMyJob"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:tabBackground="@drawable/tab_indecator"
+        app:tabGravity="fill"
+        app:tabIndicatorAnimationMode="elastic"
+        app:tabIndicatorGravity="stretch"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/white"/>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayoutMyJob"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            app:tabGravity="fill"
-            app:tabIndicatorAnimationMode="elastic"
-            app:tabSelectedTextColor="@color/black" />
-
-        <androidx.viewpager2.widget.ViewPager2
+    <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"

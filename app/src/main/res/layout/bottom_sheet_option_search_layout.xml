@@ -28,18 +28,7 @@
             android:layout_weight="7"
             android:layout_height="wrap_content"
             android:text="" />
-        <androidx.appcompat.widget.AppCompatButton
-            android:textAllCaps="false"
-            android:id="@+id/btn_reset"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:drawableLeft="@drawable/close_1511_svgrepo_com"
-            android:drawablePadding="10dp"
-            android:text="@string/lo_i_c_ng_vi_c"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+
 
         <Button
             android:id="@+id/btnReset"

@@ -224,7 +224,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
             public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
-//                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " số lượng " + response.body().size() + " từ khoas " + key + " remote=" + isRemote +" nawmexp="+ experience+ " loại=" + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
+                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " số lượng " + response.body().size() + " từ khoas " + key + " remote=" + isRemote +" nawmexp="+ experience+ " loại=" + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
 
                     if (page == 1) {
                         listSearchJob.clear(); // Clear the list for new searches
@@ -275,26 +275,32 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
             selectedOption = "";
         }
         switch (pos) {
-            case 0:
-                jobType = selectedOption.toLowerCase();
+            case 0: // Type Job
+                if (selectedOption.isEmpty()) {
+                    jobType = null;  // Reset the job type filter
+                } else {
+                    jobType = selectedOption.toLowerCase();
+                }
                 if (listSearchJob.size() > 0) {
                     listSearchJob.clear();
                     adapter.notifyDataSetChanged();
                 }
-
                 progressBar.setVisibility(View.VISIBLE);
                 performJobSearch(input.getText().toString(), currentPage);
-
                 break;
-            case 1:
-                experience = selectedOption.toLowerCase();
+
+            case 1: // Experience
+                if (selectedOption.isEmpty()) {
+                    experience = null;
+                } else {
+                    experience = selectedOption.toLowerCase();
+                }
                 if (listSearchJob.size() > 0) {
                     listSearchJob.clear();
                     adapter.notifyDataSetChanged();
                 }
                 progressBar.setVisibility(View.VISIBLE);
                 performJobSearch(input.getText().toString(), currentPage);
-
                 break;
         }
     }
@@ -304,14 +310,13 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         super.onStop();
         optionJobTypeAdapter.clearSavedSelectedPosition(this);
         optionExperienceAdapter.clearSavedSelectedPosition(this);
-            Log.d("testssss", "onStop: ");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("testssss", "onDestroy: ");
         optionJobTypeAdapter.clearSavedSelectedPosition(this);
         optionExperienceAdapter.clearSavedSelectedPosition(this);
+
     }
 }

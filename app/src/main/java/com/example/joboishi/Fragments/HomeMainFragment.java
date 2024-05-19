@@ -235,11 +235,9 @@ public class HomeMainFragment extends Fragment {
         });
     }
 
-
-
     private void saveJobToBookmarks(JobBasic job) {
         DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-        String userId = "3"; // Lấy user ID từ SharedPreferences hoặc nơi lưu trữ khác
+        String userId = "3";
         bookmarksRef.child("userId"+userId).child("job"+job.getId()).setValue(job)
                 .addOnSuccessListener(aVoid -> {
                     MotionToast.Companion.createToast(getActivity(), "😍",
