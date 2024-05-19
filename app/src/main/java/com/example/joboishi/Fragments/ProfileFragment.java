@@ -19,13 +19,12 @@ import com.bumptech.glide.Glide;
 import com.example.joboishi.Activities.JobCriteriaActivity;
 import com.example.joboishi.Activities.LoginActivity;
 import com.example.joboishi.Activities.ProfileActivity;
+import com.example.joboishi.Activities.SettingActivity;
 import com.example.joboishi.Activities.UploadFileActivity;
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserResponse;
-import com.example.joboishi.Activities.SettingActivity;
-import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.FragmentProfileBinding;
@@ -53,22 +52,12 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
 
         loadingDialog = new LoadingDialog(requireActivity());
-        loadingDialog.show();
-
-        binding.setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Chuyển đến màn hình đăng xuất
-                Intent intent = new Intent(getActivity(), SettingActivity.class);
-                startActivity(intent);
-            }
-        });
+        // loadingDialog.show();
 
 
         // Lấy giá trị từ SharedPreferences
         SharedPreferences sharedPref = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         USER_ID = sharedPref.getInt("user_id", 0);
-
         if (USER_ID == 0) {
             Intent intent = new Intent(this.getActivity(), LoginActivity.class);
             startActivity(intent);
@@ -76,6 +65,7 @@ public class ProfileFragment extends Fragment {
 
         // Get user data from api
         UserApi userApi = ApiClient.getUserAPI();
+        Log.d("USER_ID", USER_ID + "");
         Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
         callUser.enqueue(new Callback<UserApiResponse>() {
             @SuppressLint("SetTextI18n")
@@ -83,10 +73,11 @@ public class ProfileFragment extends Fragment {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-
+                    Log.d("TEST", response.body().toString());
 
                     // Check if user exists
                     if (response.body().getId() != 0) {
+                        Log.d("TEST", response.body().getFirstname());
                         userData.setId(response.body().getId());
                         userData.setFirstName(response.body().getFirstname());
                         userData.setPhone(response.body().getPhone());
@@ -133,9 +124,7 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
-
-         binding.setting.setOnClickListener(new View.OnClickListener() {
+        binding.setting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Chuyển đến màn hình đăng xuất
@@ -145,7 +134,6 @@ public class ProfileFragment extends Fragment {
         });
 
         //bắt sự kiện cho boxProfile
-
         binding.boxProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +143,7 @@ public class ProfileFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CODE_TO_PROFILE_ACTIVITY);
             }
         });
+
         binding.boxJobCriteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +162,6 @@ public class ProfileFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CODE_TO_PROFILE_ACTIVITY);
             }
         });
-
 
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
