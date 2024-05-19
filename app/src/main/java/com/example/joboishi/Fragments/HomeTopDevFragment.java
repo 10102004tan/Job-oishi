@@ -274,8 +274,6 @@ public class HomeTopDevFragment extends BaseFragment {
                         JobBasic job = data.getValue(JobBasic.class);
                         arrId.add(job.getId());
                     }
-                } else {
-                    Log.d("test11",task.getException().getMessage());
                 }
             }
         });

@@ -154,7 +154,6 @@ public class SavedJobFragment extends BaseFragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d("test122",databaseError.getMessage());
             }
         });
     }
@@ -174,7 +173,7 @@ public class SavedJobFragment extends BaseFragment {
         }
 
         MotionToast.Companion.createToast(getActivity(), "😍",
-                "Không có kết nối mạng",
+                getString(R.string.kh_ng_c_k_t_n_i_m_ng),
                 MotionToastStyle.ERROR,
                 MotionToast.GRAVITY_BOTTOM,
                 MotionToast.LONG_DURATION,
@@ -184,7 +183,7 @@ public class SavedJobFragment extends BaseFragment {
     @Override
     protected void handleLowInternet() {
         MotionToast.Companion.createToast(getActivity(), "😍",
-                "Đang kết nối ...",
+                getString(R.string.ang_k_t_n_i),
                 MotionToastStyle.WARNING,
                 MotionToast.GRAVITY_BOTTOM,
                 MotionToast.LONG_DURATION,

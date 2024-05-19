@@ -42,7 +42,6 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userEmail = sharedPref.getString("user_email", "ko");
         processingTokenFcm();
-
     }
 
     private void processingTokenFcm(){
@@ -85,8 +84,6 @@ public class SplashActivity extends AppCompatActivity {
                   finish();
                 }
               else{
-                  // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
-                    Log.e("testsss", "Send FCM token failed with code: " + response.code());
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
                 }
