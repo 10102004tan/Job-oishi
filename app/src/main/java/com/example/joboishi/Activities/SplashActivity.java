@@ -30,10 +30,11 @@ public class SplashActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private UserFcmAPI userFcmAPI;
     private String userEmail;
-    private int userId;
 
     private SplashLayoutBinding binding;
-    private  CuteDialog.withIcon dialog;
+    private int userId;
+    private CuteDialog.withIcon dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,9 +43,10 @@ public class SplashActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userEmail = sharedPref.getString("user_email", "ko");
         processingTokenFcm();
+
     }
 
-    private void processingTokenFcm(){
+    private void processingTokenFcm() {
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -55,8 +57,9 @@ public class SplashActivity extends AppCompatActivity {
                         String token = task.getResult();
                         userId = 2;
                         // Lưu token vào db
-                        sendRegistrationToServer(userId,token,userEmail);
-                    }});
+                        sendRegistrationToServer(userId, token, userEmail);
+                    }
+                });
     }
 
     // Phương thức gửi token đã được tách ra và tối ưu
@@ -75,52 +78,37 @@ public class SplashActivity extends AppCompatActivity {
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && userId != 0) {
+                if (response.isSuccessful() && userEmail != null) {
                     Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
                     startActivity(intent);
-                } else if (userId == 0) {
+                    finish();
+                } else if (userEmail == null) {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    if (response.isSuccessful() && userEmail != null) {
-                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else if (userEmail == null) {
-                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                        finish();
-                    } else {
-                        // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
-                        Log.e("testsss", "Send FCM token failed with code: " + response.code());
-                    }
-                    if (response.isSuccessful() && userEmail != null) {
-                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } else if (userEmail == null) {
-                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                        finish();
-                    } else {
-                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                    }
+                    finish();
+                } else {
+                    // Xử lý khi gửi token không thành công (ví dụ: kiểm tra mã lỗi)
+                    Log.e("testsss", "Send FCM token failed with code: " + response.code());
+                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                    startActivity(intent);
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 binding.lottieAnimationView.pauseAnimation();
-               dialog =
-                new CuteDialog.withIcon(SplashActivity.this)
-                        .setIcon(R.drawable.logo)
-                        .setTitle("Lỗi")
-                        .hideCloseIcon(true)
-                        .setDescription("Có lỗi, vui lòng kiểm tra kết nối mạng và thử lại sau!")
-                        .setPositiveButtonText("Tải lại", v2 -> {
-                            binding.lottieAnimationView.playAnimation();
-                            processingTokenFcm();
-                        })
-                        .setNegativeButtonText("Thoát", v1 -> {
-                            finish();
-                        });
+                dialog =
+                        new CuteDialog.withIcon(SplashActivity.this)
+                                .setIcon(R.drawable.logo)
+                                .setTitle("Lỗi")
+                                .hideCloseIcon(true)
+                                .setDescription("Có lỗi, vui lòng kiểm tra kết nối mạng và thử lại sau!")
+                                .setPositiveButtonText("Tải lại", v2 -> {
+                                    binding.lottieAnimationView.playAnimation();
+                                    processingTokenFcm();
+                                })
+                                .setNegativeButtonText("Thoát", v1 -> {
+                                    finish();
+                                });
                 dialog.setCanceledOnTouchOutside(false);
                 dialog.show();
 
