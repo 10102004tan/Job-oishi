@@ -1,11 +1,12 @@
 package com.example.joboishi.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import com.example.joboishi.Activities.SearchActivity;
 import com.example.joboishi.Adapters.ViewPagerHomeFragmentAdapter;
 
 import com.example.joboishi.R;
@@ -49,6 +51,8 @@ public class HomeFragment extends Fragment  {
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
+
                 isFirstTimeSelected = true;
             }
 
@@ -56,11 +60,12 @@ public class HomeFragment extends Fragment  {
             public void onTabReselected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (!isFirstTimeSelected){
-                    scrollRecyclerviewListener.setCurrentTabPosition(-1);
+                    scrollRecyclerviewListener.setCurrentTabPosition(position);
                 }
             }
         });
 
+        filterJob = new ArrayList<>(Arrays.asList("Android Developer", "Frontend Developer", "Backend Developer"));
         /*DONG BO TABLELAYOUT VOI VIEWPAGER*/
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override

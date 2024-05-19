@@ -42,6 +42,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         binding = SplashLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userEmail = sharedPref.getString("user_email", "ko");
         userId = sharedPref.getInt("user_id", 0);

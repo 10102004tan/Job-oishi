@@ -125,6 +125,7 @@ public class HomeTopDevFragment extends BaseFragment {
         });
 
         //processing add bookmark
+
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
             public void onClickJob(int id) {
