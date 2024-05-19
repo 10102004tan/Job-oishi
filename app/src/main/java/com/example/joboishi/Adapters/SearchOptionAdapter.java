@@ -51,11 +51,15 @@ public class SearchOptionAdapter extends RecyclerView.Adapter<SearchOptionAdapte
 
         // Cập nhật màu nền dựa trên trạng thái lựa chọn
         if (position == 1 && isRemoteSelected) {
+
             holder.optionSearchItemBinding.optionName.setTextColor(ContextCompat.getColor(context, R.color.selected_color));
             holder.optionSearchItemBinding.optionName.setBackgroundResource(R.drawable.background_item_selected);
         } else {
             holder.optionSearchItemBinding.optionName.setTextColor(ContextCompat.getColor(context, R.color.default_color));
             holder.optionSearchItemBinding.optionName.setBackgroundResource(R.drawable.background_item_chosen);
+        }
+        if (position == 1) {
+            holder.optionSearchItemBinding.optionName.setCompoundDrawables(null, null, null, null);
         }
     }
 

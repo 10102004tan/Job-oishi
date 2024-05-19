@@ -37,12 +37,14 @@
                     tools:ignore="NestedWeights">
 
                     <androidx.appcompat.widget.AppCompatButton
+                        android:textAllCaps="false"
                         android:id="@+id/btn_like_job"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@color/transparent"
                         android:drawableEnd="@drawable/ic_arrow_down"
                         android:text="Developer"
+                        android:padding="10dp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -72,25 +74,24 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4">
+                    android:layout_weight="6">
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_show_type"
+                        android:textAllCaps="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="10dp"
                         android:background="@drawable/border_choose_button"
                         android:drawableRight="@drawable/ic_arrow_down"
-                        android:text="Developer"
-                        android:textStyle="bold"
-                        tools:layout_editor_absoluteX="81dp"
-                        tools:layout_editor_absoluteY="82dp" />
+                        android:text="Tiêu chí công việc"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="6">
+                    android:layout_weight="4">
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_location"
@@ -98,9 +99,8 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/border_choose_button"
                         android:drawableRight="@drawable/ic_arrow_down"
-                        android:text="Thành Phố Hồ Chí Minh"
-                        tools:layout_editor_absoluteX="261dp"
-                        tools:layout_editor_absoluteY="82dp" />
+                        android:text="Địa điểm"
+                        android:textAllCaps="false" />
                 </LinearLayout>
             </LinearLayout>
 

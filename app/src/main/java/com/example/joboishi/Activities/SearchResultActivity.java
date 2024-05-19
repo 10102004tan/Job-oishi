@@ -9,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,7 +21,7 @@ import com.example.joboishi.Adapters.SearchOptionAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
-import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
+
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Models.JobSearch;
 import com.example.joboishi.R;
@@ -38,6 +39,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class SearchResultActivity extends AppCompatActivity implements OptionTypeJobFragment.OnOptionSelectedListener, OptionExperienceFragment.OnOptionSelectedListener {
 
@@ -123,10 +126,11 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
 //                        DesignerToast.Success(getBaseContext(), listSearchJob.size()+"", Gravity.CENTER, Toast.LENGTH_SHORT);
                         Log.d("testssss", listSearchJob.size()+"");
 
+                        if (listSearchJob.size() > 0) {
                             listSearchJob.clear();
                             adapter.notifyDataSetChanged();
 
-
+                        }
 
                         progressBar.setVisibility(View.VISIBLE);
                         performJobSearch(finalKword, currentPage);
@@ -220,7 +224,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
             public void onResponse(Call<ArrayList<JobSearch>> call, Response<ArrayList<JobSearch>> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
-                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " số lượng " + response.body().size() + " từ khoas " + key + " remote=" + isRemote +" nawmexp="+ experience+ " loại=" + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
+//                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " số lượng " + response.body().size() + " từ khoas " + key + " remote=" + isRemote +" nawmexp="+ experience+ " loại=" + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
 
                     if (page == 1) {
                         listSearchJob.clear(); // Clear the list for new searches
@@ -242,7 +246,6 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                     }
                 } else {
                     showNoDataAnimation();
-                    Toast.makeText(SearchResultActivity.this, "Không tìm thấy công việc nào", Toast.LENGTH_SHORT).show();
                 }
             }
 

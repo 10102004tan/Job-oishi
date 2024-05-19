@@ -57,6 +57,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
+import com.vdx.designertoast.DesignerToast;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
@@ -73,8 +75,10 @@ import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 public class HomeFragment extends Fragment {
 
+    private ArrayList<String> filterJob;
 
-
+    private SelectFilterJob selectFilterJob =  new SelectFilterJob();
+    private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
     private FragmentHomeBinding binding;
 
     @Override
@@ -91,8 +95,10 @@ public class HomeFragment extends Fragment {
         /*
          *ADD ITEM ON TABLAYOUT
          */
-        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Job oishi"));
-        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Top dev"));
+
+        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Job Oishii"));
+        binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText("Top Dev"));
+
 
         /*ADD LISTENER FOR tablayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -111,7 +117,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        /*DONG BO TABLAYOUT VOI VIEWPAGER*/
+        filterJob = new ArrayList<>(Arrays.asList("Android Developer", "Frontend Developer", "Backend Developer"));
+        /*DONG BO TABLELAYOUT VOI VIEWPAGER*/
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -119,6 +126,43 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        binding.btnShowType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+                selectFilterJob.setTitleFilter("Tiêu chí công việc");
+                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Phù hợp nhất", "Lương cao")));
+            }
+        });
+
+        binding.btnLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+
+                selectFilterJob.setTitleFilter("Đia điểm");
+                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Thành Phố Hồ Chí Minh", "TP. Hà Nội", "Đà Nẵng")));
+            }
+        });
+
+        binding.btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), SearchActivity.class);
+                intent.putExtra("filterJob", filterJob);
+                startActivity(intent);
+            }
+        });
+
         return binding.getRoot();
     }
+
+    private void showDialog() {
+        myBottomSheetDialogFragment = MyBottomSheetDialogFragment.newInstance();
+        myBottomSheetDialogFragment.setFragment(selectFilterJob);
+        myBottomSheetDialogFragment.show(getActivity().getSupportFragmentManager(), "MyBottomSheetDialogFragmentTag");
+
+    }
+
+
 }

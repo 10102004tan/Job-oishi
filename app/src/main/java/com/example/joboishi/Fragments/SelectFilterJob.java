@@ -1,13 +1,17 @@
 package com.example.joboishi.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,17 +21,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
+import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
+import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.R;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.vdx.designertoast.DesignerToast;
 
 import java.util.ArrayList;
-
 public class SelectFilterJob extends BottomSheetDialogFragment {
-    private Fragment fragment;
     private ArrayList<String> list;
     private String selectedValue = "";
     private String titleFilter;
-
 
     public String getTitleFilter() {
         return titleFilter;
@@ -53,31 +57,20 @@ public class SelectFilterJob extends BottomSheetDialogFragment {
         this.selectedValue = selectedValue;
     }
 
-    public Fragment getFragment() {
-        return fragment;
-    }
-
-    public void setFragment(Fragment fragment) {
-        this.fragment = fragment;
-    }
-
     public static MyBottomSheetDialogFragment newInstance() {
         return new MyBottomSheetDialogFragment();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.bottom_sheet_find_layout, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if(fragment != null) {
-            fragment = getFragment();
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment, fragment).commit();
-        }
 
         TextView lblTitleFilter = view.findViewById(R.id.lbl_title_filter);
         lblTitleFilter.setText(titleFilter);
@@ -95,6 +88,7 @@ public class SelectFilterJob extends BottomSheetDialogFragment {
             @Override
             public void onItemClick(SimpleStringRecyclerViewAdapter.MyHolder holder) {
                 selectedValue = list.get(holder.getPos());
+
                 onCloseDialog();
             }
         });
@@ -112,7 +106,11 @@ public class SelectFilterJob extends BottomSheetDialogFragment {
     public void  onCloseDialog() {
         MyBottomSheetDialogFragment bottomSheetFragment = (MyBottomSheetDialogFragment) getParentFragment();
         if (bottomSheetFragment != null) {
+
             bottomSheetFragment.dismiss();
         }
     }
+
+
 }
+

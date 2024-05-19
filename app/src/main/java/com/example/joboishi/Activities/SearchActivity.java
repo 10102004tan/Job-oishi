@@ -31,14 +31,18 @@ public class SearchActivity extends AppCompatActivity {
 
     private SearchLayoutBinding binding;
     private ListView listRecentSearch;
-
+    private ListView keyToTries;
+    private ArrayList<String> listKeyToTries = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = SearchLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        Intent filterJob = getIntent();
+        listKeyToTries = filterJob.getStringArrayListExtra("filterJob");
         listRecentSearch = binding.listRecentSearches;
+        keyToTries = binding.keyToTries;
         ImageButton btnBack = binding.btnToolbarBack;
         AppCompatButton btnDelRecentSearches = binding.btnDelRecentSearches;
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +74,14 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+
+        keyToTries.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listKeyToTries));
+        keyToTries.setOnItemClickListener((adapterView, view, position, id) -> {
+            String selectedSearch = (String) adapterView.getItemAtPosition(position);
+            Intent intent = new Intent(SearchActivity.this, SearchResultActivity.class);
+            intent.putExtra("key", selectedSearch);
+            startActivity(intent);
         });
 
         btnDelRecentSearches.setOnClickListener(view -> {

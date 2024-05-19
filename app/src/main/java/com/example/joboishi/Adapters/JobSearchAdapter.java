@@ -71,10 +71,7 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        if (jobs != null) {
-            return jobs.size();
-        }
-        return 0;
+        return jobs.size();
     }
 
     public class JobViewHolder extends RecyclerView.ViewHolder {
@@ -98,7 +95,7 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void addFooterLoading() {
         isLoadingAdd = true;
-        jobs.add(new JobSearch());
+        jobs.add(null);
     }
 
     public void removeFooterLoading() {

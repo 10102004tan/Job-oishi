@@ -1,5 +1,6 @@
 package com.example.joboishi.Api;
 
+import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.Models.JobSearch;
 
 import java.util.ArrayList;
@@ -10,9 +11,9 @@ import retrofit2.http.Query;
 
 public interface JobSearchAPI {
 
-    public static String BASE_URL = "http://ip172-18-0-7-cp48j2ol2o9000avmmug-3001.direct.labs.play-with-docker.com/";
+    public static String BASE_URL = "http://10.0.2.2:3001";
 
-    @GET("api/sjobs/search")
+    @GET("api/jobs/search")
     Call<ArrayList<JobSearch>> getListSearchJob(
             @Query("q") String keyword,
             @Query("remote") Boolean remote,
@@ -23,7 +24,7 @@ public interface JobSearchAPI {
     );
 
     // Lấy bỏ sang Chọn ngành nghề
-    @GET("api/sjobs")
+    @GET("api/jobs")
     Call<ArrayList<JobSearch>> getListJobs();
 
 }

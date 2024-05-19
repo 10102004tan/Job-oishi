@@ -8,7 +8,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 public interface JobAppliedAPI{
-    public static String BASE_URL = "http://ip172-18-0-7-cp48j2ol2o9000avmmug-3001.direct.labs.play-with-docker.com/";
+    public static String BASE_URL = "http://10.0.2.2:3001";
 
     @Multipart
     @POST(BASE_URL + "api/applied")
