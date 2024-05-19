@@ -2,6 +2,7 @@ package com.example.joboishi.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -68,6 +69,7 @@ public class SavedJobFragment extends BaseFragment {
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private IJobsService iJobsService;
+    private int userId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -75,6 +77,10 @@ public class SavedJobFragment extends BaseFragment {
         binding = FragmentSavedJobBinding.inflate(inflater, container, false);
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", 0);
+
         iJobsService = retrofit.create(IJobsService.class);
         jobs = new ArrayList<>();
         adapter = new JobAdapter(jobs,getContext());
@@ -87,7 +93,7 @@ public class SavedJobFragment extends BaseFragment {
             @Override
             public void onClickJob(int id) {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
-                intent.putExtra("id",id);
+                intent.putExtra("JOB_ID",id);
                 startActivity(intent);
             }
 
@@ -99,7 +105,7 @@ public class SavedJobFragment extends BaseFragment {
             @Override
             public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-                bookmarksRef.child("userId3").child("job"+job.getId()).removeValue();
+                bookmarksRef.child("userId"+userId).child("job"+job.getId()).removeValue();
             }
         });
 
@@ -129,7 +135,7 @@ public class SavedJobFragment extends BaseFragment {
         binding.image.setVisibility(View.VISIBLE);
         binding.image.setAnimation(R.raw.fetch_api_loading);
         binding.image.playAnimation();
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId"+userId);
         bookmarksRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -208,8 +214,4 @@ public class SavedJobFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 }

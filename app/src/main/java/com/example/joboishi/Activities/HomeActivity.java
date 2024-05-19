@@ -1,9 +1,12 @@
 package com.example.joboishi.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.joboishi.Adapters.ViewPagerHomeAdapter;
 
@@ -22,9 +25,9 @@ public class HomeActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = HomeLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
 
         //viewpager2

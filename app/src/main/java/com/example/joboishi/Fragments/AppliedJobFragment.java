@@ -1,4 +1,7 @@
 package com.example.joboishi.Fragments;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.core.content.res.ResourcesCompat;
@@ -8,7 +11,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
+import com.example.joboishi.Activities.DetailJobActivity;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
@@ -40,10 +45,14 @@ public class AppliedJobFragment extends BaseFragment {
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirstLoading = true;
+    private int userId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAppliedJobBinding.inflate(inflater, container, false);
+
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", 0);
         jobs = new ArrayList<>();
         adapter = new JobAdapter(jobs,getContext());
         adapter.setVisibleBookmark(false);
@@ -51,6 +60,24 @@ public class AppliedJobFragment extends BaseFragment {
         binding.listJob.setAdapter(adapter);
         getJobsApplied();
 
+        adapter.setiClickJob(new JobAdapter.IClickJob() {
+            @Override
+            public void onClickJob(int id) {
+                Intent intent = new Intent(getActivity(), DetailJobActivity.class);
+                intent.putExtra("JOB_ID",id);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage, int position) {
+
+            }
+
+            @Override
+            public void onRemoveBookmark(JobBasic jobBasic, ImageView bookmarkImage, int position) {
+
+            }
+        });
 
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -89,7 +116,7 @@ public class AppliedJobFragment extends BaseFragment {
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
-        Call<ArrayList<JobBasic>> call = iJobsService.getJobApplied(1);
+        Call<ArrayList<JobBasic>> call = iJobsService.getJobApplied(userId);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
@@ -106,8 +133,6 @@ public class AppliedJobFragment extends BaseFragment {
                         binding.image.setVisibility(View.GONE);
                     }
                     adapter.updateData(jobs);
-                    Gson gson = new Gson();
-                    String json = gson.toJson(response.body());
                 }
             }
             @Override

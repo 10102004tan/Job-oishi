@@ -34,6 +34,7 @@ import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.R;
+import com.example.joboishi.abstracts.BaseActivity;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.thecode.aestheticdialogs.AestheticDialog;
@@ -55,7 +56,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
 
-public class DetailJobActivity extends AppCompatActivity {
+public class DetailJobActivity extends BaseActivity {
 
     private DetailJobLayoutBinding binding;
     private ArrayList<Job> jobs;
@@ -407,57 +408,50 @@ public class DetailJobActivity extends AppCompatActivity {
 
 
 
-    // Ham dang ki receiver
-    private void registerInternetBroadcastReceiver() {
-        internetBroadcastReceiver = new InternetBroadcastReceiver();
-        internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {
-            @Override
-            public void noInternet() {
-                statusPreInternet = STATUS_NO_INTERNET;
-                if (isFirst) {
-                    binding.main.setVisibility(View.GONE);
-                    binding.image.setVisibility(View.VISIBLE);
-                    binding.image.setAnimation(R.raw.a404);
-                    binding.image.playAnimation();
-                    statusInternet = STATUS_NO_INTERNET;
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                    isFirst = false;
 
-                }
-                new AestheticDialog.Builder(DetailJobActivity.this, DialogStyle.CONNECTIFY, DialogType.ERROR)
-                        .setTitle("Không có kết nối mạng")
-                        .setMessage("Vui lòng kiểm tra lại kết nối mạng")
-                        .setCancelable(false)
-                        .setGravity(Gravity.BOTTOM).show();
-            }
+    @Override
+    protected void handleNoInternet() {
+        statusPreInternet = STATUS_NO_INTERNET;
+        if (isFirst) {
+            binding.main.setVisibility(View.GONE);
+            binding.image.setVisibility(View.VISIBLE);
+            binding.image.setAnimation(R.raw.a404);
+            binding.image.playAnimation();
+            statusInternet = STATUS_NO_INTERNET;
+            binding.swipeRefreshLayout.setRefreshing(false);
+            isFirst = false;
 
-            @Override
-            public void lowInternet() {
-                binding.image.setVisibility(View.VISIBLE);
-                binding.main.setVisibility(View.GONE);
-            }
+        }
+        new AestheticDialog.Builder(DetailJobActivity.this, DialogStyle.CONNECTIFY, DialogType.ERROR)
+                .setTitle("Không có kết nối mạng")
+                .setMessage("Vui lòng kiểm tra lại kết nối mạng")
+                .setCancelable(false)
+                .setGravity(Gravity.BOTTOM).show();
+    }
 
-            @Override
-            public void goodInternet() {
-                statusPreInternet = STATUS_GOOD_INTERNET;
-                if (isFirst) {
-                    statusInternet = STATUS_GOOD_INTERNET;
-                    isFirst = false;
-                }
-                else{
-                    binding.image.setVisibility(View.GONE);
-                    binding.main.setVisibility(View.VISIBLE);
-                    MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
-                            "Kết nối mạng đã được khôi phục",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
-                }
-            }
-        };
-        intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(internetBroadcastReceiver, intentFilter, Context.RECEIVER_EXPORTED);
+    @Override
+    protected void handleLowInternet() {
+        binding.image.setVisibility(View.VISIBLE);
+        binding.main.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void handleGoodInternet() {
+        statusPreInternet = STATUS_GOOD_INTERNET;
+        if (isFirst) {
+            statusInternet = STATUS_GOOD_INTERNET;
+            isFirst = false;
+        }
+        else{
+            binding.image.setVisibility(View.GONE);
+            binding.main.setVisibility(View.VISIBLE);
+            MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+                    "Kết nối mạng đã được khôi phục",
+                    MotionToastStyle.SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.LONG_DURATION,
+                    ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+        }
     }
 
     //Show dialog
