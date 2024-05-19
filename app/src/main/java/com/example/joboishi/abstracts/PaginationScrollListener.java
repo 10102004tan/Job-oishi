@@ -26,7 +26,7 @@ public abstract class PaginationScrollListener extends RecyclerView.OnScrollList
         // Số lượng hiển thị trên 1 page
         int totalItemCount = linearLayoutManager.getItemCount();
         int firstVisibleItemPos = linearLayoutManager.findFirstVisibleItemPosition();
-        Log.d("onScrolled", visibleItemCount + " " + totalItemCount + " " + firstVisibleItemPos);
+//        Log.d("onScrolled", visibleItemCount + " " + totalItemCount + " " + firstVisibleItemPos);
 
         if (isLoading() || isLastPage()) {
             return;

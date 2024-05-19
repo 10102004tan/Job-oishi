@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    android:id="@+id/item_filter"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/list_majors_chosen"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/white"
     app:cardCornerRadius="10dp"
-    app:cardUseCompatPadding="true">
+    app:cardUseCompatPadding="true"
+    >
 
-    <TextView
-        android:id="@+id/option_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_item_chosen"
-        android:drawableRight="@drawable/ic_arrow_down"
-        android:drawablePadding="20dp"
-        android:padding="10dp"
-        android:text="@string/l_m_t_xa"
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/option_name"
+            android:text="Làm từ xa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="18dp"
+            android:textColor="@color/selected_color"
+            android:background="@drawable/background_item_selected"
+            android:drawableRight="@drawable/ic_arrow_down"
+            android:drawablePadding="20dp"/>
 
 </androidx.cardview.widget.CardView>
