@@ -56,11 +56,11 @@ public class HomeTopDevFragment extends BaseFragment {
     private ArrayList<Integer> arrId;
 
     private FragmentHomeTopDevBinding binding;
-    private ScrollRecyclerviewListener scrollRecyclerviewListener;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
+        ScrollRecyclerviewListener scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
         scrollRecyclerviewListener.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();
