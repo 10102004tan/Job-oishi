@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment  {
             public void onClick(View view) {
                 showDialog();
                 selectFilterJob.setTitleFilter("Tiêu chí công việc");
-                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Phù hợp nhất", "Lương cao")));
+                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Phù hợp nhất")));
             }
         });
 
@@ -108,7 +108,7 @@ public class HomeFragment extends Fragment  {
             public void onClick(View view) {
                 showDialog();
                 selectFilterJob.setTitleFilter("Đia điểm");
-                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Thành Phố Hồ Chí Minh", "TP. Hà Nội", "Đà Nẵng")));
+                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Tất cả" ,"Thành phố Hồ Chí Minh", "Thành phố Hà Nội", "Tỉnh Đà Nẵng", "Tỉnh Cần Thơ", "Tỉnh Hải Phòng")));
             }
         });
 

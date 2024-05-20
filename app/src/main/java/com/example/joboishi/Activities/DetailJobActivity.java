@@ -319,6 +319,7 @@ public class DetailJobActivity extends BaseActivity {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
                 if(response.isSuccessful()){
+                    Log.d("test", "onResponse: " + response.body().getContent());
                     Job detailJob = response.body();
                     assert detailJob != null;
                     callback.onDetailJobLoaded(detailJob);

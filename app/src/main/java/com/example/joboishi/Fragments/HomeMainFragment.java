@@ -1,6 +1,8 @@
 package com.example.joboishi.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,6 +24,7 @@ import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.ViewModels.ScrollRecyclerviewListener;
 import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentHomeMainBinding;
@@ -56,10 +59,19 @@ public class HomeMainFragment extends BaseFragment {
     private ArrayList<Integer> arrId;
 
     private FragmentHomeMainBinding binding;
+    private int userId;
+    private String city;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
+            city = (str == null || str == "Tất cả") ? "" : str;
+            Log.d("testt", "onViewCreated: " + str);
+            page = 1;
+            getJobs(str);
+        });
         ScrollRecyclerviewListener scrollRecyclerviewListener = new ViewModelProvider(requireActivity()).get(ScrollRecyclerviewListener.class);
         scrollRecyclerviewListener.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
@@ -74,9 +86,13 @@ public class HomeMainFragment extends BaseFragment {
         // Inflate the layout for this fragment
         binding = FragmentHomeMainBinding.inflate(inflater, container, false);
 
+        //get user id
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", 0);
+        Log.d("testt", "onCreateView:use" + userId);
         //get All array id bookmark
         arrId = new ArrayList<>();
-        getAllIdBookmark(3);
+        getAllIdBookmark(userId);
 
         //Start init
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
@@ -90,7 +106,7 @@ public class HomeMainFragment extends BaseFragment {
         adapter.setArrId(arrId);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
-        getJobs();
+        getJobs(null);
         //refresh
         //Add event for swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -106,8 +122,9 @@ public class HomeMainFragment extends BaseFragment {
                     binding.imageNotInternet.setVisibility(View.VISIBLE);
                 }
                 else{
-                    getJobs();
-                    getAllIdBookmark(3);
+                    page = 1;
+                    getJobs("");
+                    getAllIdBookmark(userId);
                     binding.listJob.setVisibility(View.VISIBLE);
                 }
             }
@@ -132,7 +149,7 @@ public class HomeMainFragment extends BaseFragment {
             public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 job.setBookmarked(false);
                 adapter.notifyItemChanged(pos);
-                removeJobBookmark(3, job.getId());
+                removeJobBookmark(userId, job.getId());
             }
         });
         //processing load more
@@ -141,7 +158,7 @@ public class HomeMainFragment extends BaseFragment {
             public void onLoadMore() {
                 page+=1;
                 Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
-                Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(page, 1);
+                Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(city, page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
                     public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
@@ -162,27 +179,36 @@ public class HomeMainFragment extends BaseFragment {
         return binding.getRoot();
     }
 
-    private void getJobs() {
+    private void getJobs(String city) {
+        city = (city == null) ? "" : city;
+        Log.d("testt", "getJobs: city = " + city + ", page = " + page + ", userId = " + userId);
+
         binding.imageNotInternet.setAnimation(R.raw.fetch_api_loading);
         binding.imageNotInternet.playAnimation();
         binding.imageNotInternet.setVisibility(View.VISIBLE);
-        Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(page, 1);
+        Log.d("testt", "getJobs: key gửi API " + city);
+        Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(city, page, userId);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 if (response.isSuccessful()) {
                     jobList = response.body();
+                    Log.d("testt", "Jobs received: " + jobList.size());
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.imageNotInternet.setVisibility(View.GONE);
                     adapter.updateData(jobList);
+                } else {
+                    Log.d("testt", "Response was not successful");
                 }
             }
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                 binding.swipeRefreshLayout.setRefreshing(false);
+                Log.d("testt", "Lỗi tại đây " + t.getMessage());
             }
         });
     }
+
     @Override
     protected void handleNoInternet() {
         statusPreInternet = STATUS_NO_INTERNET;
@@ -221,7 +247,8 @@ public class HomeMainFragment extends BaseFragment {
         if (isFirst) {
             isFirst = false;
         }else{
-            getJobs();
+            page = 1;
+            getJobs(null);
             binding.imageNotInternet.setVisibility(View.GONE);
         }
     }
