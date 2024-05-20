@@ -128,7 +128,7 @@ public class DetailJobActivity extends BaseActivity {
                 binding.shimmer.setVisibility(View.GONE);
                 binding.detailLayout.setVisibility(View.VISIBLE);
 
-//                Log.d("test", job.getContent());
+                Log.d("test", job.getTitle());
 
                 // Responsibilities
                 if (job.getResponsibilities() != null) {
