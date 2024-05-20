@@ -25,6 +25,7 @@ public class MyJobFragment extends Fragment {
         binding = FragmentMyJobBinding.inflate(inflater, container, false);
         ViewPagerMyJobAdpater adapter = new ViewPagerMyJobAdpater(this);
         binding.viewPagerMyJob.setAdapter(adapter);
+        binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
 
         /*
         *ADD ITEM ON TABLAYOUT

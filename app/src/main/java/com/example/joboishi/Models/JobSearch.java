@@ -18,29 +18,20 @@ public class JobSearch implements Serializable {
     @SerializedName("company_id")
     private String company_id;
 
-    @SerializedName("display_name")
+    @SerializedName("company_name")
     private String company_name;
 
-    @SerializedName("image_logo")
+    @SerializedName("company_logo")
     private String company_logo;
 
     @SerializedName("sort_addresses")
     private String sort_addresses;
     @SerializedName("published")
     private String published;
-    @SerializedName("benefits")
-    private ArrayList<Benefit> benefits;
+
     private Boolean isChecked = false;
 
-    public ArrayList<Benefit> getBenefits() {
-        return benefits;
-    }
-
-    public void setBenefits(ArrayList<Benefit> benefits) {
-        this.benefits = benefits;
-    }
-
-    public JobSearch(int id, String title, String company_id, String company_name, String company_logo, String sort_addresses, String published, ArrayList<Benefit> benefits, Boolean isChecked) {
+    public JobSearch(int id, String title, String company_id, String company_name, String company_logo, String sort_addresses, String published, Boolean isChecked) {
         this.id = id;
         this.title = title;
         this.company_id = company_id;
@@ -48,7 +39,6 @@ public class JobSearch implements Serializable {
         this.company_logo = company_logo;
         this.sort_addresses = sort_addresses;
         this.published = published;
-        this.benefits = benefits;
         this.isChecked = isChecked;
     }
 

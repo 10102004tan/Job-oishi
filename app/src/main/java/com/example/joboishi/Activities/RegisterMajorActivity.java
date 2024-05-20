@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +49,8 @@ public class RegisterMajorActivity extends AppCompatActivity {
 
         // Get View
         AppCompatButton btnNext = registerMajorLayoutBinding.btnNextAdress;
+        TextView toolbarTitle = findViewById(R.id.toolbar_text_title);
+        ImageButton btnBackToolBar = findViewById(R.id.btn_toolbar_back);
 
 
         // Get data from intent, from Job criteria Activity
@@ -65,6 +68,8 @@ public class RegisterMajorActivity extends AppCompatActivity {
             }
         } else if (caller.equals("LoginEmailActivity")) {
             btnNext.setText(R.string.continute);
+            toolbarTitle.setVisibility(View.GONE);
+            btnBackToolBar.setVisibility(View.GONE);
         }
 
 
@@ -90,7 +95,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
 
         // Khởi tạo Retrofit và JobSearchAPI
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(JobSearchAPI.BASE_URL) // Thay bằng base URL thực tế
+                .baseUrl(JobSearchAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         jobSearchAPI = retrofit.create(JobSearchAPI.class);
@@ -112,7 +117,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
         registerMajorLayoutBinding.showListMajor.setAdapter(registerMajorAdapter);
 
 
-        getJobs(); // Gọi API để lấy danh sách công việc
+        getJobs();
 
         majorChosenAdapter = new SelectedJobAdapter(this, majorsChosen);
 
@@ -144,6 +149,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
                         Intent intent = new Intent(RegisterMajorActivity.this, AddressActivity.class);
                         intent.putExtra("majorsChosen", majorsChosen);
                         intent.putExtra("caller", "RegisterMajorActivity");
+                        intent.putExtra("is_first_login", true);
                         startActivity(intent);
                     }
                 }
