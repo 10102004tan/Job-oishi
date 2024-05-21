@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,8 @@ public class AddressActivity extends AppCompatActivity {
         // Get View
         Button btnDone = findViewById(R.id.btnDone);
         loadingDialog = new LoadingDialog(this);
+        TextView toolbarTitle = findViewById(R.id.toolbar_text_title);
+        ImageButton buttonBackToolbar = findViewById(R.id.btn_toolbar_back);
 
         // Lấy giá trị từ SharedPreferences
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
@@ -76,6 +79,7 @@ public class AddressActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // Use for check caller activity
         String caller = intent.getStringExtra("caller");
+        boolean isFirstLogin = intent.getBooleanExtra("is_first_login", false);
         assert caller != null;
         if (caller.equals("JobCriteriaActivity")) {
             btnDone.setText(R.string.btn_save_label);
@@ -88,6 +92,10 @@ public class AddressActivity extends AppCompatActivity {
             }
         } else if (caller.equals("RegisterMajorActivity")) {
             majors = (ArrayList<String>) intent.getSerializableExtra("majorsChosen");
+            if (isFirstLogin) {
+                buttonBackToolbar.setVisibility(View.GONE);
+                toolbarTitle.setVisibility(View.GONE);
+            }
         }
 
 
