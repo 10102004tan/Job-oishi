@@ -59,10 +59,7 @@ public class SplashActivity extends BaseActivity {
 
 
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        userEmail = sharedPref.getString("user_email", "ko");
-        userId = sharedPref.getInt("user_id", userId);
-        processingTokenFcm();
-    }
+        userId = sharedPref.getInt("user_id", 0);
 
         //Handler 3s for animtion
         binding.lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
