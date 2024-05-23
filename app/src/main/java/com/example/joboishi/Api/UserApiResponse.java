@@ -35,6 +35,8 @@ public class UserApiResponse {
 
     @SerializedName("birth")
     private String birth;
+    @SerializedName("phone")
+    private String phone;
 
     @SerializedName("gender")
     private String gender;
@@ -57,7 +59,7 @@ public class UserApiResponse {
     @SerializedName("province")
     private String province;
 
-    public UserApiResponse(int id, String firstname, String lastname, String email, String birth, String gender, String education, String photoUrl, String timeStartingWork, String city, String country, String province) {
+    public UserApiResponse(int id, String firstname, String lastname, String email, String birth, String gender, String education, String photoUrl, String timeStartingWork, String city, String country, String province, String phone) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -70,10 +72,19 @@ public class UserApiResponse {
         this.province = province;
         this.city = city;
         this.country = country;
+        this.phone = phone;
     }
 
     public UserApiResponse() {
 
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public int getId() {
