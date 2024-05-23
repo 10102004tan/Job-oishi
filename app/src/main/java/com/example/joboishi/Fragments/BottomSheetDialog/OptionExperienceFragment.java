@@ -114,7 +114,7 @@ public class OptionExperienceFragment extends Fragment {
             editor.remove("OptionExperiencePos");
             editor.apply();
             adapter.clearSavedSelectedPosition(getContext());
-            DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);
+//            DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);
         });
 
         return view;

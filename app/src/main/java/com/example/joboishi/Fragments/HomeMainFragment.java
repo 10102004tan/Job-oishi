@@ -27,6 +27,7 @@ import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentHomeMainBinding;
+import com.example.joboishi.databinding.FragmentHomeTopDevBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -34,6 +35,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,11 +68,12 @@ public class HomeMainFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
-            city = (str == null || str == "Tất cả") ? "" : str;
-            Log.d("testt", "onViewCreated: " + str);
+            city = (str == null || str == "Tất cả") ? "" : str.toLowerCase().trim();
+            Log.d("testt", "Joboishi: " + city.toLowerCase());
             page = 1;
-            getJobs(str);
+            getJobs(city);
         });
+
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();
@@ -81,13 +84,13 @@ public class HomeMainFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         binding = FragmentHomeMainBinding.inflate(inflater, container, false);
 
         //get user id
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getInt("user_id", 0);
-        Log.d("testt", "onCreateView:use" + userId);
+        userId = sharedPreferences.getInt("user_id", userId);
+
         //get All array id bookmark
         arrId = new ArrayList<>();
         getAllIdBookmark(userId);
@@ -140,13 +143,14 @@ public class HomeMainFragment extends BaseFragment {
             public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 job.setBookmarked(true);
                 adapter.notifyItemChanged(pos);
-                saveJobToBookmarks(job);
+                saveJobToBookmarks(job,userId);
             }
 
             @Override
             public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
                 job.setBookmarked(false);
                 adapter.notifyItemChanged(pos);
+                Log.d("test", "onRemoveBookmark: " + pos);
                 removeJobBookmark(userId, job.getId());
             }
         });
@@ -155,7 +159,9 @@ public class HomeMainFragment extends BaseFragment {
             @Override
             public void onLoadMore() {
                 page+=1;
-                Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                if (jobList.size() > 10) {
+                    Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                }
                 Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(city, page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
@@ -178,9 +184,6 @@ public class HomeMainFragment extends BaseFragment {
     }
 
     private void getJobs(String city) {
-        city = (city == null) ? "" : city;
-        Log.d("testt", "getJobs: city = " + city + ", page = " + page + ", userId = " + userId);
-
         binding.imageNotInternet.setAnimation(R.raw.fetch_api_loading);
         binding.imageNotInternet.playAnimation();
         binding.imageNotInternet.setVisibility(View.VISIBLE);
@@ -251,9 +254,8 @@ public class HomeMainFragment extends BaseFragment {
         }
     }
 
-    private void saveJobToBookmarks(JobBasic job) {
+    private void saveJobToBookmarks(JobBasic job,int userId) {
         DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-        String userId = "3"; // Lấy user ID từ SharedPreferences hoặc nơi lưu trữ khác
         bookmarksRef.child("userId"+userId).child("job"+job.getId()).setValue(job)
                 .addOnSuccessListener(aVoid -> {
                     MotionToast.Companion.createToast(getActivity(), "😍",
@@ -289,7 +291,7 @@ public class HomeMainFragment extends BaseFragment {
     }
     private void getAllIdBookmark(int userId){
         arrId.clear();
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId" + userId);
         bookmarksRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {

@@ -108,7 +108,7 @@ public class OptionTypeJobFragment extends Fragment {
             editor.remove("OptionJobTypePos");
             editor.apply();
             adapter.clearSavedSelectedPosition(getContext());
-            DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);
+//            DesignerToast.Info(getActivity(), "Reset thành công", Gravity.CENTER, Toast.LENGTH_SHORT);
         });
         return view;
     }
