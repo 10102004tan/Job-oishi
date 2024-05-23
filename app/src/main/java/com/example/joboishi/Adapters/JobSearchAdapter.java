@@ -102,6 +102,7 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             binding.jobTitleTxt.setText(job.getTitle());
             binding.sortAddressesTxt.setText(job.getSort_addresses());
             binding.published.setText(job.getPublished());
+            binding.salaryTxt.setVisibility((job.isIs_salary_visible()) ? View.VISIBLE : View.GONE);
             binding.bookmarkImage.setVisibility(View.GONE);
             Glide.with(context).load(job.getCompany_logo()).into(binding.companyLogo);
         }
