@@ -199,7 +199,7 @@ public class AddressActivity extends AppCompatActivity {
                     setResult(RESULT_OK, resultIntent);
                     finish();
                 } else if (caller.equals("RegisterMajorActivity")) {
-                    // loadingDialog.show();
+                    loadingDialog.show();
                     StringBuilder jobPositions = new StringBuilder();
                     StringBuilder cities = new StringBuilder();
 
@@ -235,6 +235,8 @@ public class AddressActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 loadingDialog.cancel();
                                 Intent intentHome = new Intent(AddressActivity.this, HomeActivity.class);
+                                intentHome.putExtra("jobPositions", majors);
+                                intentHome.putExtra("cities", listCityChosen);
                                 startActivity(intentHome);
                                 finish();
                             } else {

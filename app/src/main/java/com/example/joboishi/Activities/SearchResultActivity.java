@@ -53,7 +53,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     private JobSearchAPI jobSearchAPI;
     private boolean isLoading = false;
     private boolean isLastPage = false;
-    private int currentPage = 1;
+    private static int currentPage = 1;
     private int pageSize = 10;
     private RecyclerView rcv_tool;
 
@@ -61,8 +61,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     private LottieAnimationView animateNoData;
 
     private Boolean isRemote = false;
-    private String jobType;
-    private String experience;
+    private static String jobType;
+    private static String experience;
 
     private OptionJobTypeAdapter optionJobTypeAdapter;
     private OptionExperienceAdapter optionExperienceAdapter;
@@ -107,7 +107,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
 
         recyclerView.setAdapter(adapter);
 
-        DesignerToast.Success(getBaseContext(), input.getText().toString(), Gravity.CENTER, Toast.LENGTH_SHORT);
+//        DesignerToast.Success(getBaseContext(), input.getText().toString(), Gravity.CENTER, Toast.LENGTH_SHORT);
 
         // Set the initial visibility
         animateNoData.setVisibility(View.GONE);
@@ -141,15 +141,20 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                             adapter.notifyDataSetChanged();
 
                         }
+                        currentPage = 1;
 
                         progressBar.setVisibility(View.VISIBLE);
+                        // Load lại trang từ đầu giả sử đang ở trang khác
+
                         performJobSearch(finalKword, currentPage);
                         break;
                     case 2:
+
                         dialogFragment.setFragment(new OptionExperienceFragment());
                         dialogFragment.show(getSupportFragmentManager(), "experience");
                         break;
                     case 3:
+
                         dialogFragment.setFragment(new OptionTypeJobFragment());
                         dialogFragment.show(getSupportFragmentManager(), "type job");
                         break;
@@ -234,7 +239,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
-                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " số lượng " + response.body().size() + " từ khoas " + key + " remote=" + isRemote +" nawmexp="+ experience+ " loại=" + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
+//                    DesignerToast.Success(getBaseContext(), response.isSuccessful() + " số lượng " + response.body().size() + " từ khoas " + key + " remote=" + isRemote +" nawmexp="+ experience+ " loại=" + jobType, Gravity.CENTER, Toast.LENGTH_SHORT);
 
                     if (page == 1) {
                         listSearchJob.clear(); // Clear the list for new searches
@@ -296,7 +301,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                     adapter.notifyDataSetChanged();
                 }
                 progressBar.setVisibility(View.VISIBLE);
-                performJobSearch(input.getText().toString(), currentPage);
+                performJobSearch(input.getText().toString(), 1);
                 break;
 
             case 1: // Experience
@@ -310,7 +315,7 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
                     adapter.notifyDataSetChanged();
                 }
                 progressBar.setVisibility(View.VISIBLE);
-                performJobSearch(input.getText().toString(), currentPage);
+                performJobSearch(input.getText().toString(), 1);
                 break;
         }
     }

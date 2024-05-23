@@ -3,19 +3,8 @@ package com.example.joboishi.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,7 +43,6 @@ public class ProfileFragment extends Fragment {
     private final int REQUEST_CODE_TO_PROFILE_ACTIVITY = 987709;
     private UserResponse userData = new UserResponse();
     private FragmentProfileBinding binding;
-
     private int USER_ID = 0;
     private LoadingDialog loadingDialog;
 
@@ -65,7 +53,7 @@ public class ProfileFragment extends Fragment {
 
 
         loadingDialog = new LoadingDialog(requireActivity());
-        // loadingDialog.show();
+        loadingDialog.show();
 
 
         // Lấy giá trị từ SharedPreferences
@@ -78,7 +66,6 @@ public class ProfileFragment extends Fragment {
 
         // Get user data from api
         UserApi userApi = ApiClient.getUserAPI();
-        Log.d("USER_ID", USER_ID + "");
         Call<UserApiResponse> callUser = userApi.getDetailUser(USER_ID);
         callUser.enqueue(new Callback<UserApiResponse>() {
             @SuppressLint("SetTextI18n")
@@ -86,11 +73,9 @@ public class ProfileFragment extends Fragment {
             public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    Log.d("TEST", response.body().toString());
 
                     // Check if user exists
                     if (response.body().getId() != 0) {
-                        Log.d("TEST", response.body().getFirstname());
                         userData.setId(response.body().getId());
                         userData.setFirstName(response.body().getFirstname());
                         userData.setPhone(response.body().getPhone());

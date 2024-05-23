@@ -65,8 +65,6 @@ public class DetailJobActivity extends BaseActivity {
     private String jobId;
     private DetailJobAPI detailJobAPI;
     private ProgressDialog progressDialog;
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
     private final  int STATUS_NO_INTERNET = 0;
     private final  int STATUS_LOW_INTERNET = 1;
     private final  int STATUS_GOOD_INTERNET = 2;
@@ -319,6 +317,7 @@ public class DetailJobActivity extends BaseActivity {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
                 if(response.isSuccessful()){
+                    Log.d("test", "onResponse: " + response.body().getContent());
                     Job detailJob = response.body();
                     assert detailJob != null;
                     callback.onDetailJobLoaded(detailJob);
@@ -445,12 +444,6 @@ public class DetailJobActivity extends BaseActivity {
         else{
             binding.image.setVisibility(View.GONE);
             binding.main.setVisibility(View.VISIBLE);
-            MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
-                    "Kết nối mạng đã được khôi phục",
-                    MotionToastStyle.SUCCESS,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
         }
     }
 

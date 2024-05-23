@@ -262,7 +262,7 @@
             android:id="@+id/btn_save_salary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginHorizontal="16dp"
             android:background="@drawable/border_radius_btn"
             android:text="@string/btn_save_label"
             android:textColor="@color/white"
