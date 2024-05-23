@@ -59,13 +59,17 @@ public class HomeTopDevFragment extends BaseFragment {
 
     private FragmentHomeTopDevBinding binding;
     private int userId;
+    private String city;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), s -> {
-            Log.d("test111", "String value " + s);
+        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
+            city = (str == null || str == "Tất cả") ? "" : str;
+            Log.d("testt", "onViewCreated: " + str);
+            page = 1;
+            getJobs(str);
         });
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
@@ -83,6 +87,7 @@ public class HomeTopDevFragment extends BaseFragment {
         //get user id
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userId = sharedPreferences.getInt("user_id", 0);
+        Log.d("testt", "onCreateView:use" + userId);
         //get All array id bookmark
         arrId = new ArrayList<>();
         getAllIdBookmark(userId);
@@ -99,7 +104,7 @@ public class HomeTopDevFragment extends BaseFragment {
         adapter.setArrId(arrId);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
-        getJobs();
+        getJobs(null);
         //refresh
         //Add event for swipe refresh layout
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -115,7 +120,8 @@ public class HomeTopDevFragment extends BaseFragment {
                     binding.imageNoInternet.setVisibility(View.VISIBLE);
                 }
                 else{
-                    getJobs();
+                    page = 1;
+                    getJobs("");
                     getAllIdBookmark(userId);
                     binding.listJob.setVisibility(View.VISIBLE);
                 }
@@ -150,7 +156,7 @@ public class HomeTopDevFragment extends BaseFragment {
             public void onLoadMore() {
                 page+=1;
                 Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
-                Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page, userId);
+                Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(city, page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
                     public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
@@ -171,29 +177,36 @@ public class HomeTopDevFragment extends BaseFragment {
         return binding.getRoot();
     }
 
-    private void getJobs() {
+    private void getJobs(String city) {
+        city = (city == null) ? "" : city;
+        Log.d("testt", "getJobs: city = " + city + ", page = " + page + ", userId = " + userId);
+
         binding.imageNoInternet.setAnimation(R.raw.fetch_api_loading);
         binding.imageNoInternet.playAnimation();
         binding.imageNoInternet.setVisibility(View.VISIBLE);
-        Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(page,1);
+        Log.d("testt", "getJobs: key gửi API " + city);
+        Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(city, page, userId);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 if (response.isSuccessful()) {
                     jobList = response.body();
+                    Log.d("testt", "Jobs received: " + jobList.size());
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.imageNoInternet.setVisibility(View.GONE);
                     adapter.updateData(jobList);
+                } else {
+                    Log.d("testt", "Response was not successful");
                 }
-                Log.d("test11",jobList.size()+"");
             }
             @Override
             public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
                 binding.swipeRefreshLayout.setRefreshing(false);
-                Log.d("test11",t.getMessage());
+                Log.d("testt", "Lỗi tại đây " + t.getMessage());
             }
         });
     }
+
     @Override
     protected void handleNoInternet() {
         statusPreInternet = STATUS_NO_INTERNET;
@@ -232,7 +245,8 @@ public class HomeTopDevFragment extends BaseFragment {
         if (isFirst) {
             isFirst = false;
         }else{
-            getJobs();
+            page = 1;
+            getJobs(null);
             binding.imageNoInternet.setVisibility(View.GONE);
         }
     }
