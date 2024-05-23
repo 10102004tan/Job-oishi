@@ -235,6 +235,8 @@ public class AddressActivity extends AppCompatActivity {
                             if (response.isSuccessful()) {
                                 loadingDialog.cancel();
                                 Intent intentHome = new Intent(AddressActivity.this, HomeActivity.class);
+                                intentHome.putExtra("jobPositions", majors);
+                                intentHome.putExtra("cities", listCityChosen);
                                 startActivity(intentHome);
                                 finish();
                             } else {
