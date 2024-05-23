@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface JobSearchAPI {
@@ -24,7 +25,7 @@ public interface JobSearchAPI {
     );
 
     // Lấy sang Chọn ngành nghề
-    @GET("api/jobs")
+    @POST("api/jobs")
     Call<ArrayList<JobSearch>> getListJobs();
 
 }

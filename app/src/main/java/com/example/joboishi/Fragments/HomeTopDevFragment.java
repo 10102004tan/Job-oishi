@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -67,10 +68,11 @@ public class HomeTopDevFragment extends BaseFragment {
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
             city = (str == null || str == "Tất cả") ? "" : str;
-            Log.d("testt", "onViewCreated: " + str);
+            Log.d("testt", "Topdev: " + city.toLowerCase());
             page = 1;
-            getJobs(str);
+            getJobs(city.toLowerCase());
         });
+
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();
