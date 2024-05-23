@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">10.0.2.2</domain>
+        <!--        <domain includeSubdomains="true">10.0.2.2</domain>-->
+        <domain includeSubdomains="true">
+            ip172-18-0-93-cp7diq2im2rg00celnpg-3001.direct.labs.play-with-docker.com
+        </domain>
     </domain-config>
 </network-security-config>
