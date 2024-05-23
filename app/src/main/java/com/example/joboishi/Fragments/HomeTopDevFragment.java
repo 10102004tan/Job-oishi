@@ -67,10 +67,10 @@ public class HomeTopDevFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
-            city = (str == null || str == "Tất cả") ? "" : str;
+            city = (str == null || str == "Tất cả") ? "" : str.toLowerCase().trim();
             Log.d("testt", "Topdev: " + city.toLowerCase());
             page = 1;
-            getJobs(city.toLowerCase());
+            getJobs(city);
         });
 
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
@@ -157,7 +157,9 @@ public class HomeTopDevFragment extends BaseFragment {
             @Override
             public void onLoadMore() {
                 page+=1;
-                Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                if (jobList.size() > 15) {
+                    Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                }
                 Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(city, page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override

@@ -68,7 +68,7 @@ public class HomeMainFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
-            city = (str == null || str == "Tất cả") ? "" : str.toLowerCase();
+            city = (str == null || str == "Tất cả") ? "" : str.toLowerCase().trim();
             Log.d("testt", "Joboishi: " + city.toLowerCase());
             page = 1;
             getJobs(city);
@@ -125,7 +125,7 @@ public class HomeMainFragment extends BaseFragment {
                 else{
                     page = 1;
                     getJobs("");
-                    getAllIdBookmark(4);
+                    getAllIdBookmark(userId);
                     binding.listJob.setVisibility(View.VISIBLE);
                 }
             }
@@ -159,7 +159,9 @@ public class HomeMainFragment extends BaseFragment {
             @Override
             public void onLoadMore() {
                 page+=1;
-                Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                if (jobList.size() > 10) {
+                    Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                }
                 Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(city, page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
@@ -182,9 +184,6 @@ public class HomeMainFragment extends BaseFragment {
     }
 
     private void getJobs(String city) {
-        city = (city == null) ? "" : city;
-        Log.d("testt", "getJobs: city = " + city + ", page = " + page + ", userId = " + userId);
-
         binding.imageNotInternet.setAnimation(R.raw.fetch_api_loading);
         binding.imageNotInternet.playAnimation();
         binding.imageNotInternet.setVisibility(View.VISIBLE);
@@ -292,7 +291,7 @@ public class HomeMainFragment extends BaseFragment {
     }
     private void getAllIdBookmark(int userId){
         arrId.clear();
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId" + userId);
         bookmarksRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
