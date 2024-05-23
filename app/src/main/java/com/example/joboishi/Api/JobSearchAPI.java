@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 
 public interface JobSearchAPI {
 
-    public static String BASE_URL = APIURL.BASE_URL;
+    String BASE_URL = APIURL.BASE_URL;
 
     @GET("api/jobs/search")
     Call<ArrayList<JobBasic>> getListSearchJob(
