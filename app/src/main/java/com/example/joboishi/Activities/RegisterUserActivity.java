@@ -1,7 +1,5 @@
 package com.example.joboishi.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +9,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
@@ -20,15 +18,14 @@ import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserRegisterEmailRequest;
 import com.example.joboishi.R;
 
+import java.util.regex.Pattern;
+
 import io.github.cutelibs.cutedialog.CuteDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import www.sanju.motiontoast.MotionToast;
 import www.sanju.motiontoast.MotionToastStyle;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
@@ -143,7 +140,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                             Log.d("response", response.toString());
                             if (response.isSuccessful()) {
                                 CuteDialog.withIcon
-                                dialog =
+                                        dialog =
                                         new CuteDialog.withIcon(RegisterUserActivity.this)
                                                 .setIcon(R.drawable.logo)
                                                 .setTitle("Thông báo")
@@ -157,7 +154,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                                 dialog.setCanceledOnTouchOutside(false);
                                 dialog.show();
 
-                            }else {
+                            } else {
                                 MotionToast.Companion.createToast(RegisterUserActivity.this,
                                         "Thất bại",
                                         "Emai đã tồn tại !!!",
@@ -170,6 +167,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<UserApiResponse> call, Throwable t) {
+                            Log.d("Register Error", t.toString());
                             MotionToast.Companion.createToast(RegisterUserActivity.this,
                                     "Lỗi",
                                     "Đăng ký tài khoản thất bại",
