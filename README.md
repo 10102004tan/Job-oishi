@@ -41,13 +41,13 @@ or get it from the [GitHub Releases](https://github.com/RetroMusicPlayer/RetroMu
 ___
 
 ## 📱 Screenshots
-### Home screen
-| <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="200"/>| <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.jpg" width="200"/>| <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.jpg" width="200"/>| <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.jpg" width="200"/>| <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.jpg" width="200"/>|
-|:---:|:---:|:---:|:---:|:---:|
-| Home | My Jobs | Profile | Artists | Settings |
+### screen 
+| <img src="screen/splash.jpg" width="200"/>| <img src="screen/dangnhap.jpg" width="200"/>| <img src="screen/dangki.jpg" width="200"/>| <img src="screen/dangnhapfull.jpg" width="200"/>|
+|:---:|:---:|:---:|:---:|
+| Splash | Login | Register | Home choice login |
 
 ### Synced lyrics screen (Over Cover)
-| <img src="screenshots/synced_over_light.jpg" width="200"/>| <img src="screenshots/synced_over_dark.jpg" width="200"/>| <img src="screenshots/synced_over_black.jpg" width="200"/>|
+| <img src="screen/homefragment.jpg" width="200"/>| <img src="screen/homefragment2.jpg" width="200"/>| <img src="screen/vieccuatoi.jpg" width="200"/>|
 |:---:|:---:|:---:|
 | Synced Over Cover light | Synced Over Cover dark | Synced Over Cover black |
 

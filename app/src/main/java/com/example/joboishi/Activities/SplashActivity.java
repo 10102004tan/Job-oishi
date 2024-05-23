@@ -1,5 +1,6 @@
 package com.example.joboishi.Activities;
 
+import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -30,8 +31,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends BaseActivity {
-    private UserFcmAPI userFcmAPI;
-    private String userEmail;
 
     private SplashLayoutBinding binding;
     private int statusInternet = 0;
@@ -44,81 +43,73 @@ public class SplashActivity extends BaseActivity {
         binding = SplashLayoutBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        dialog =
+                new CuteDialog.withIcon(SplashActivity.this)
+                        .setIcon(R.drawable.logo)
+                        .setTitle("Lỗi")
+                        .hideCloseIcon(true)
+                        .setDescription(statusInternet == 0 ? "Không có kết nối mạng" : "Đã xảy ra lỗi, vui lòng thử laị sau")
+                        .setPositiveButtonText("Tải lại", v2 -> {
+                            binding.lottieAnimationView.playAnimation();
+                        })
+                        .setNegativeButtonText("Thoát", v1 -> {
+                            finish();
+                        });
+        dialog.setCanceledOnTouchOutside(false);
+
+
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userEmail = sharedPref.getString("user_email", "ko");
         userId = sharedPref.getInt("user_id", userId);
         processingTokenFcm();
     }
 
-    private void processingTokenFcm() {
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            return;
-                        }
-                        String token = task.getResult();
-                        // Lưu token vào db
-                        sendRegistrationToServer(userId, token, userEmail);
-                    }
-                });
-    }
-
-    // Phương thức gửi token đã được tách ra và tối ưu
-    private void sendRegistrationToServer(int userId, String token, String userEmail) {
-
-        // Chỉ khởi tạo Retrofit một lần (nếu chưa được khởi tạo)
-        if (userFcmAPI == null) {
-            Retrofit retrofit = new Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl(UserFcmAPI.BASE_URL)
-                    .build();
-            userFcmAPI = retrofit.create(UserFcmAPI.class);
-        }
-
-        Call<ResponseBody> call = userFcmAPI.sendFcmToken(userId, token);
-        call.enqueue(new Callback<ResponseBody>() {
+        //Handler 3s for animtion
+        binding.lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful() && userId != 0) {
-                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else if(userId == 0) {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
+            public void onAnimationStart(@NonNull Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(@NonNull Animator animation) {
+                if (statusInternet != 0) {
+                    if (userId != 0) {
+                        Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        finish();
+                    }
                 }
                 else{
-//                    Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
-//                    startActivity(intent);
+                    dialog.show();
+
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                binding.lottieAnimationView.pauseAnimation();
-                dialog =
-                        new CuteDialog.withIcon(SplashActivity.this)
-                                .setIcon(R.drawable.logo)
-                                .setTitle("Lỗi")
-                                .hideCloseIcon(true)
-                                .setDescription(statusInternet == 0 ? "Không có kết nối mạng" : "Đã xảy ra lỗi, vui lòng thử laị sau")
-                                .setPositiveButtonText("Tải lại", v2 -> {
-                                    binding.lottieAnimationView.playAnimation();
-                                    processingTokenFcm();
-                                })
-                                .setNegativeButtonText("Thoát", v1 -> {
-                                    finish();
-                                });
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.show();
+            public void onAnimationCancel(@NonNull Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(@NonNull Animator animation) {
+
             }
         });
+
+        binding.lottieAnimationView.playAnimation();
+
+
     }
+
     @Override
     protected void handleNoInternet() {
         statusInternet = 0;
+        dialog.show();
+
     }
 
     @Override
