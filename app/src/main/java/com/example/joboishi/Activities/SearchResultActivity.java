@@ -56,11 +56,14 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     private static int currentPage = 1;
     private int pageSize = 10;
     private RecyclerView rcv_tool;
+
     private LottieAnimationView progressBar;
     private LottieAnimationView animateNoData;
+
     private Boolean isRemote = false;
     private static String jobType;
     private static String experience;
+
     private OptionJobTypeAdapter optionJobTypeAdapter;
     private OptionExperienceAdapter optionExperienceAdapter;
     MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();

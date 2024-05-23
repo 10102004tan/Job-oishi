@@ -170,6 +170,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<UserApiResponse> call, Throwable t) {
+                            Log.d("test", "onFailure: " + t.getMessage());
                             MotionToast.Companion.createToast(RegisterUserActivity.this,
                                     "Lỗi",
                                     "Đăng ký tài khoản thất bại",
