@@ -65,6 +65,12 @@ public class HomeMainFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
+            city = (str == null || str == "Tất cả") ? "" : str;
+            Log.d("testt", "onViewCreated: " + str);
+            page = 1;
+            getJobs(str);
+        });
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();

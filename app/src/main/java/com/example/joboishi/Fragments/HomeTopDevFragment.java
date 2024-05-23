@@ -66,7 +66,7 @@ public class HomeTopDevFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
-            city = (str == null) ? "" : str;
+            city = (str == null || str == "Tất cả") ? "" : str;
             Log.d("testt", "onViewCreated: " + str);
             page = 1;
             getJobs(str);
