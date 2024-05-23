@@ -290,7 +290,7 @@ public class DetailJobActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 if (statusPreInternet != statusInternet){
-                    registerInternetBroadcastReceiver();
+                    //registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
                 if (statusInternet == STATUS_NO_INTERNET){
@@ -437,21 +437,21 @@ public class DetailJobActivity extends BaseActivity {
 
     @Override
     protected void handleGoodInternet() {
-        statusPreInternet = STATUS_GOOD_INTERNET;
-        if (isFirst) {
-            statusInternet = STATUS_GOOD_INTERNET;
-            isFirst = false;
-        }
-        else{
-            binding.image.setVisibility(View.GONE);
-            binding.main.setVisibility(View.VISIBLE);
-            MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
-                    "Kết nối mạng đã được khôi phục",
-                    MotionToastStyle.SUCCESS,
-                    MotionToast.GRAVITY_BOTTOM,
-                    MotionToast.LONG_DURATION,
-                    ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
-        }
+//        statusPreInternet = STATUS_GOOD_INTERNET;
+//        if (isFirst) {
+//            statusInternet = STATUS_GOOD_INTERNET;
+//            isFirst = false;
+//        }
+//        else{
+//            binding.image.setVisibility(View.GONE);
+//            binding.main.setVisibility(View.VISIBLE);
+//            MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+//                    "Kết nối mạng đã được khôi phục",
+//                    MotionToastStyle.SUCCESS,
+//                    MotionToast.GRAVITY_BOTTOM,
+//                    MotionToast.LONG_DURATION,
+//                    ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+//        }
     }
 
     //Show dialog

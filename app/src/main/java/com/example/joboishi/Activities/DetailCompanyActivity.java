@@ -89,7 +89,9 @@ public class DetailCompanyActivity extends AppCompatActivity {
 //        binding.jobsOfCompany.setAdapter(adapter);
 
         company_id = getIntent().getIntExtra("COMPANY_ID", -1) + "";
+//        company_id = "94691";
         Log.d("test", "Company id: " + company_id);
+
         getDetailCompany(company_id, new DetailCompanyCallBack() {
             @Override
             public void onGetCompanyLoaded(Company company) {
@@ -197,19 +199,19 @@ public class DetailCompanyActivity extends AppCompatActivity {
             }
         });
 
-        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (statusPreInternet != statusInternet) {
-                    registerInternetBroadcastReceiver();
-                    isFirst = true;
-                }
-                if (statusInternet == STATUS_NO_INTERNET) {
-                    binding.swipeRefreshLayout.setRefreshing(false);
-                }
-                binding.swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+//        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                if (statusPreInternet != statusInternet) {
+//                    registerInternetBroadcastReceiver();
+//                    isFirst = true;
+//                }
+//                if (statusInternet == STATUS_NO_INTERNET) {
+//                    binding.swipeRefreshLayout.setRefreshing(false);
+//                }
+//                binding.swipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
     }
 
     //Get Company
@@ -230,12 +232,14 @@ public class DetailCompanyActivity extends AppCompatActivity {
 
                 }
                 else {
+                    binding.lblNotFound.setVisibility(View.VISIBLE);
                     Log.d("test", "Lỗi không thể phản hồi công ty này ");
                 }
             }
 
             @Override
             public void onFailure(Call<Company> call, Throwable t) {
+                binding.lblNotFound.setVisibility(View.VISIBLE);
                 Log.d("test", "Lỗi không thể đọc công ty này ");
             }
         });

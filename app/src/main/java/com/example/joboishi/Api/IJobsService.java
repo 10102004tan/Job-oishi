@@ -16,7 +16,7 @@ import retrofit2.http.Query;
 public interface IJobsService {
 
     String BASE_URL = APIURL.BASE_URL;
-    @GET("api/jobs2")
+    @POST("api/jobs2")
     Call<ArrayList<JobBasic>> getListJobsDB(@Query("page") int page, @Query("user_id") int user_id);
 
     @POST("api/jobs")
