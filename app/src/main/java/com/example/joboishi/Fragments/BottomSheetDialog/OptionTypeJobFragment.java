@@ -89,7 +89,7 @@ public class OptionTypeJobFragment extends Fragment {
 
             selectedOption = listOption.get(position);
             listener.onOptionSelected(selectedOption, POS);
-            DesignerToast.Success(getActivity(), selectedOption  + POS, Gravity.CENTER, Toast.LENGTH_SHORT);
+//            DesignerToast.Success(getActivity(), selectedOption  + POS, Gravity.CENTER, Toast.LENGTH_SHORT);
 
         });
 
