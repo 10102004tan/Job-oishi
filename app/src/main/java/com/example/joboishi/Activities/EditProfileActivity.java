@@ -126,6 +126,7 @@ public class EditProfileActivity extends AppCompatActivity {
         return m.find();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +144,11 @@ public class EditProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // Default value
+        CountryApiResponse vnCountry = new CountryApiResponse("Vietnam", "84", "success");
+        countryData.add(vnCountry);
+        tempCountry.addAll(countryData);
 
         // Get View
         countryTextView = findViewById(R.id.selected_country_label);
@@ -169,6 +175,7 @@ public class EditProfileActivity extends AppCompatActivity {
         countryFragment.setCountryTextView(countryTextView);
         countryFragment.setCountrySelectedValue(countrySelectedValue);
         countryFragment.setCountryData(countryData);
+        countryFragment.setTemp(tempCountry);
 
         cityTextView = findViewById(R.id.selected_city_label);
         // Hard City of user
@@ -180,7 +187,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         genderTextView = findViewById(R.id.selected_gender);
         // Hard gender of user
-        String genderSelectedValue = "Nam";
+        String genderSelectedValue = genderData.get(0);
         genderTextView.setText(genderSelectedValue);
         genderFragment.setGenderTextView(genderTextView);
         genderFragment.setGenderData(genderData);
@@ -188,7 +195,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         eduTextView = findViewById(R.id.selected_edu);
         // Hard edu of user
-        String eduSelectedValue = "Cao Đẳng";
+        String eduSelectedValue = EDUCATIONS.get(0);
         eduTextView.setText(eduSelectedValue);
         eduFragment.setEduTextView(eduTextView);
         eduFragment.setEduData(EDUCATIONS);
@@ -196,12 +203,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
         experienceTextView = findViewById(R.id.selected_experience);
         // Hard experience of user
-        String experienceSelectedValue = "Tôi đã có kinh nghiệm";
+        String experienceSelectedValue = EXPERIENCES.get(1);
         experienceTextView.setText(experienceSelectedValue);
         experienceFragment.setExperienceSelectedValue(experienceSelectedValue);
         // experience of user
-        boolean isHaveExperience = true;
-        experienceFragment.setHaveExperience(isHaveExperience);
+        experienceFragment.setHaveExperience(false);
         experienceFragment.setExperienceData(EXPERIENCES);
         experienceFragment.setExperienceTextView(experienceTextView);
         // Begin employment time
@@ -258,6 +264,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 experienceFragment.setHaveExperience(false);
             } else {
                 experienceTextView.setText(userData.getTimeStartingWorking());
+                experienceFragment.setExperienceSelectedValue(EXPERIENCES.get(0)); // Have experience
                 experienceFragment.setHaveExperience(true);
                 experienceFragment.setExperienceStartedDateValue(userData.getTimeStartingWorking());
             }
@@ -395,6 +402,8 @@ public class EditProfileActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<ArrayList<CountryApiResponse>> call, @NonNull Response<ArrayList<CountryApiResponse>> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
+                    countryData.clear();
+                    tempCountry.clear();
                     countryData.addAll(response.body());
                     tempCountry.addAll(response.body());
                     countryFragment.setCountryData(countryData);
@@ -607,7 +616,8 @@ public class EditProfileActivity extends AppCompatActivity {
         }
 
         String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
-        if (timeStartingWork.equals(DEFAULT_NO_EXPERIENCE_STR)) {
+        String DEFAULT_HAVE_EXPERIENCE_STR = "Tôi đã có kinh nghiệm";
+        if (timeStartingWork.equals(DEFAULT_NO_EXPERIENCE_STR) || timeStartingWork.equals(DEFAULT_HAVE_EXPERIENCE_STR)) {
             timeStartingWork = null;
         }
 

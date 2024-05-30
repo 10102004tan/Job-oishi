@@ -3,6 +3,7 @@ package com.example.joboishi.Fragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class SelectExperienceFragment extends BottomSheetDialogFragment {
     private String experienceSelectedValue = "";
     private TextView experienceTextView;
     private String experienceStartedDateValue = ""; // Begin employment time
-    private boolean isHaveExperience = true; // experience of user
+    private boolean isHaveExperience = false; // experience of user
     private String tempExperience = "";
 
     public String getTempExperience() {
@@ -155,9 +156,9 @@ public class SelectExperienceFragment extends BottomSheetDialogFragment {
 
         // Show section time experience if user have experience
         LinearLayout haveExperience = view.findViewById(R.id.have_experience);
-        tempExperience = experienceData.get(1);
+        tempExperience = experienceData.get(1); // No experience
         if (isHaveExperience) {
-            tempExperience = experienceData.get(0);
+            tempExperience = experienceData.get(0); // Have experience
             assert haveExperience != null;
             haveExperience.setVisibility(View.VISIBLE);
             int month = Integer.parseInt(experienceStartedDateValue.split("/")[0]);
@@ -200,10 +201,17 @@ public class SelectExperienceFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 experienceSelectedValue = tempExperience;
-                experienceTextView.setText(experienceSelectedValue);
+                Log.d("EXEX", experienceSelectedValue);
+
                 isHaveExperience = experienceSelectedValue.equals(experienceData.get(0)); // Update is have experience
-                experienceStartedDateValue = monthPicker.getValue() < 10 ? "0" + monthPicker.getValue() + "/" + yearPicker.getValue() : monthPicker.getValue() + "/" + yearPicker.getValue();
-                experienceTextView.setText(experienceStartedDateValue);
+
+                if (isHaveExperience) {
+                    experienceStartedDateValue = monthPicker.getValue() < 10 ? "0" + monthPicker.getValue() + "/" + yearPicker.getValue() : monthPicker.getValue() + "/" + yearPicker.getValue();
+                    experienceTextView.setText(experienceStartedDateValue);
+                }else {
+                    experienceTextView.setText(experienceSelectedValue);
+                }
+
                 tempExperience = "";
                 onCloseDialog();
             }
