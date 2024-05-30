@@ -26,20 +26,25 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private Context context;
     private boolean isLoadingAdd;
 
+    private iClickItem iClickViewDetail;
+
+    public JobSearchAdapter(ArrayList<JobBasic> jobs, Context context) {
+        this.jobs = jobs;
+        this.context = context;
+    }
+
     public void setData(ArrayList<JobBasic> jobs) {
         this.jobs = jobs;
         notifyDataSetChanged();
     }
 
-    private iClickItem iClickViewDetail;
-
     public void setiClickViewDetail(iClickItem iClickViewDetail) {
         this.iClickViewDetail = iClickViewDetail;
-    }
-
-    public JobSearchAdapter(ArrayList<JobBasic> jobs, Context context) {
-        this.jobs = jobs;
-        this.context = context;
+        if (this.iClickViewDetail == null) {
+            Log.d("Adapter", "iClickViewDetail is null");
+        } else {
+            Log.d("Adapter", "iClickViewDetail is set");
+        }
     }
 
     @Override
@@ -66,8 +71,6 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             JobViewHolder jobViewHolder = (JobViewHolder) holder;
             JobBasic job = jobs.get(position);
             jobViewHolder.bind(job); // Bind the job object
-        } else if (holder instanceof LoadingViewHolder) {
-            // Handle the loading view holder binding if necessary
         }
     }
 
@@ -84,16 +87,16 @@ public class JobSearchAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             super(binding.getRoot());
             this.binding = binding;
 
-//            this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    if (iClickViewDetail != null && job != null) {
-//                        iClickViewDetail.clickViewDetail(job.getId());
-//                    } else {
-//                        Log.d("test", "Interface or job is null" + iClickViewDetail.toString() + " " + job.getId());
-//                    }
-//                }
-//            });
+            this.binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (iClickViewDetail != null) {
+                        iClickViewDetail.clickViewDetail(job.getId());
+                    } else {
+                        Log.d("test", "iClickViewDetail is null");
+                    }
+                }
+            });
         }
 
         public void bind(JobBasic job) {
