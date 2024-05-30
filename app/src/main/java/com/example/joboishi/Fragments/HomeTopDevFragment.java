@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,11 +67,12 @@ public class HomeTopDevFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
-            city = (str == null || str == "Tất cả") ? "" : str;
-            Log.d("testt", "onViewCreated: " + str);
+            city = (str == null || str == "Tất cả") ? "" : str.toLowerCase().trim();
+            Log.d("testt", "Topdev: " + city.toLowerCase());
             page = 1;
-            getJobs(str);
+            getJobs(city);
         });
+
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();
@@ -155,7 +157,9 @@ public class HomeTopDevFragment extends BaseFragment {
             @Override
             public void onLoadMore() {
                 page+=1;
-                Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                if (jobList.size() > 15) {
+                    Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                }
                 Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(city, page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override

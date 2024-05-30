@@ -54,13 +54,13 @@ public class CountryRecyclerViewAdapter extends RecyclerView.Adapter<CountryRecy
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.setPos(position);
 
-        TextView title = holder.getBinding().getRoot().findViewById(com.example.joboishi.R.id.country_name);
+        TextView title = holder.getBinding().getRoot().findViewById(R.id.country_name);
         ImageView image = holder.getBinding().getRoot().findViewById(R.id.btn_check);
 
-        title.setText(data.get(position).getName().getCommon());
+        title.setText(data.get(position).getName());
 
         // Display check icon when user choose a country
-        if (selectedCountry.equals(data.get(position).getName().getCommon())) {
+        if (selectedCountry.equals(data.get(position).getName())) {
             image.setImageResource(R.drawable.check_svgrepo_com);
             title.setTextColor(Color.parseColor("#1D7CA3"));
         } else {
