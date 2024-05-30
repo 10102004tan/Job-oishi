@@ -64,6 +64,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -260,7 +261,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 birthDayTextView.setText(userData.getBirth());
             }
 
-            if (userData.getTimeStartingWorking() == null) {
+            if (userData.getTimeStartingWorking() == null || Objects.equals(userData.getTimeStartingWorking(), "")) {
                 experienceFragment.setHaveExperience(false);
             } else {
                 experienceTextView.setText(userData.getTimeStartingWorking());
@@ -618,7 +619,7 @@ public class EditProfileActivity extends AppCompatActivity {
         String DEFAULT_NO_EXPERIENCE_STR = "Tôi chưa có kinh nghiệm";
         String DEFAULT_HAVE_EXPERIENCE_STR = "Tôi đã có kinh nghiệm";
         if (timeStartingWork.equals(DEFAULT_NO_EXPERIENCE_STR) || timeStartingWork.equals(DEFAULT_HAVE_EXPERIENCE_STR)) {
-            timeStartingWork = null;
+            timeStartingWork = "";
         }
 
         UserRequest userUpdateRequest = new UserRequest();

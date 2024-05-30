@@ -201,7 +201,6 @@ public class SelectExperienceFragment extends BottomSheetDialogFragment {
             @Override
             public void onClick(View v) {
                 experienceSelectedValue = tempExperience;
-                Log.d("EXEX", experienceSelectedValue);
 
                 isHaveExperience = experienceSelectedValue.equals(experienceData.get(0)); // Update is have experience
 
