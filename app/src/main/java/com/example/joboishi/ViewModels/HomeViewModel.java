@@ -21,7 +21,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> selectedValue = new MutableLiveData<String>("");
     private MutableLiveData<Integer> currentTabPosition = new MutableLiveData<>(0);
-    private IJobsService iJobsService;
 
     public MutableLiveData<String> getSelectedValue() {
         return selectedValue;
