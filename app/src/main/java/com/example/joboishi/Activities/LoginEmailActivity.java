@@ -120,6 +120,7 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 // Lưu email người dùng vào SharedPreferences
                                 SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
+                                //lưu trữ dữ liệu trong SharedPreferences
                                 editor.putString("user_email", userEmail);
                                 editor.putInt("user_id", userId);
                                 editor.apply();
