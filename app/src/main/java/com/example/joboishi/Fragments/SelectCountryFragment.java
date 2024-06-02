@@ -111,7 +111,7 @@ public class SelectCountryFragment extends BottomSheetDialogFragment {
         recyclerViewAdapter.setItemClickListener(new CountryRecyclerViewAdapter.ItemClickListener() {
             @Override
             public void onItemClick(CountryRecyclerViewAdapter.MyHolder holder) {
-                countrySelectedValue = countryData.get(holder.getPos()).getName().getCommon();
+                countrySelectedValue = countryData.get(holder.getPos()).getName();
                 countryTextView.setText(countrySelectedValue);
                 countryData.clear();
                 countryData.addAll(temp);
@@ -154,7 +154,7 @@ public class SelectCountryFragment extends BottomSheetDialogFragment {
                     // If value search not empty
                     for (CountryApiResponse item :
                             countryData) {
-                        if (checkPattern(item.getName().getCommon().toLowerCase(), ".*" + searchingValue.toLowerCase() + ".*")) {
+                        if (checkPattern(item.getName().toLowerCase(), ".*" + searchingValue.toLowerCase() + ".*")) {
                             // TolowerCase search value and country value to compare
                             // If country value contains search value => add to new array
                             searchData.add(item);
