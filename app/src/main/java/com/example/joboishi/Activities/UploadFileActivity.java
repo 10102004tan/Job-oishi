@@ -194,6 +194,7 @@ public class UploadFileActivity extends AppCompatActivity {
         } else {
             String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(permission, REQ);
+            openFile();
         }
     }
 
@@ -370,12 +371,18 @@ public class UploadFileActivity extends AppCompatActivity {
                     }
                 } else {
                     Log.d("test", "Xóa tệp thất bại: " + response.message());
+                    mProgressDialog.dismiss();
+                    binding.layoutFileInfo.setVisibility(View.GONE);
+                    binding.btnUpload.setVisibility(View.VISIBLE);
                 }
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                mProgressDialog.dismiss();
+                binding.layoutFileInfo.setVisibility(View.GONE);
+                binding.btnUpload.setVisibility(View.VISIBLE);
                 Log.d("test", "Failure Xóa tệp thất bại");
             }
         });
