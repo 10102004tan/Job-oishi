@@ -60,7 +60,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Response<ForgotPasswordApiResponse> response) {
                             if (response.isSuccessful()) {
-                                Log.d("forgotpassword", response.body().getMessage() + "");
+                                Log.d("TESST", response.body().getMessage() + "");
                                 MotionToast.Companion.createToast(ForgotPasswordActivity.this, "Thành công",
                                         "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.",
                                         MotionToastStyle.SUCCESS,

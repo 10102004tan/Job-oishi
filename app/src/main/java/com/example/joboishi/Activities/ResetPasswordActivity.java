@@ -18,6 +18,8 @@ import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserResetPasswordRequest;
 import com.example.joboishi.R;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,6 +43,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 String newPassword = newPasswordEditText.getText().toString().trim();
                 String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
+                Intent intent = getIntent();
+                String email = intent.getStringExtra("email");
+
                 // Kiểm tra nếu mật khẩu trống hoặc không khớp
                 if (newPassword.isEmpty() || !newPassword.equals(confirmPassword)) {
                     MotionToast.Companion.createToast(ResetPasswordActivity.this, "Lỗi",
@@ -51,13 +56,13 @@ public class ResetPasswordActivity extends AppCompatActivity {
                             ResourcesCompat.getFont(ResetPasswordActivity.this, R.font.helvetica_regular));
                 } else {
                     // Gửi yêu cầu đặt lại mật khẩu đến máy chủ
-                    UserResetPasswordRequest request = new UserResetPasswordRequest(newPassword);
+                    UserResetPasswordRequest request = new UserResetPasswordRequest(email, newPassword);
                     UserApi userApi = ApiClient.getUserAPI();
                     Call<ForgotPasswordApiResponse> callUser = userApi.resetPassword(request);
                     callUser.enqueue(new Callback<ForgotPasswordApiResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Response<ForgotPasswordApiResponse> response) {
-                            if (response.isSuccessful()) {
+                            if (response.isSuccessful() && Objects.requireNonNull(response.body()).getStatus() == 200) {
                                 MotionToast.Companion.createToast(ResetPasswordActivity.this, "Thành công",
                                         "Mật khẩu của bạn đã được đặt lại thành công.",
                                         MotionToastStyle.SUCCESS,

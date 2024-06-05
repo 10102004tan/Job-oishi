@@ -36,7 +36,6 @@ public class VerifyTokenActivity extends Activity {
                 String email = intent.getStringExtra("email");
 
                 String token = verifyToken.getText().toString();
-                Log.d("email", email);
 
                 UserVerifyTokenRequest request = new UserVerifyTokenRequest(token,email);
                 UserApi userApi = ApiClient.getUserAPI();
@@ -45,7 +44,12 @@ public class VerifyTokenActivity extends Activity {
                     @Override
                     public void onResponse(Call<ForgotPasswordApiResponse> call, Response<ForgotPasswordApiResponse> response) {
                         if (response.isSuccessful()){
-                            Log.d("ktra",response.body().getStatus() + "");
+                            assert response.body() != null;
+                            if (response.body().getStatus() == 200) {
+                                Intent intent = new Intent(VerifyTokenActivity.this, ResetPasswordActivity.class);
+                                intent.putExtra("email",email);
+                                startActivity(intent);
+                            }
 
                         }
                     }
