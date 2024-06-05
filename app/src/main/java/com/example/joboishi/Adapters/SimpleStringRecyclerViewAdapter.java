@@ -10,11 +10,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.databinding.ListCityRycBinding;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
         this.selectedValue = selectedValue;
     }
 
+
     public ItemClickListener getItemClickListener() {
         return itemClickListener;
     }
@@ -52,17 +55,16 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
     @SuppressLint("ResourceAsColor")
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
 
-
         holder.setPos(position);
         holder.title.setText(data.get(position));
 
-        if (selectedValue.equals(data.get(position))) {
-            holder.image.setImageResource(com.example.joboishi.R.drawable.check_svgrepo_com);
-            holder.title.setTextColor(Color.parseColor("#1D7CA3"));
-        } else {
-            holder.image.setImageResource(R.drawable.border_radius_input);
-            holder.title.setTextColor(Color.parseColor("#000000"));
-        }
+//        if (selectedValue.equals(data.get(position))) {
+//            holder.image.setImageResource(com.example.joboishi.R.drawable.check_svgrepo_com);
+//            holder.title.setTextColor(Color.parseColor("#1D7CA3"));
+//        } else {
+//            holder.image.setImageResource(R.drawable.border_radius_input);
+//            holder.title.setTextColor(Color.parseColor("#000000"));
+//        }
     }
 
     @Override

@@ -6,14 +6,14 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.Fragment;
+import androidx.core.widget.NestedScrollView;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,31 +23,22 @@ import android.widget.Toast;
 import com.example.joboishi.Activities.DetailJobActivity;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
+import com.example.joboishi.Api.JobBookmarksResponse;
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
-import com.example.joboishi.abstracts.BaseFragment;
+import com.example.joboishi.Abstracts.BaseFragment;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.databinding.FragmentSavedJobBinding;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.thecode.aestheticdialogs.AestheticDialog;
-import com.thecode.aestheticdialogs.DialogStyle;
-import com.thecode.aestheticdialogs.DialogType;
-import com.thecode.aestheticdialogs.OnDialogClickListener;
-import com.vdx.designertoast.DesignerToast;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,8 +51,8 @@ public class SavedJobFragment extends BaseFragment {
     private FragmentSavedJobBinding binding;
     private ArrayList<JobBasic> jobs;
     private JobAdapter adapter;
-    private InternetBroadcastReceiver internetBroadcastReceiver;
-    private IntentFilter intentFilter;
+    private HomeViewModel homeViewModel;
+
     private boolean isFirst = true;
     private final  int STATUS_NO_INTERNET = 0;
     private final  int STATUS_LOW_INTERNET = 1;
@@ -70,7 +61,27 @@ public class SavedJobFragment extends BaseFragment {
     private int statusPreInternet = -1;
     private IJobsService iJobsService;
     private int userId;
+    private int page = 1;
+    private int totalPages = 1;
+    private boolean isDestroy = false;
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getCurrentTotalBookmark().observe(getViewLifecycleOwner(), total -> {
+            if (!isDestroy){
+                jobs.clear();
+                getJobsSaved();
+            }
+            if (total == 0){
+                binding.image.setVisibility(View.VISIBLE);
+                binding.image.setAnimation(R.raw.no_data);
+                binding.image.playAnimation();
+                binding.listJob.setVisibility(View.GONE);
+            }
+        });
+    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -87,7 +98,6 @@ public class SavedJobFragment extends BaseFragment {
         adapter.setBookmark(true);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         binding.listJob.setAdapter(adapter);
-        getJobsSaved();
         //Add event for adapter
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
@@ -104,8 +114,9 @@ public class SavedJobFragment extends BaseFragment {
 
             @Override
             public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
-                DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-                bookmarksRef.child("userId"+userId).child("job"+job.getId()).removeValue();
+                removeJobBookmark(userId,job.getId());
+                jobs.remove(pos);
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -113,10 +124,12 @@ public class SavedJobFragment extends BaseFragment {
         binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                jobs.clear();
                 if (statusPreInternet != statusInternet){
                     registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
+                page = 1;
                 getJobsSaved();
                 if (statusInternet == STATUS_NO_INTERNET){
                     binding.swipeRefreshLayout.setRefreshing(false);
@@ -125,27 +138,48 @@ public class SavedJobFragment extends BaseFragment {
                 }
             }
         });
+
+        //processing load more
+        binding.idNestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    page++;
+                    if (page <= totalPages) {
+                        binding.idPBLoading.setVisibility(View.VISIBLE);
+                        getJobsSaved();
+                    }
+                }
+            }
+        });
         return binding.getRoot();
     }
-
     //get data from server
-
     private void getJobsSaved(){
-        binding.listJob.setVisibility(View.GONE);
-        binding.image.setVisibility(View.VISIBLE);
-        binding.image.setAnimation(R.raw.fetch_api_loading);
-        binding.image.playAnimation();
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId"+userId);
-        bookmarksRef.addValueEventListener(new ValueEventListener() {
+
+        if (page == 1){
+            binding.listJob.setVisibility(View.GONE);
+            binding.image.setVisibility(View.VISIBLE);
+            binding.image.setAnimation(R.raw.fetch_api_loading);
+            binding.image.playAnimation();
+            binding.idPBLoading.setVisibility(View.GONE);
+        }
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+
+        iJobsService = retrofit.create(IJobsService.class);
+        Call<JobBookmarksResponse> call = iJobsService.getJobBookmark(userId,page);
+        call.enqueue(new Callback<JobBookmarksResponse>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                jobs.clear();
-                for (DataSnapshot jobSnapshot : dataSnapshot.getChildren()) {
-                    JobBasic job = jobSnapshot.getValue(JobBasic.class);
+            public void onResponse(Call<JobBookmarksResponse> call, Response<JobBookmarksResponse> response) {
+                JobBookmarksResponse jobBookmarksResponse = response.body();
+                for(JobBasic job : jobBookmarksResponse.getData()){
+                    job.setBookmarked(true);
                     jobs.add(job);
                 }
-                // Cập nhật Adapter của RecyclerView với danh sách bookmarkedJobs
+                totalPages = jobBookmarksResponse.getTotalPages();
                 binding.swipeRefreshLayout.setRefreshing(false);
+                binding.idPBLoading.setVisibility(View.GONE);
                 if (jobs.size() == 0){
                     binding.image.setVisibility(View.VISIBLE);
                     binding.image.setAnimation(R.raw.no_data);
@@ -158,9 +192,9 @@ public class SavedJobFragment extends BaseFragment {
                 }
                 adapter.notifyDataSetChanged();
             }
-
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onFailure(Call<JobBookmarksResponse> call, Throwable t) {
+
             }
         });
     }
@@ -176,7 +210,6 @@ public class SavedJobFragment extends BaseFragment {
             statusInternet = STATUS_NO_INTERNET;
             binding.swipeRefreshLayout.setRefreshing(false);
             isFirst = false;
-            ;
         }
 
         MotionToast.Companion.createToast(getActivity(), "😍",
@@ -196,7 +229,6 @@ public class SavedJobFragment extends BaseFragment {
                 MotionToast.LONG_DURATION,
                 ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
     }
-
     @Override
     protected void handleGoodInternet() {
         //When internet is good, enable bookmark
@@ -213,5 +245,27 @@ public class SavedJobFragment extends BaseFragment {
             }
         }
     }
+    private void removeJobBookmark(int userId, int jobId) {
+        Call<Void> call = iJobsService.destroyBookmark(userId, jobId, 0);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    isDestroy = true;
+                    homeViewModel.setCurrentTotalBookmark(homeViewModel.getCurrentTotalBookmark().getValue()-1);
+                }
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+            }
+        });
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (isDestroy){
+            isDestroy = false;
+        }
+    }
 }

@@ -1,16 +1,16 @@
 package com.example.joboishi.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
+<<<<<<< HEAD
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+=======
+>>>>>>> ff1ad9df25e2ce04a37afafdacc2921648a6e5d1
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -32,21 +32,24 @@ import com.example.joboishi.Adapters.BenefitAdapter;
 import com.example.joboishi.Api.DetailJobAPI;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Api.JobAppliedAPI;
+<<<<<<< HEAD
 import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.Models.JobBasic;
+=======
+>>>>>>> ff1ad9df25e2ce04a37afafdacc2921648a6e5d1
 import com.example.joboishi.Models.data.Job;
-import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.R;
-import com.example.joboishi.abstracts.BaseActivity;
+import com.example.joboishi.Abstracts.BaseActivity;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
+<<<<<<< HEAD
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.gson.Gson;
+=======
+>>>>>>> ff1ad9df25e2ce04a37afafdacc2921648a6e5d1
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -57,8 +60,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import www.sanju.motiontoast.MotionToast;
-import www.sanju.motiontoast.MotionToastStyle;
 
 public class DetailJobActivity extends BaseActivity {
 
