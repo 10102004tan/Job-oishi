@@ -24,7 +24,6 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<Integer> currentTabPosition = new MutableLiveData<>(0);
     private MutableLiveData<String> selectedValueTopDev = new MutableLiveData<>("Tất cả");
     private MutableLiveData<String> selectedValueJoboishi = new MutableLiveData<>("Tất cả");
-
     public MutableLiveData<String> getSelectedValueJoboishi() {
         return selectedValueJoboishi;
     }
