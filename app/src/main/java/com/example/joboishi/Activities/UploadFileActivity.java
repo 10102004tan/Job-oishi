@@ -194,6 +194,7 @@ public class UploadFileActivity extends AppCompatActivity {
         } else {
             String[] permission = {Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(permission, REQ);
+            openFile();
         }
     }
 

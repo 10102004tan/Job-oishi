@@ -3,7 +3,6 @@ package com.example.joboishi.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -20,8 +19,7 @@ import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Models.JobBasic;
-import com.example.joboishi.R;
-import com.example.joboishi.abstracts.PaginationScrollListener;
+import com.example.joboishi.Abstracts.PaginationScrollListener;
 import com.example.joboishi.databinding.SearchResultLayoutBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;

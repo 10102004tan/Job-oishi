@@ -23,11 +23,9 @@ public class JobBasic implements Serializable {
 
     @SerializedName("is_salary_visible")
     private boolean is_salary_visible = false;
-
     @SerializedName("published")
     private  String published;
     private boolean isBookmarked;
-
     public boolean isBookmarked() {
         return isBookmarked;
     }

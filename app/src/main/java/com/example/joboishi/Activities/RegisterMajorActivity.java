@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.joboishi.Adapters.RegisterMajorAdapter;
+import com.example.joboishi.Adapters.RegisterMajorAdapter2;
 import com.example.joboishi.Adapters.SelectedJobAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
 import com.example.joboishi.Models.JobSearch;
@@ -36,8 +37,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RegisterMajorActivity extends AppCompatActivity {
     private final ArrayList<String> majorsChosen = new ArrayList<>();
     private RegisterMajorLayoutBinding registerMajorLayoutBinding;
-    private ArrayList<JobSearch> majors = new ArrayList<>();
-    private RegisterMajorAdapter registerMajorAdapter;
+    private ArrayList<String> majors = new ArrayList<>();
+    private RegisterMajorAdapter2 registerMajorAdapter;
     private SelectedJobAdapter majorChosenAdapter;
     private JobSearchAPI jobSearchAPI;
 
@@ -53,24 +54,24 @@ public class RegisterMajorActivity extends AppCompatActivity {
         ImageButton btnBackToolBar = findViewById(R.id.btn_toolbar_back);
 
 
-        // Get data from intent, from Job criteria Activity
-        Intent intent = getIntent();
-        // Use for check caller activity
-        String caller = intent.getStringExtra("caller");
-        assert caller != null;
-        if (caller.equals("JobCriteriaActivity")) {
-            btnNext.setText(R.string.btn_save_label);
-            ArrayList<String> major = (ArrayList<String>) intent.getSerializableExtra("majors");
-            assert major != null;
-            if (!major.isEmpty()) {
-                majorsChosen.clear();
-                majorsChosen.addAll(major);
-            }
-        } else if (caller.equals("LoginEmailActivity")) {
-            btnNext.setText(R.string.continute);
-            toolbarTitle.setVisibility(View.GONE);
-            btnBackToolBar.setVisibility(View.GONE);
-        }
+//        // Get data from intent, from Job criteria Activity
+//        Intent intent = getIntent();
+//        // Use for check caller activity
+//        String caller = intent.getStringExtra("caller");
+//        assert caller != null;
+//        if (caller.equals("JobCriteriaActivity")) {
+//            btnNext.setText(R.string.btn_save_label);
+//            ArrayList<String> major = (ArrayList<String>) intent.getSerializableExtra("majors");
+//            assert major != null;
+//            if (!major.isEmpty()) {
+//                majorsChosen.clear();
+//                majorsChosen.addAll(major);
+//            }
+//        } else if (caller.equals("LoginEmailActivity")) {
+//            btnNext.setText(R.string.continute);
+//            toolbarTitle.setVisibility(View.GONE);
+//            btnBackToolBar.setVisibility(View.GONE);
+//        }
 
 
         EditText input = registerMajorLayoutBinding.inputMajor;
@@ -84,7 +85,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                filter(s.toString());
+//                filter(s.toString());
             }
 
             @Override
@@ -103,11 +104,12 @@ public class RegisterMajorActivity extends AppCompatActivity {
         RecyclerView recyclerView = registerMajorLayoutBinding.showListMajor;
 
         // Khởi tạo adapter và thiết lập itemClickListener
-        registerMajorAdapter = new RegisterMajorAdapter(this, majors);
-        registerMajorAdapter.setItemClickListener(new RegisterMajorAdapter.ItemClickListener() {
+        registerMajorAdapter = new RegisterMajorAdapter2(this, majors);
+        registerMajorAdapter.setItemClickListener(new RegisterMajorAdapter2.ItemClickListener() {
             @Override
-            public void onItemClick(RegisterMajorAdapter.MyViewHolder holder, int position) {
-                handleMajorClick(position);
+            public void onItemClick(RegisterMajorAdapter2.MyViewHolder holder, int position) {
+                handleMajorClick(position,holder);
+                Toast.makeText(RegisterMajorActivity.this, "Click 1", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -128,33 +130,33 @@ public class RegisterMajorActivity extends AppCompatActivity {
         majorChosenAdapter.setItemClickListener(new SelectedJobAdapter.ItemClickListener() {
             @Override
             public void onItemClick(SelectedJobAdapter.MyViewHolder holder, int position) {
-                handleChosenMajorClick(position);
+//                handleChosenMajorClick(position);
             }
         });
 
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (hasMajorsChosen()) {
-                    // Handle mul screen here
-                    if (caller.equals("JobCriteriaActivity")) {
-                        Intent resultIntent = new Intent();
-                        resultIntent.putExtra("majorsChosen", majorsChosen);
-                        setResult(RESULT_OK, resultIntent);
-                        finish();
-                    } else if (caller.equals("LoginEmailActivity")) {
-                        // Handle update job criteria selected later
-
-                        Intent intent = new Intent(RegisterMajorActivity.this, AddressActivity.class);
-                        intent.putExtra("majorsChosen", majorsChosen);
-                        intent.putExtra("caller", "RegisterMajorActivity");
-                        intent.putExtra("is_first_login", true);
-                        startActivity(intent);
-                    }
-                }
-            }
-        });
+//        btnNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (hasMajorsChosen()) {
+//                    // Handle mul screen here
+//                    if (caller.equals("JobCriteriaActivity")) {
+//                        Intent resultIntent = new Intent();
+//                        resultIntent.putExtra("majorsChosen", majorsChosen);
+//                        setResult(RESULT_OK, resultIntent);
+//                        finish();
+//                    } else if (caller.equals("LoginEmailActivity")) {
+//                        // Handle update job criteria selected later
+//
+//                        Intent intent = new Intent(RegisterMajorActivity.this, AddressActivity.class);
+//                        intent.putExtra("majorsChosen", majorsChosen);
+//                        intent.putExtra("caller", "RegisterMajorActivity");
+//                        intent.putExtra("is_first_login", true);
+//                        startActivity(intent);
+//                    }
+//                }
+//            }
+//        });
 
         updateChosenCountTextView();
         updateButtonBackground();
@@ -193,92 +195,106 @@ public class RegisterMajorActivity extends AppCompatActivity {
     }
 
     private void getJobs() {
-        Call<ArrayList<JobSearch>> call = jobSearchAPI.getListJobs();
-        call.enqueue(new Callback<ArrayList<JobSearch>>() {
+        Call<ArrayList<String>> call = jobSearchAPI.getListJobs();
+        call.enqueue(new Callback<ArrayList<String>>() {
             @Override
-            public void onResponse(@NonNull Call<ArrayList<JobSearch>> call, @NonNull Response<ArrayList<JobSearch>> response) {
+            public void onResponse(@NonNull Call<ArrayList<String>> call, @NonNull Response<ArrayList<String>> response) {
                 if (response.isSuccessful()) {
                     majors = response.body();
                     registerMajorAdapter.updateData(majors); // Cập nhật dữ liệu cho adapter
-                    handleMajorAutoCheck();
+//                    handleMajorAutoCheck();
                 } else {
                     Log.d("testaaa", "onResponse: Unsuccessful response");
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ArrayList<JobSearch>> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<ArrayList<String>> call, @NonNull Throwable t) {
                 Log.d("testaaa", "onFailure: " + t.getMessage());
             }
         });
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void handleMajorClick(int position) {
+    private void handleMajorClick(int position,RegisterMajorAdapter2.MyViewHolder holder) {
         if (position != RecyclerView.NO_POSITION) {
-            JobSearch clickedMajor = majors.get(position);
-            if (!clickedMajor.getChecked()) {
-                if (majorsChosen.size() < 5) {
-                    majorsChosen.add(clickedMajor.getTitle());
-                    updateChosenCountTextView();
-                } else {
-                    Toast.makeText(RegisterMajorActivity.this, "Bạn đã chọn tối đa 5 vị trí.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            } else {
-                majorsChosen.remove(clickedMajor.getTitle());
+//            JobSearch clickedMajor = majors.get(position);
+            String clickedMajor = majors.get(position);
+            //!clickedMajor.getChecked()
+//            if (true) {
+//                if (majorsChosen.size() < 5) {
+////                    majorsChosen.add(clickedMajor.getTitle());
+//                    majorsChosen.add(clickedMajor);
+//                    updateChosenCountTextView();
+//                } else {
+//                    Toast.makeText(RegisterMajorActivity.this, "Bạn đã chọn tối đa 5 vị trí.", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//            } else {
+////                majorsChosen.remove(clickedMajor.getTitle());
+//                majorsChosen.add(clickedMajor);
+//                updateChosenCountTextView();
+//            }
+
+            if (majorsChosen.size() < 5 ) {
+//                    majorsChosen.add(clickedMajor.getTitle());
+                holder.itemView.setEnabled(false);
+                majorsChosen.add(clickedMajor);
                 updateChosenCountTextView();
+            } else {
+                Toast.makeText(RegisterMajorActivity.this, "Bạn đã chọn tối đa 5 vị trí.", Toast.LENGTH_SHORT).show();
+                return;
             }
-            clickedMajor.setChecked(!clickedMajor.getChecked());
+//            clickedMajor.setChecked(!clickedMajor.getChecked());
             registerMajorAdapter.notifyItemChanged(position);
             majorChosenAdapter.notifyDataSetChanged();
             updateButtonBackground();
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private void handleChosenMajorClick(int position) {
-        String major = majorsChosen.get(position);
-        majorsChosen.remove(major);
-
-        majorChosenAdapter.notifyDataSetChanged();
-        updateChosenCountTextView();
-        for (int i = 0; i < majors.size(); i++) {
-            JobSearch originalMajor = majors.get(i);
-            if (originalMajor.getTitle().equals(major)) {
-                originalMajor.setChecked(false);
-                registerMajorAdapter.notifyItemChanged(i);
-                break;
-            }
-        }
-
-        updateButtonBackground();
-    }
+//    @SuppressLint("NotifyDataSetChanged")
+//    private void handleChosenMajorClick(int position) {
+//        String major = majorsChosen.get(position);
+//        majorsChosen.remove(major);
+//
+//        majorChosenAdapter.notifyDataSetChanged();
+//        updateChosenCountTextView();
+//        for (int i = 0; i < majors.size(); i++) {
+//            JobSearch originalMajor = majors.get(i);
+//            if (originalMajor.getTitle().equals(major)) {
+//                originalMajor.setChecked(false);
+//                registerMajorAdapter.notifyItemChanged(i);
+//                break;
+//            }
+//        }
+//
+//        updateButtonBackground();
+//    }
 
     // Filter
-    private void filter(String text) {
-        ArrayList<JobSearch> filteredList = new ArrayList<>();
+//    private void filter(String text) {
+//        ArrayList<JobSearch> filteredList = new ArrayList<>();
+//
+//        for (JobSearch item : majors) {
+//            if (item.getTitle().toLowerCase().contains(text.toLowerCase())) {
+//                filteredList.add(item);
+//            }
+//        }
+//
+//        registerMajorAdapter.updateData(filteredList);
+//    }
 
-        for (JobSearch item : majors) {
-            if (item.getTitle().toLowerCase().contains(text.toLowerCase())) {
-                filteredList.add(item);
-            }
-        }
-
-        registerMajorAdapter.updateData(filteredList);
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private void handleMajorAutoCheck() {
-        for (int position = 0; position < majors.size(); position++) {
-            for (int check = 0; check < majorsChosen.size(); check++) {
-                if (majors.get(position).getTitle().equals(majorsChosen.get(check))) {
-                    majors.get(position).setChecked(true);
-                }
-            }
-        }
-        registerMajorAdapter.updateData(majors);
-        registerMajorAdapter.notifyDataSetChanged();
-        majorChosenAdapter.notifyDataSetChanged();
-    }
+//    @SuppressLint("NotifyDataSetChanged")
+//    private void handleMajorAutoCheck() {
+//        for (int position = 0; position < majors.size(); position++) {
+//            for (int check = 0; check < majorsChosen.size(); check++) {
+//                if (majors.get(position).getTitle().equals(majorsChosen.get(check))) {
+//                    majors.get(position).setChecked(true);
+//                }
+//            }
+//        }
+//        registerMajorAdapter.updateData(majors);
+//        registerMajorAdapter.notifyDataSetChanged();
+//        majorChosenAdapter.notifyDataSetChanged();
+//    }
 }
