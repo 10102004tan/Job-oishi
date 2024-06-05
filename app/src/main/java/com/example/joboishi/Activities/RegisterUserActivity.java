@@ -2,10 +2,13 @@ package com.example.joboishi.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -47,7 +50,23 @@ public class RegisterUserActivity extends AppCompatActivity {
         EditText confirmPasswordEditText = findViewById(R.id.confirm_password);
         Button registerButton = findViewById(R.id.register_button);
         TextView loginTextView = findViewById(R.id.login_textview);
+        CheckBox showPasswordCheckBox = findViewById(R.id.show_password_checkbox);
 
+        //hiển thị mật khẩu
+        showPasswordCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Hiển thị mật khẩu
+                passwordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                confirmPasswordEditText.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+            } else {
+                // Ẩn mật khẩu
+                passwordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                confirmPasswordEditText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
+        });
+
+
+        //chuyển sang mh login
         loginTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

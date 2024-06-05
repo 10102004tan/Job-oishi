@@ -263,4 +263,6 @@
     <string name="top_dev">Top dev</string>
     <string name="kh_ng_c_k_t_n_i_m_ng">Không có kết nối mạng</string>
     <string name="ang_k_t_n_i">Đang kết nối ...</string>
+    <string name="request_verification_code">Yêu cầu mã xác minh</string>
+    <string name="verification_code">Mã xác nhận</string>
 </resources>

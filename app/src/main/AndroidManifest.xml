@@ -60,6 +60,9 @@
             android:name=".Activities.MyPersonalPageActivity"
             android:exported="true" />
         <activity
+            android:name=".Activities.ForgotPasswordActivity"
+            android:exported="true" />
+        <activity
             android:name=".Activities.EditProfileActivity"
             android:exported="true" />
         <activity
