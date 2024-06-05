@@ -1,5 +1,6 @@
 package com.example.joboishi.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -61,6 +62,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                         MotionToast.GRAVITY_BOTTOM,
                                         MotionToast.LONG_DURATION,
                                         ResourcesCompat.getFont(ForgotPasswordActivity.this, R.font.helvetica_regular));
+
                             } else {
                                 try {
                                     String errorBody = response.errorBody().string();
