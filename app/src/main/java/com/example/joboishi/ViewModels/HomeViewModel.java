@@ -24,17 +24,6 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<Integer> currentTabPosition = new MutableLiveData<>(0);
     private MutableLiveData<String> selectedValueTopDev = new MutableLiveData<>("Tất cả");
     private MutableLiveData<String> selectedValueJoboishi = new MutableLiveData<>("Tất cả");
-    private MutableLiveData<ArrayList<JobBasic>> jobsBookmark = new MutableLiveData<>(new ArrayList<>());
-    public MutableLiveData<ArrayList<JobBasic>> getJobsBookmark() {
-        return jobsBookmark;
-    }
-    public void setJobsBookmark(JobBasic ... jobsBookmark) {
-        ArrayList<JobBasic> jobBasics = this.jobsBookmark.getValue();
-        for (JobBasic jobBasic : jobsBookmark) {
-            jobBasics.add(jobBasic);
-        }
-        this.jobsBookmark.setValue(jobBasics);
-    }
 
     public MutableLiveData<String> getSelectedValueJoboishi() {
         return selectedValueJoboishi;
