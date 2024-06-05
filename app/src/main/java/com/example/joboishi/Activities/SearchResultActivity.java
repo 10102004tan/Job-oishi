@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.joboishi.Adapters.JobSearchAdapter;
+import com.example.joboishi.Adapters.OptionExperienceAdapter;
+import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Adapters.SearchOptionAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
@@ -57,6 +59,9 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     private static String jobType;
     private static String experience;
 
+    private OptionJobTypeAdapter optionJobTypeAdapter;
+    private OptionExperienceAdapter optionExperienceAdapter;
+
     MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
 
     @Override
@@ -79,6 +84,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         progressBar = binding.progressBar;
         animateNoData = binding.animateNoData;
         input = binding.inputMajor;
+        optionJobTypeAdapter = new OptionJobTypeAdapter(this, null);
+        optionExperienceAdapter = new OptionExperienceAdapter(this, null);
 
         Intent intent = getIntent();
         input.setText(intent.getStringExtra("key"));
@@ -278,10 +285,19 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     @Override
     protected void onStop() {
         super.onStop();
+        jobType = "";
+        experience = "";
+        optionJobTypeAdapter.clearSavedSelectedPosition(this);
+        optionExperienceAdapter.clearSavedSelectedPosition(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        jobType = "";
+        experience = "";
+        optionJobTypeAdapter.clearSavedSelectedPosition(this);
+        optionExperienceAdapter.clearSavedSelectedPosition(this);
+
     }
 }
