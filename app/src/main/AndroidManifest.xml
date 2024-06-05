@@ -60,6 +60,12 @@
             android:name=".Activities.MyPersonalPageActivity"
             android:exported="true" />
         <activity
+            android:name=".Activities.VerifyTokenActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Activities.ResetPasswordActivity"
+            android:exported="true" />
+        <activity
             android:name=".Activities.ForgotPasswordActivity"
             android:exported="true" />
         <activity

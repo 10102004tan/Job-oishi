@@ -4,6 +4,8 @@ import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -31,16 +33,20 @@ public interface UserApi {
     @POST("/api/user/login")
     Call<UserApiResponse> loginUser(@Body UserLoginEmailRequest request);
 
-    @POST("{id}/job_criteria")
+    @POST("/api/user/{id}/job_criteria")
     Call<JobCriteriaApiResponse> updateJobCriteria(@Body JobCriteriaRequest request);
 
-    @GET("{id}/job_criteria")
+    @GET("/api/user/{id}/job_criteria")
     Call<JobCriteriaApiResponse> getJobCriteria(@Path("id") int userId);
 
-    @POST("/api/user/forgot-password")
-    Call<UserApiResponse> forgotPassword(@Body UserForgotPasswordRequest request);
+    @FormUrlEncoded
+    @POST("/api/forgot-password")
+    Call<ForgotPasswordApiResponse> forgotPassword(@Field("email") String email);
 
-    @POST("/api/user/reset-password")
-    Call<UserApiResponse> resetPassword(@Body UserResetPasswordRequest request);
+    @POST("/api/reset-password")
+    Call<ForgotPasswordApiResponse> resetPassword(@Body UserResetPasswordRequest request);
+
+    @POST("/api/verify-token")
+    Call<ForgotPasswordApiResponse> verifyPassword(@Body UserVerifyTokenRequest request);
 }
 

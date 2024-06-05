@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.ForgotPasswordApiResponse;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserResetPasswordRequest;
@@ -52,10 +53,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     // Gửi yêu cầu đặt lại mật khẩu đến máy chủ
                     UserResetPasswordRequest request = new UserResetPasswordRequest(newPassword);
                     UserApi userApi = ApiClient.getUserAPI();
-                    Call<UserApiResponse> callUser = userApi.resetPassword(request);
-                    callUser.enqueue(new Callback<UserApiResponse>() {
+                    Call<ForgotPasswordApiResponse> callUser = userApi.resetPassword(request);
+                    callUser.enqueue(new Callback<ForgotPasswordApiResponse>() {
                         @Override
-                        public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                        public void onResponse(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Response<ForgotPasswordApiResponse> response) {
                             if (response.isSuccessful()) {
                                 MotionToast.Companion.createToast(ResetPasswordActivity.this, "Thành công",
                                         "Mật khẩu của bạn đã được đặt lại thành công.",
@@ -77,7 +78,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                        public void onFailure(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Throwable t) {
                             MotionToast.Companion.createToast(ResetPasswordActivity.this, "Lỗi",
                                     "Đã xảy ra lỗi. Vui lòng thử lại sau.",
                                     MotionToastStyle.ERROR,
