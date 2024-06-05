@@ -93,7 +93,7 @@
             android:exported="true" />
         <activity
             android:name=".Activities.DetailCompanyActivity"
-            android:exported="true" />
+            android:exported="true"/>
         <activity
             android:name=".Activities.UploadFileActivity"
             android:exported="true" />
