@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -39,6 +41,8 @@ public class LoginEmailActivity extends AppCompatActivity {
         TextView emailErrorTextView = findViewById(R.id.email_error);
         TextView passwordErrorTextView = findViewById(R.id.password_error);
         TextView signupTextView = findViewById(R.id.sign_up);
+        CheckBox showPasswordCheckBox = findViewById(R.id.show_password);
+        TextView forgotPassword = findViewById(R.id.forgot_password);
 
         // Hiển thị lỗi nếu các trường nhập liệu trống khi khởi tạo
         if (emailEditText.getText().toString().trim().isEmpty()) {
@@ -86,6 +90,32 @@ public class LoginEmailActivity extends AppCompatActivity {
             }
         });
 
+        //Hiển thị mật khẩu
+        showPasswordCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // Hiển thị mật khẩu, là kiểu dữ liệu cho phép hiển thị mật khẩu
+                passwordEditText.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            } else {
+                // Ẩn mật khẩu
+                passwordEditText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            }
+            // Di chuyển con trỏ đến cuối văn bản
+            passwordEditText.setSelection(passwordEditText.length());
+        });
+
+
+        //Quên mật khẩu
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginEmailActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+        //ktra các trường khi nhập thiếu thông tin
         TextView loginButton = findViewById(R.id.login_button);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,12 +150,13 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 // Lưu email người dùng vào SharedPreferences
                                 SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editor = sharedPref.edit();
+                                //lưu trữ dữ liệu trong SharedPreferences
                                 editor.putString("user_email", userEmail);
                                 editor.putInt("user_id", userId);
                                 editor.apply();
 
                                 // Log ra thông tin đã lưu
-                                 //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
+                                //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
 
                                 MotionToast.Companion.createToast(LoginEmailActivity.this, "Thành công",
                                         "Đã đăng nhập thành công.",
