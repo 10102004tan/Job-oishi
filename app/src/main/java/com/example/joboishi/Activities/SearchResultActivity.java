@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.joboishi.Adapters.JobSearchAdapter;
+import com.example.joboishi.Adapters.OptionExperienceAdapter;
+import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Adapters.SearchOptionAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
@@ -77,7 +79,6 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         progressBar = binding.progressBar;
         animateNoData = binding.animateNoData;
         input = binding.inputMajor;
-
         Intent intent = getIntent();
         input.setText(intent.getStringExtra("key"));
         String kword = "";
@@ -276,10 +277,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     @Override
     protected void onStop() {
         super.onStop();
+        jobType = "";
+        experience = "";
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

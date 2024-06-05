@@ -6,6 +6,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -25,11 +27,16 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.BenefitAdapter;
 import com.example.joboishi.Api.DetailJobAPI;
+import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Api.JobAppliedAPI;
+import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
+import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.Models.data.Job;
 import com.example.joboishi.R;
 import com.example.joboishi.Abstracts.BaseActivity;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.gson.Gson;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
@@ -52,6 +59,8 @@ public class DetailJobActivity extends BaseActivity {
     private Job jobDetail;
     private Intent intent;
     private String jobId;
+    private ArrayList<JobBasic> appliedJobs = new ArrayList<JobBasic>();
+    private int userId;
     private DetailJobAPI detailJobAPI;
     private ProgressDialog progressDialog;
     private final  int STATUS_NO_INTERNET = 0;
@@ -69,6 +78,9 @@ public class DetailJobActivity extends BaseActivity {
 
         //Dang ki receiver
         registerInternetBroadcastReceiver();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", -1);
 
         //Init progress dialog
         progressDialog = new ProgressDialog(DetailJobActivity.this);
@@ -115,7 +127,7 @@ public class DetailJobActivity extends BaseActivity {
                 binding.shimmer.setVisibility(View.GONE);
                 binding.detailLayout.setVisibility(View.VISIBLE);
 
-//                Log.d("test", job.getContent());
+                Log.d("test", job.getTitle());
 
                 // Responsibilities
                 if (job.getResponsibilities() != null) {
@@ -246,6 +258,20 @@ public class DetailJobActivity extends BaseActivity {
                 });
 
                 //Applied Job Event From Serve
+                //Get job applied
+                getJobsApplied(new AppliedJobCallback() {
+                    @Override
+                    public void onDetailJobLoaded(ArrayList<JobBasic> appliedJobs) {
+                        for (JobBasic applied: appliedJobs) {
+                            String appliedIDStr  = String.valueOf(applied.getId());
+                            Log.d("applied",appliedIDStr.equals(jobId) + "");
+                            if(appliedIDStr.equals(jobId)){
+                                binding.btnApplied.setEnabled(false);
+                                return;
+                            }
+                        }
+                    }
+                });
 
                 if (job.isIs_edit()) {
                     binding.btnApplied.setEnabled(true);
@@ -253,13 +279,23 @@ public class DetailJobActivity extends BaseActivity {
                 else {
                     binding.btnApplied.setEnabled(false);
                 }
+
+                Log.d("test", "User id in detail job: " + userId);
                 binding.btnApplied.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AppliedJob(
-                                job.getId() + "",
-                                "7"
-                        );
+                        if (userId != -1) {
+                            // Chuyen userID thanh chuoi
+                            String userIdStr = String.valueOf(userId);
+
+                            // Goi api applied job
+                            appliedJob(
+                                    job.getId() + "",
+                                    userIdStr
+                            );
+                        } else {
+                            Log.d("test", "User ID not found in SharedPreferences");
+                        }
                     }
                 });
 
@@ -277,7 +313,7 @@ public class DetailJobActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 if (statusPreInternet != statusInternet){
-                    registerInternetBroadcastReceiver();
+                    //registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
                 if (statusInternet == STATUS_NO_INTERNET){
@@ -323,7 +359,7 @@ public class DetailJobActivity extends BaseActivity {
     }
 
     //Ham Applied Job
-    private void AppliedJob (String job_id, String user_id) {
+    private void appliedJob (String job_id, String user_id) {
         //Tao Retrofit
         progressDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
@@ -345,6 +381,7 @@ public class DetailJobActivity extends BaseActivity {
                 if(response.isSuccessful()){
 //                    Log.d("test", "Response");
                     progressDialog.dismiss();
+                    binding.btnApplied.setEnabled(false);
                     showDialog("Ứng tuyển thành công", true);
                 }
                 else {
@@ -363,9 +400,42 @@ public class DetailJobActivity extends BaseActivity {
 
     }
 
+    private void getJobsApplied(AppliedJobCallback callback){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IJobsService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        IJobsService iJobsService = retrofit.create(IJobsService.class);
+        Call<ArrayList<JobBasic>> call = iJobsService.getJobApplied(userId);
+        call.enqueue(new Callback<ArrayList<JobBasic>>() {
+            @Override
+            public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
+                if (response.isSuccessful()){
+
+                    appliedJobs = response.body();
+                    assert appliedJobs != null;
+                    callback.onDetailJobLoaded(appliedJobs);
+
+//                    Gson gson = new Gson();
+//                    String json = gson.toJson( response.body());
+//                    Log.d("applied",json);
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     public interface DetailJobCallback {
         void onDetailJobLoaded(Job job);
         void onDetailJobFailed(String errorMessage);
+    }
+
+    public interface AppliedJobCallback {
+        void onDetailJobLoaded(ArrayList<JobBasic> appliedJobs);
     }
 
     //Ham xu ly chuoi thanh cac dau cham dau dong
@@ -425,15 +495,21 @@ public class DetailJobActivity extends BaseActivity {
 
     @Override
     protected void handleGoodInternet() {
-        statusPreInternet = STATUS_GOOD_INTERNET;
-        if (isFirst) {
-            statusInternet = STATUS_GOOD_INTERNET;
-            isFirst = false;
-        }
-        else{
-            binding.image.setVisibility(View.GONE);
-            binding.main.setVisibility(View.VISIBLE);
-        }
+//        statusPreInternet = STATUS_GOOD_INTERNET;
+//        if (isFirst) {
+//            statusInternet = STATUS_GOOD_INTERNET;
+//            isFirst = false;
+//        }
+//        else{
+//            binding.image.setVisibility(View.GONE);
+//            binding.main.setVisibility(View.VISIBLE);
+//            MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+//                    "Kết nối mạng đã được khôi phục",
+//                    MotionToastStyle.SUCCESS,
+//                    MotionToast.GRAVITY_BOTTOM,
+//                    MotionToast.LONG_DURATION,
+//                    ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+//        }
     }
 
     //Show dialog

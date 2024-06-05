@@ -90,7 +90,7 @@ public class SavedJobFragment extends BaseFragment {
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-        userId = sharedPreferences.getInt("user_id", 0);
+        userId = sharedPreferences.getInt("user_id", userId);
 
         iJobsService = retrofit.create(IJobsService.class);
         jobs = new ArrayList<>();

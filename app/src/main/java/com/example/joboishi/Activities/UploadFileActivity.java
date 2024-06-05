@@ -12,7 +12,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,6 +30,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joboishi.Api.UploadAPI;
 import com.example.joboishi.Models.RealPathUtil;
@@ -68,7 +71,7 @@ public class UploadFileActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> launcher;
     private FileContent file = new FileContent();
-    private String userID = "111";
+    private String userID = "";
     private long LIMIT_SIZE = 500000;
 
     @Override
@@ -81,6 +84,14 @@ public class UploadFileActivity extends AppCompatActivity {
         //Init progress dialog
         mProgressDialog = new ProgressDialog(UploadFileActivity.this);
         mProgressDialog.setMessage("Please waite...");
+
+        //Lấy user id
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userID = String.valueOf(sharedPreferences.getInt("user_id", -1));
+        if (userID.equals("-1")) {
+            Toast.makeText(this, "Not found!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         //Shimmer
         binding.shimmerUpload.startShimmerAnimation();
@@ -188,6 +199,9 @@ public class UploadFileActivity extends AppCompatActivity {
     private void onClickRequirementPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
+        }
+        if(Build.VERSION.SDK_INT > 33) {
+            openFile();
         }
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             openFile();
@@ -371,12 +385,18 @@ public class UploadFileActivity extends AppCompatActivity {
                     }
                 } else {
                     Log.d("test", "Xóa tệp thất bại: " + response.message());
+                    mProgressDialog.dismiss();
+                    binding.layoutFileInfo.setVisibility(View.GONE);
+                    binding.btnUpload.setVisibility(View.VISIBLE);
                 }
 
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                mProgressDialog.dismiss();
+                binding.layoutFileInfo.setVisibility(View.GONE);
+                binding.btnUpload.setVisibility(View.VISIBLE);
                 Log.d("test", "Failure Xóa tệp thất bại");
             }
         });
