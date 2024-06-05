@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +27,7 @@ import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserResponse;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.ViewModels.LoadingDialog;
 import com.example.joboishi.databinding.FragmentProfileBinding;
 import com.google.firebase.database.DataSnapshot;
@@ -50,8 +52,6 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentProfileBinding.inflate(inflater, container, false);
-
-
         loadingDialog = new LoadingDialog(requireActivity());
         loadingDialog.show();
 
@@ -181,28 +181,13 @@ public class ProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void getTotalBookmarkByUserId(int userId) {
-
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId" + userId); // Thay "userId1" bằng ID người dùng thực tế
-        bookmarksRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                long totalBookmarks = dataSnapshot.getChildrenCount();
-                binding.totalBookmark.setText(String.valueOf(totalBookmarks));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý lỗi
-                Log.e("Firebase", "Error getting bookmark count", databaseError.toException());
-            }
-        });
-    }
-
     @Override
-    public void onResume() {
-        super.onResume();
-        getTotalBookmarkByUserId(USER_ID);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        HomeViewModel homeViewModel =  new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getCurrentTotalBookmark().observe(getViewLifecycleOwner(), totalBookmark -> {
+            binding.totalBookmark.setText(totalBookmark.toString());
+        });
     }
 
     @SuppressLint("SetTextI18n")
