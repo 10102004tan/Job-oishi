@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.ForgotPasswordApiResponse;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserForgotPasswordRequest;
@@ -50,11 +51,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     // Gửi yêu cầu đặt lại mật khẩu đến máy chủ
                     UserForgotPasswordRequest request = new UserForgotPasswordRequest(email);
                     UserApi userApi = ApiClient.getUserAPI();
-                    Call<UserApiResponse> callUser = userApi.forgotPassword(request);
-                    callUser.enqueue(new Callback<UserApiResponse>() {
+                    Call<ForgotPasswordApiResponse> callUser = userApi.forgotPassword(request);
+                    callUser.enqueue(new Callback<ForgotPasswordApiResponse>() {
                         @Override
-                        public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                        public void onResponse(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Response<ForgotPasswordApiResponse> response) {
                             if (response.isSuccessful()) {
+                                Log.d("forgotpassword", response.toString());
                                 MotionToast.Companion.createToast(ForgotPasswordActivity.this, "Thành công",
                                         "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.",
                                         MotionToastStyle.SUCCESS,
@@ -79,7 +81,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                        public void onFailure(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Throwable t) {
                             Log.e("ForgotPassword", "Network error: " + t.getMessage());
                             MotionToast.Companion.createToast(ForgotPasswordActivity.this, "Lỗi",
                                     "Đã xảy ra lỗi. Vui lòng thử lại sau.",
