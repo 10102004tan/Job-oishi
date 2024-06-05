@@ -1,5 +1,6 @@
 package com.example.joboishi.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +21,7 @@ import com.example.joboishi.R;
 
 import java.io.IOException;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,20 +51,27 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     emailErrorTextView.setVisibility(View.GONE);
 
                     // Gửi yêu cầu đặt lại mật khẩu đến máy chủ
-                    UserForgotPasswordRequest request = new UserForgotPasswordRequest(email);
+                    //UserForgotPasswordRequest request = new UserForgotPasswordRequest(email);
+
+
                     UserApi userApi = ApiClient.getUserAPI();
-                    Call<ForgotPasswordApiResponse> callUser = userApi.forgotPassword(request);
+                    Call<ForgotPasswordApiResponse> callUser = userApi.forgotPassword(email);
                     callUser.enqueue(new Callback<ForgotPasswordApiResponse>() {
                         @Override
                         public void onResponse(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Response<ForgotPasswordApiResponse> response) {
                             if (response.isSuccessful()) {
-                                Log.d("forgotpassword", response.toString());
+                                Log.d("TESST", response.body().getMessage() + "");
                                 MotionToast.Companion.createToast(ForgotPasswordActivity.this, "Thành công",
                                         "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.",
                                         MotionToastStyle.SUCCESS,
                                         MotionToast.GRAVITY_BOTTOM,
                                         MotionToast.LONG_DURATION,
                                         ResourcesCompat.getFont(ForgotPasswordActivity.this, R.font.helvetica_regular));
+                                //chuyển sang màn hình xác nhận mã
+                                Intent intent = new Intent(ForgotPasswordActivity.this, VerifyTokenActivity.class);
+                                intent.putExtra("email",email);
+                                startActivity(intent);
+
                             } else {
                                 try {
                                     String errorBody = response.errorBody().string();
