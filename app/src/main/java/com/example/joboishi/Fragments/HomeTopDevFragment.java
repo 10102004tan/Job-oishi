@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -66,11 +67,12 @@ public class HomeTopDevFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
         HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
-            city = (str == null || str == "Tất cả") ? "" : str;
-            Log.d("testt", "onViewCreated: " + str);
+            city = (str == null || str == "Tất cả") ? "" : str.toLowerCase().trim();
+            Log.d("testt", "Topdev: " + city.toLowerCase());
             page = 1;
-            getJobs(str);
+            getJobs(city);
         });
+
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 scrollToTopOfRecyclerView();
@@ -101,7 +103,6 @@ public class HomeTopDevFragment extends BaseFragment {
 
 
         adapter = new JobAdapter(jobList, getContext());
-        adapter.setArrId(arrId);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
         getJobs(null);
@@ -123,6 +124,7 @@ public class HomeTopDevFragment extends BaseFragment {
                     page = 1;
                     getJobs("");
                     getAllIdBookmark(userId);
+                    adapter.setArrId(arrId);
                     binding.listJob.setVisibility(View.VISIBLE);
                 }
             }
@@ -155,7 +157,9 @@ public class HomeTopDevFragment extends BaseFragment {
             @Override
             public void onLoadMore() {
                 page+=1;
-                Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                if (jobList.size() > 15) {
+                    Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+                }
                 Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(city, page, userId);
                 call.enqueue(new Callback<ArrayList<JobBasic>>() {
                     @Override
@@ -179,21 +183,18 @@ public class HomeTopDevFragment extends BaseFragment {
 
     private void getJobs(String city) {
         city = (city == null) ? "" : city;
-        Log.d("testt", "getJobs: city = " + city + ", page = " + page + ", userId = " + userId);
-
         binding.imageNoInternet.setAnimation(R.raw.fetch_api_loading);
         binding.imageNoInternet.playAnimation();
         binding.imageNoInternet.setVisibility(View.VISIBLE);
-        Log.d("testt", "getJobs: key gửi API " + city);
         Call<ArrayList<JobBasic>> call = iJobsService.getListJobs(city, page, userId);
         call.enqueue(new Callback<ArrayList<JobBasic>>() {
             @Override
             public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
                 if (response.isSuccessful()) {
                     jobList = response.body();
-                    Log.d("testt", "Jobs received: " + jobList.size());
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.imageNoInternet.setVisibility(View.GONE);
+                    adapter.setArrId(arrId);
                     adapter.updateData(jobList);
                 } else {
                     Log.d("testt", "Response was not successful");
@@ -288,7 +289,7 @@ public class HomeTopDevFragment extends BaseFragment {
     }
     private void getAllIdBookmark(int userId){
         arrId.clear();
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId3");
+        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId"+userId);
         bookmarksRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -298,6 +299,7 @@ public class HomeTopDevFragment extends BaseFragment {
                         JobBasic job = data.getValue(JobBasic.class);
                         arrId.add(job.getId());
                     }
+                    Log.d("test111", "onComplete: "+arrId.size());
                 }
             }
         });

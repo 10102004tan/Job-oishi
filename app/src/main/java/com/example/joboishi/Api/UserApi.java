@@ -36,5 +36,11 @@ public interface UserApi {
 
     @GET("{id}/job_criteria")
     Call<JobCriteriaApiResponse> getJobCriteria(@Path("id") int userId);
+
+    @POST("/api/user/forgot-password")
+    Call<UserApiResponse> forgotPassword(@Body UserForgotPasswordRequest request);
+
+    @POST("/api/user/reset-password")
+    Call<UserApiResponse> resetPassword(@Body UserResetPasswordRequest request);
 }
 

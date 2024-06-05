@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment  {
             public void onClick(View view) {
                 showDialog();
                 selectFilterJob.setTitleFilter("Đia điểm");
-                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Tất cả" ,"Thành phố Hồ Chí Minh", "Thành phố Hà Nội", "Tỉnh Đà Nẵng", "Tỉnh Cần Thơ", "Tỉnh Hải Phòng")));
+                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Tất cả" ,"Thành phố Hồ Chí Minh", "Thành phố Hà Nội", "Thành phố Đà Nẵng")));
             }
         });
 

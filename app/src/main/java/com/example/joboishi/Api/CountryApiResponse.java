@@ -4,25 +4,25 @@ import com.google.gson.annotations.SerializedName;
 
 public class CountryApiResponse {
     @SerializedName("name")
-    private NameData name;
+    private String name;
     @SerializedName("region")
     private String region;
     @SerializedName("status")
 
     private String status;
 
-    public CountryApiResponse(NameData name, String region, String status) {
+    public CountryApiResponse(String name, String region, String status) {
         this.name = name;
         this.region = region;
         this.status = status;
     }
 
-    public NameData getName() {
+    public String getName() {
         return name;
     }
 
     public void setName(NameData name) {
-        this.name = name;
+        this.name = String.valueOf(name);
     }
 
     public String getRegion() {
