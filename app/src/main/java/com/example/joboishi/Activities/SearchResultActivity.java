@@ -56,6 +56,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     private Boolean isRemote = false;
     private static String jobType;
     private static String experience;
+    private OptionExperienceAdapter optionExperienceAdapter;
+    private OptionJobTypeAdapter optionJobTypeAdapter;
 
     MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
 
@@ -79,6 +81,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         progressBar = binding.progressBar;
         animateNoData = binding.animateNoData;
         input = binding.inputMajor;
+        optionExperienceAdapter = new OptionExperienceAdapter(this, null);
+        optionJobTypeAdapter = new OptionJobTypeAdapter(this, null);
         Intent intent = getIntent();
         input.setText(intent.getStringExtra("key"));
         String kword = "";
@@ -279,6 +283,9 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         super.onStop();
         jobType = "";
         experience = "";
+        optionJobTypeAdapter.clearSavedSelectedPosition(this);
+        optionExperienceAdapter.clearSavedSelectedPosition(this);
+
     }
 
 }
