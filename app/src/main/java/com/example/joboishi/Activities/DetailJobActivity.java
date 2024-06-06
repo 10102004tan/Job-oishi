@@ -191,7 +191,8 @@ public class DetailJobActivity extends BaseActivity {
 
                 // Job Content
                 if (job.getContent() != null) {
-                    binding.txtJobContent.setText(job.getContent().trim());
+                    SpannableStringBuilder content = processStringWithBullet(job.getContent().trim());
+                    binding.txtJobContent.setText(content);
                 }
 
                 // Skills
@@ -482,17 +483,17 @@ public class DetailJobActivity extends BaseActivity {
 
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         for (int i = 0; i < arr.length; i++) {
-            String line = arr[i];
-            SpannableString ss = new SpannableString(line);
-            ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append(ss);
-
-            // Tránh thêm "\n" cuối cùng
-            if (i + 1 < arr.length)
+            String line = arr[i].trim();
+            if(!line.isEmpty()) {
+                SpannableString ss = new SpannableString(line);
+                ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.append(ss);
+                // Tránh thêm "\n" cuối cùng
+                if (i + 1 < arr.length) {
+                    ssb.append("\n");
+                }
                 ssb.append("\n");
-
-            // Thêm khoảng trống sau mỗi đoạn văn
-            ssb.append("\n");
+            }
 
         }
         return ssb;
