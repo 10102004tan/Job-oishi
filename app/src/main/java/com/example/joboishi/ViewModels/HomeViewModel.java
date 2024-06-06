@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.joboishi.Api.IJobsService;
+import com.example.joboishi.Api.NotificationResponse;
 import com.example.joboishi.Models.JobBasic;
 
 import java.util.ArrayList;
@@ -27,6 +28,17 @@ public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> selectedValueJoboishi = new MutableLiveData<>("Tất cả");
     public MutableLiveData<String> getSelectedValueJoboishi() {
         return selectedValueJoboishi;
+    }
+
+    public MutableLiveData<NotificationResponse> notificationResponse = new MutableLiveData<>(new NotificationResponse());
+
+
+    public MutableLiveData<NotificationResponse> getNotificationResponse() {
+        return notificationResponse;
+    }
+
+    public void setNotificationResponse(NotificationResponse notificationResponse) {
+        this.notificationResponse.setValue(notificationResponse);
     }
 
     public MutableLiveData<Integer> getCurrentTotalApplied() {

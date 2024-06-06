@@ -21,6 +21,7 @@ import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserLoginEmailRequest;
+import com.example.joboishi.Api.UserRequest;
 import com.example.joboishi.R;
 
 import retrofit2.Call;
@@ -165,10 +166,18 @@ public class LoginEmailActivity extends AppCompatActivity {
                                         MotionToast.LONG_DURATION,
                                         ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
 
+
                                 //chuyển sang màn hình nhập mã
                                 Intent intent = new Intent(LoginEmailActivity.this, EmailVerificationActivity.class);
                                 intent.putExtra("email", email);
                                 startActivity(intent);
+
+                                if (userApiResponse.getIsFirstLogin() == 1) {
+                                    updateFirstLogin(userId);
+                                }else {
+                                    Intent intent = new Intent(LoginEmailActivity.this, HomeActivity.class);
+                                    startActivity(intent);
+                                }
                             } else {
                                 // Xử lý lỗi nếu có
                                 Log.e("LoginError", "Đăng nhập không thành công");
@@ -203,6 +212,48 @@ public class LoginEmailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LoginEmailActivity.this, RegisterUserActivity.class);
                 startActivity(intent);
+            }
+        });
+
+
+    }
+
+    public void updateFirstLogin(int userId) {
+        UserRequest userUpdateRequest = new UserRequest();
+        userUpdateRequest.setIs_first_login(0);
+
+        UserApi userApi = ApiClient.getUserAPI();
+        Call<UserApiResponse> call = userApi.updateUserInfo(userId, userUpdateRequest);
+        call.enqueue(new Callback<UserApiResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    Intent intent = new Intent(LoginEmailActivity.this, RegisterMajorActivity.class);
+                    intent.putExtra("caller", "LoginEmailActivity");
+                    startActivity(intent);
+                } else {
+                    Log.d("UPDATE_USER_ERROR", "ERROR");
+                    // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
+                    MotionToast.Companion.createToast(LoginEmailActivity.this, "Thất bại",
+                            "Đã xảy ra lỗi trong quá trình cập nhật thông tin",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
+                Log.d("UPDATE_USER_ERROR", t.toString());
+                // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
+                MotionToast.Companion.createToast(LoginEmailActivity.this, "Thất bại",
+                        "Đã xảy ra lỗi trong quá trình cập nhật thông tin",
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.LONG_DURATION,
+                        ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
             }
         });
     }

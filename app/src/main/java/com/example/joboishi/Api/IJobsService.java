@@ -21,7 +21,7 @@ public interface IJobsService {
     @GET("api/bookmarks")
     Call<JobBookmarksResponse> getJobBookmark(@Query("user_id") int userId,@Query("page") int page);
     @GET("api/bookmarks/ids")
-    Call<ArrayList<Integer>> getIdsJobBookmark(@Query("user_id") int userId);
+    Call<ArrayList<Integer>> ha(@Query("user_id") int userId);
     @POST("api/bookmarks/store")
     Call<Void> addBookmark(@Query("user_id") int userId,@Query("job_id") int jobId,@Query("type") int type);
     @POST("api/bookmarks/destroy")

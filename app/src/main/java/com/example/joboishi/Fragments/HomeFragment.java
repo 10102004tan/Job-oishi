@@ -109,14 +109,6 @@ public class HomeFragment extends Fragment  {
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText(R.string.job_oishi));
         binding.tabLayoutMyJob.addTab(binding.tabLayoutMyJob.newTab().setText(R.string.top_dev));
 
-        binding.btnShowType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDialog();
-                selectFilterJob.setTitleFilter("Tiêu chí công việc");
-                selectFilterJob.setList(new ArrayList<>(Arrays.asList("Phù hợp nhất")));
-            }
-        });
 
         binding.btnLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +124,7 @@ public class HomeFragment extends Fragment  {
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), SearchActivity.class);
 
-                intent.putExtra("filterJob", new ArrayList<>(Arrays.asList("Android", "Front end", "Back end")));
+                intent.putExtra("filterJob", new ArrayList<>(Arrays.asList("Android", "Frontend", "Backend", "Java")));
                 startActivity(intent);
             }
         });

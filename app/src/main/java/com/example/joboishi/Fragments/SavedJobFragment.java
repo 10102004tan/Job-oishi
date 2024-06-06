@@ -52,6 +52,7 @@ public class SavedJobFragment extends BaseFragment {
     private ArrayList<JobBasic> jobs;
     private JobAdapter adapter;
     private HomeViewModel homeViewModel;
+    static final int REQUEST_CODE = 1;
 
     private boolean isFirst = true;
     private final  int STATUS_NO_INTERNET = 0;
@@ -105,7 +106,8 @@ public class SavedJobFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
                 intent.putExtra("JOB_ID",job.getId());
                 intent.putExtra("TYPE",job.getType());
-                startActivity(intent);
+//                startActivity(intent);
+                getActivity().startActivityForResult(intent, REQUEST_CODE);
             }
 
             @Override

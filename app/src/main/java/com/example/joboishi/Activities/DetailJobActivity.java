@@ -59,11 +59,10 @@ public class DetailJobActivity extends BaseActivity {
     private ArrayList<Job> jobs;
     private Job jobDetail;
     private Intent intent;
-    private String jobId;
     private ArrayList<JobBasic> appliedJobs = new ArrayList<JobBasic>();
     private IJobsService iJobsService;
-    private int userId;
-    private DetailJobAPI detailJobAPI;
+
+    private IJobsService detailJobAPI;
     private ProgressDialog progressDialog;
     private final  int STATUS_NO_INTERNET = 0;
     private final  int STATUS_LOW_INTERNET = 1;
@@ -71,7 +70,9 @@ public class DetailJobActivity extends BaseActivity {
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
+    private int userId;
     private int type = 0;
+    private String jobId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,10 +129,10 @@ public class DetailJobActivity extends BaseActivity {
         if (jobId.equals("-1")) {
             // Không tìm thấy JOB_ID, xử lý lỗi
             Toast.makeText(this, "Job ID not found!", Toast.LENGTH_SHORT).show();
-            finish(); // Kết thúc Activity nếu không có ID hợp lệ
+            finish();
             return;
         }
-        getDetailJob(jobId, new DetailJobCallback() {
+        getDetailJob(jobId, type, userId, new DetailJobCallback() {
             @Override
             public void onDetailJobLoaded(Job job) {
                 // Hide loading indicator
@@ -190,7 +191,8 @@ public class DetailJobActivity extends BaseActivity {
 
                 // Job Content
                 if (job.getContent() != null) {
-                    binding.txtJobContent.setText(job.getContent().trim());
+                    SpannableStringBuilder content = processStringWithBullet(job.getContent().trim());
+                    binding.txtJobContent.setText(content);
                 }
 
                 // Skills
@@ -361,16 +363,18 @@ public class DetailJobActivity extends BaseActivity {
 
 
     //Ham gọi API
-    private void getDetailJob(String jobId, DetailJobCallback callback) {
+    private void getDetailJob(String jobId, int type,int userId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
+        Log.d("test", type + " type");
+        Log.d("test", userId + " user id");
         Log.d("test", DetailJobAPI.BASE_URL);
         Log.d("test", jobId);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailJobAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        detailJobAPI = retrofit.create(DetailJobAPI.class);
-        Call<Job> call = detailJobAPI.getJobDetail(jobId);
+        detailJobAPI = retrofit.create(IJobsService.class);
+        Call<Job> call = detailJobAPI.getJobDetail(Integer.parseInt(jobId), type, userId);
         call.enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
@@ -479,17 +483,17 @@ public class DetailJobActivity extends BaseActivity {
 
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         for (int i = 0; i < arr.length; i++) {
-            String line = arr[i];
-            SpannableString ss = new SpannableString(line);
-            ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append(ss);
-
-            // Tránh thêm "\n" cuối cùng
-            if (i + 1 < arr.length)
+            String line = arr[i].trim();
+            if(!line.isEmpty()) {
+                SpannableString ss = new SpannableString(line);
+                ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.append(ss);
+                // Tránh thêm "\n" cuối cùng
+                if (i + 1 < arr.length) {
+                    ssb.append("\n");
+                }
                 ssb.append("\n");
-
-            // Thêm khoảng trống sau mỗi đoạn văn
-            ssb.append("\n");
+            }
 
         }
         return ssb;
@@ -611,6 +615,11 @@ public class DetailJobActivity extends BaseActivity {
         });
     }
     private void removeJobBookmark(int userId, int jobId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DetailJobAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        iJobsService = retrofit.create(IJobsService.class);
         Call<Void> call = iJobsService.destroyBookmark(userId, jobId, type);
         call.enqueue(new Callback<Void>() {
             @Override

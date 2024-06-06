@@ -59,7 +59,10 @@ public class UserApiResponse {
     @SerializedName("province")
     private String province;
 
-    public UserApiResponse(int id, String firstname, String lastname, String email, String birth, String phone, String gender, String education, String photoUrl, String timeStartingWork, String country, String city, String province) {
+    @SerializedName("is_first_login")
+    private int isFirstLogin;
+
+    public UserApiResponse(int id, String firstname, String lastname, String email, String birth, String phone, String gender, String education, String photoUrl, String timeStartingWork, String country, String city, String province, int isFirstLogin) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -73,6 +76,15 @@ public class UserApiResponse {
         this.country = country;
         this.city = city;
         this.province = province;
+        this.isFirstLogin = isFirstLogin;
+    }
+
+    public int getIsFirstLogin() {
+        return isFirstLogin;
+    }
+
+    public void setIsFirstLogin(int isFirstLogin) {
+        this.isFirstLogin = isFirstLogin;
     }
 
     public int getId() {
