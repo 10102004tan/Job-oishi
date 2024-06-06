@@ -16,12 +16,13 @@
         >
 
         <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/noRead"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/circle_red_bg"
             android:layout_margin="10dp"
-            android:src="@drawable/ic_launcher_background"
             android:scaleType="centerCrop"
+            android:layout_gravity="center_vertical"
             />
 
         <LinearLayout

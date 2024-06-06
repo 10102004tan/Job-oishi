@@ -103,5 +103,6 @@ dependencies {
     implementation ("com.github.vedraj360:DesignerToast:0.1.3")
     implementation ("com.google.android.flexbox:flexbox:3.0.0")
     implementation ("com.github.CuteLibs:CuteDialog:2.1")
+    implementation ("org.ocpsoft.prettytime:prettytime:5.0.2.Final")
 
 }

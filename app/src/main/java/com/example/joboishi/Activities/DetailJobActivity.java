@@ -615,6 +615,11 @@ public class DetailJobActivity extends BaseActivity {
         });
     }
     private void removeJobBookmark(int userId, int jobId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DetailJobAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        iJobsService = retrofit.create(IJobsService.class);
         Call<Void> call = iJobsService.destroyBookmark(userId, jobId, type);
         call.enqueue(new Callback<Void>() {
             @Override
