@@ -264,53 +264,44 @@
                             android:text=""
                             android:textSize="14sp" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginBottom="20dp"
-                            android:background="@color/line_color" />
+<!--                        <View-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="1dp"-->
+<!--                            android:layout_marginTop="8dp"-->
+<!--                            android:layout_marginBottom="20dp"-->
+<!--                            android:background="@color/line_color" />-->
 
-                        <TextView
-                            style="@style/Profile_Title_TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Yêu cầu công viêc"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
+<!--                        <TextView-->
+<!--                            style="@style/Profile_Title_TextView"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Yêu cầu công viêc"-->
+<!--                            android:textSize="16sp"-->
+<!--                            android:textStyle="bold" />-->
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginVertical="10dp"
-                            android:orientation="horizontal">
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginVertical="10dp"-->
+<!--                            android:orientation="horizontal">-->
 
-                            <TextView
-                                style="@style/Profile_Normal_TextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="10dp"
-                                android:background="@drawable/text_badge"
-                                android:text="1 - 3 năm kinh nghiệm" />
+<!--                            <TextView-->
+<!--                                style="@style/Profile_Normal_TextView"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginRight="10dp"-->
+<!--                                android:background="@drawable/text_badge"-->
+<!--                                android:text="1 - 3 năm kinh nghiệm" />-->
 
-                            <TextView
-                                style="@style/Profile_Normal_TextView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="10dp"
-                                android:background="@drawable/text_badge"
-                                android:text="Cử nhân" />
+<!--                            <TextView-->
+<!--                                style="@style/Profile_Normal_TextView"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginRight="10dp"-->
+<!--                                android:background="@drawable/text_badge"-->
+<!--                                android:text="Cử nhân" />-->
 
-                        </LinearLayout>
-
-                        <TextView
-                            style="@style/Profile_Normal_TextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Cập nhật 17 phút trước"
-                            android:textColor="#25917B"
-                            android:textSize="12sp" />
-
+<!--                        </LinearLayout>-->
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
