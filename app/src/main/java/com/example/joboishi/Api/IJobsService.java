@@ -14,8 +14,6 @@ import retrofit2.http.Query;
 public interface IJobsService {
 
     String BASE_URL = APIURL.BASE_URL;
-    @POST("api/jobs2")
-    Call<ArrayList<JobBasic>> getListJobsDB(@Query("city") String city,@Query("page") int page, @Query("user_id") int user_id);
     @GET("api/jobs")
     Call<JobsResponse> getListJobs(@Query("city") String city, @Query("page") int page, @Query("user_id") int user_id,@Query("type")int type);
     @POST("api/applied-job")
@@ -34,6 +32,4 @@ public interface IJobsService {
     Call<Integer> getTotalJobsApplied(@Query("user_id") int userId);
     @GET("api/jobs/detail")
     Call<Job> getJobDetail(@Query("job_id") int jobId,@Query("type") int type,@Query("user_id") int user_id);
-
-
 }
