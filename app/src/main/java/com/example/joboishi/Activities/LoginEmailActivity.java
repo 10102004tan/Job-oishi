@@ -18,11 +18,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.joboishi.Api.ApiClient;
+import com.example.joboishi.Api.ForgotPasswordApiResponse;
 import com.example.joboishi.Api.UserApi;
 import com.example.joboishi.Api.UserApiResponse;
 import com.example.joboishi.Api.UserLoginEmailRequest;
 import com.example.joboishi.Api.UserRequest;
 import com.example.joboishi.R;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -160,24 +163,14 @@ public class LoginEmailActivity extends AppCompatActivity {
                                 //Log.d("UserInfo", "Email Người Dùng: " + userEmail);
 
                                 MotionToast.Companion.createToast(LoginEmailActivity.this, "Thành công",
-                                        "Đã đăng nhập thành công.",
+                                        "Vui lòng nhập mã xác nhận.",
                                         MotionToastStyle.SUCCESS,
                                         MotionToast.GRAVITY_BOTTOM,
                                         MotionToast.LONG_DURATION,
                                         ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
 
 
-                                //chuyển sang màn hình nhập mã
-                                Intent intent = new Intent(LoginEmailActivity.this, EmailVerificationActivity.class);
-                                intent.putExtra("email", email);
-                                startActivity(intent);
-
-                                if (userApiResponse.getIsFirstLogin() == 1) {
-                                    updateFirstLogin(userId);
-                                }else {
-                                    Intent intent = new Intent(LoginEmailActivity.this, HomeActivity.class);
-                                    startActivity(intent);
-                                }
+                                    sendVerifyLoginCode(userEmail, userApiResponse.getIsFirstLogin(), userId);
                             } else {
                                 // Xử lý lỗi nếu có
                                 Log.e("LoginError", "Đăng nhập không thành công");
@@ -218,38 +211,50 @@ public class LoginEmailActivity extends AppCompatActivity {
 
     }
 
-    public void updateFirstLogin(int userId) {
-        UserRequest userUpdateRequest = new UserRequest();
-        userUpdateRequest.setIs_first_login(0);
-
+    public void sendVerifyLoginCode(String email, int isFirstLogin, int userId) {
         UserApi userApi = ApiClient.getUserAPI();
-        Call<UserApiResponse> call = userApi.updateUserInfo(userId, userUpdateRequest);
-        call.enqueue(new Callback<UserApiResponse>() {
+        Call<ForgotPasswordApiResponse> callUser = userApi.forgotPassword(email);
+        callUser.enqueue(new Callback<ForgotPasswordApiResponse>() {
             @Override
-            public void onResponse(@NonNull Call<UserApiResponse> call, @NonNull Response<UserApiResponse> response) {
+            public void onResponse(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Response<ForgotPasswordApiResponse> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    Intent intent = new Intent(LoginEmailActivity.this, RegisterMajorActivity.class);
-                    intent.putExtra("caller", "LoginEmailActivity");
-                    startActivity(intent);
-                } else {
-                    Log.d("UPDATE_USER_ERROR", "ERROR");
-                    // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
-                    MotionToast.Companion.createToast(LoginEmailActivity.this, "Thất bại",
-                            "Đã xảy ra lỗi trong quá trình cập nhật thông tin",
-                            MotionToastStyle.ERROR,
+                    Log.d("TESST", response.body().getMessage());
+                    MotionToast.Companion.createToast(LoginEmailActivity.this, "Thành công",
+                            "Mã xác thực đã được gửi đến mail của bạn.",
+                            MotionToastStyle.SUCCESS,
                             MotionToast.GRAVITY_BOTTOM,
                             MotionToast.LONG_DURATION,
                             ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
+                    //chuyển sang màn hình xác nhận mã
+                    Intent intent = new Intent(LoginEmailActivity.this, EmailVerificationActivity.class);
+                    intent.putExtra("is_first_login", isFirstLogin);
+                    intent.putExtra("user_id", userId);
+                    intent.putExtra("email", email);
+                    startActivity(intent);
+
+                } else {
+                    try {
+                        String errorBody = response.errorBody().string();
+                        Log.e("ForgotPassword", "Server error: " + errorBody);
+                        MotionToast.Companion.createToast(LoginEmailActivity.this, "Lỗi",
+                                "Có lỗi xảy ra. Vui lòng thử lại sau.",
+                                MotionToastStyle.ERROR,
+                                MotionToast.GRAVITY_BOTTOM,
+                                MotionToast.LONG_DURATION,
+                                ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<UserApiResponse> call, @NonNull Throwable t) {
-                Log.d("UPDATE_USER_ERROR", t.toString());
-                // Toast.makeText(EditProfileActivity.this, "Đã xảy ra lỗi trong quá trình cập nhật thông tin", Toast.LENGTH_SHORT).show();
-                MotionToast.Companion.createToast(LoginEmailActivity.this, "Thất bại",
-                        "Đã xảy ra lỗi trong quá trình cập nhật thông tin",
+            public void onFailure(@NonNull Call<ForgotPasswordApiResponse> call, @NonNull Throwable t) {
+                Log.e("ForgotPassword", "Network error: " + t.getMessage());
+                MotionToast.Companion.createToast(LoginEmailActivity.this, "Lỗi",
+                        "Đã xảy ra lỗi. Vui lòng thử lại sau.",
                         MotionToastStyle.ERROR,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.LONG_DURATION,
@@ -257,4 +262,6 @@ public class LoginEmailActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }
