@@ -233,7 +233,11 @@ public class HomeActivity extends AppCompatActivity{
                     String countNotRead = (notificationResponse.getTotalNotRead() > 9 ? "9+" : notificationResponse.getTotalNotRead() + "");
                     Menu menu = binding.bottomNavigationView.getMenu();
                     MenuItem menuItem = menu.findItem(R.id.nav_noti);
-                    menuItem.setTitle("Thông báo (" + countNotRead + ")");
+                    if (notificationResponse.getTotalNotRead() == 0)
+                        menuItem.setTitle("Thông báo");
+                    else{
+                        menuItem.setTitle("Thông báo (" + countNotRead + ")");
+                    }
                 }
             }
             @Override
