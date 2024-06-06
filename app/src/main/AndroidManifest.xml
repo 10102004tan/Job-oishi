@@ -2,8 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.INTERNET" />
 
+=======
+>>>>>>> 50b1a809de79cf4db299d4c50065df8e3fe7df0d
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -91,10 +94,16 @@
         <activity
             android:name=".Activities.RegisterMajorActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+
         <activity
             android:name=".Activities.HomeActivity"
+<<<<<<< HEAD
             android:exported="true" />
+=======
+            android:exported="true"/>
+>>>>>>> 50b1a809de79cf4db299d4c50065df8e3fe7df0d
         <activity
             android:name=".Activities.DetailJobActivity"
             android:exported="true" />
@@ -134,10 +143,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -148,10 +155,6 @@
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_icon"
                 android:resource="@drawable/job_ic" />
-            <!--
-                 Set color used with incoming notification messages. This is used when no color is set for the incoming
-                 notification message. See README(https://goo.gl/6BKBk7) for more.
-            -->
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_color"
                 android:resource="@color/black" />

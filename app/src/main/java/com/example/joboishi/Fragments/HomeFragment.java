@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,20 +27,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class HomeFragment extends Fragment  {
-
-
-
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
     private boolean isFirstTimeSelected = true;
+
+    private boolean isLoadFirst = true;
     private SelectFilterJob selectFilterJob =  new SelectFilterJob();
     private MyBottomSheetDialogFragment myBottomSheetDialogFragment;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         binding.tabLayoutMyJob.setTabIndicatorFullWidth(true);
+
+        /*SET VALUE FOR BUTTON*/
+        if (isLoadFirst) {
+            homeViewModel.getSelectedValueJoboishi().observe(getViewLifecycleOwner(), str -> {
+                binding.btnLocation.setText(str);
+            });
+            isLoadFirst = false;
+        }
 
         /*ADD LISTENER FOR tablelayout*/
         binding.tabLayoutMyJob.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -47,7 +54,18 @@ public class HomeFragment extends Fragment  {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 binding.viewPager.setCurrentItem(position);
+                homeViewModel.setCurrentTabPosition(position);
                 isFirstTimeSelected = false;
+                //set current location
+                if (position == 0) {
+                    homeViewModel.getSelectedValueJoboishi().observe(getViewLifecycleOwner(), str -> {
+                        binding.btnLocation.setText(str);
+                    });
+                } else {
+                    homeViewModel.getSelectedValueTopDev().observe(getViewLifecycleOwner(), str -> {
+                        binding.btnLocation.setText(str);
+                    });
+                }
             }
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {

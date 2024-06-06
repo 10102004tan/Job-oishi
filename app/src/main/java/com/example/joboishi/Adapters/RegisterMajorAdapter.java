@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.joboishi.Models.JobSearch;
+import com.example.joboishi.Models.Keyword;
 import com.example.joboishi.databinding.MajorsItemBinding;
 
 import java.util.ArrayList;
 
 public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdapter.MyViewHolder> {
-    private Activity context;
-    private ArrayList<JobSearch> majors = new ArrayList<>();
+    private final Activity context;
+    private ArrayList<Keyword> majors;
 
     private ItemClickListener itemClickListener;
 
@@ -23,30 +23,31 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
         this.itemClickListener = itemClickListener;
     }
 
-    public RegisterMajorAdapter(Activity context, ArrayList<JobSearch> majors) {
+    public RegisterMajorAdapter(Activity context, ArrayList<Keyword> majors) {
         this.context = context;
-        this.majors = majors;
+        this.majors = majors != null ? majors : new ArrayList<Keyword>();
     }
 
-    public void updateData(ArrayList<JobSearch> newMajors) {
-        majors = newMajors;
-        notifyDataSetChanged();
+    public void updateData(ArrayList<Keyword> newMajors) {
+        if (newMajors != null) {
+            majors = newMajors;
+            notifyDataSetChanged();
+        }
     }
 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Sử dụng MajorsItemBinding để inflate layout và tạo instance cho ViewHolder
         MajorsItemBinding binding = MajorsItemBinding.inflate(LayoutInflater.from(context), parent, false);
         return new MyViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        JobSearch major = majors.get(position);
+        Keyword major = majors.get(position);
 
-        holder.majorsItemBinding.job.setText(major.getTitle());
-        holder.majorsItemBinding.company.setText(major.getCompany_name());
+        holder.majorsItemBinding.job.setText(major.getName());
+        holder.majorsItemBinding.company.setText(major.getKeyword());
         holder.majorsItemBinding.customCheckbox.setChecked(major.getChecked());
     }
 
@@ -56,18 +57,19 @@ public class RegisterMajorAdapter extends RecyclerView.Adapter<RegisterMajorAdap
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        private MajorsItemBinding majorsItemBinding;
+        private final MajorsItemBinding majorsItemBinding;
 
         public MyViewHolder(@NonNull MajorsItemBinding binding) {
             super(binding.getRoot());
-            majorsItemBinding = binding;
+            this.majorsItemBinding = binding;
 
-            // Gán sự kiện click cho CardView
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int position = getAdapterPosition();
-                    itemClickListener.onItemClick(MyViewHolder.this, position);
+                    if (position != RecyclerView.NO_POSITION && itemClickListener != null) {
+                        itemClickListener.onItemClick(MyViewHolder.this, position);
+                    }
                 }
             });
         }

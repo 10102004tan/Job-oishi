@@ -38,6 +38,9 @@ public class Job {
     private boolean is_edit;
     @SerializedName("is_applied")
     private boolean is_applied;
+
+    @SerializedName("is_bookmark")
+    private boolean is_bookmarked;
 //    @SerializedName("created_at")
 //    private Date created_at;
 //    @SerializedName("update_at")
@@ -61,6 +64,34 @@ public class Job {
         this.benefit = benefit;
         this.is_edit = is_edit;
         this.is_applied = is_applied;
+    }
+
+    public Job(String id, String title, String content, String responsibilities, String requirements, Company company, ArrayList<String> skills, String experience, String job_type_str, String job_level, ArrayList<String> recruitment_process, String salary_value, boolean is_salary_visible, ArrayList<Benefit> benefit, boolean is_edit, boolean is_applied, boolean is_bookmarked) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.responsibilities = responsibilities;
+        this.requirements = requirements;
+        this.company = company;
+        this.skills = skills;
+        this.experience = experience;
+        this.job_type_str = job_type_str;
+        this.job_level = job_level;
+        this.recruitment_process = recruitment_process;
+        this.salary_value = salary_value;
+        this.is_salary_visible = is_salary_visible;
+        this.benefit = benefit;
+        this.is_edit = is_edit;
+        this.is_applied = is_applied;
+        this.is_bookmarked = is_bookmarked;
+    }
+
+    public boolean getBookmark() {
+        return is_bookmarked;
+    }
+
+    public void setBookmark(boolean is_bookmarked) {
+        this.is_bookmarked = is_bookmarked;
     }
 
     public String getId() {
