@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.example.joboishi.Api.ApiClient;
 import com.example.joboishi.Api.ForgotPasswordApiResponse;
 import com.example.joboishi.Api.UserApi;
@@ -18,6 +20,8 @@ import com.example.joboishi.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 
 public class VerifyTokenActivity extends Activity {
@@ -46,6 +50,13 @@ public class VerifyTokenActivity extends Activity {
                         if (response.isSuccessful()){
                             assert response.body() != null;
                             if (response.body().getStatus() == 200) {
+                                MotionToast.Companion.createToast(VerifyTokenActivity.this, "Thành công",
+                                        "Nhập mã xác thực thành công.",
+                                        MotionToastStyle.SUCCESS,
+                                        MotionToast.GRAVITY_BOTTOM,
+                                        MotionToast.LONG_DURATION,
+                                        ResourcesCompat.getFont(VerifyTokenActivity.this, R.font.helvetica_regular));
+
                                 Intent intent = new Intent(VerifyTokenActivity.this, ResetPasswordActivity.class);
                                 intent.putExtra("email",email);
                                 startActivity(intent);
