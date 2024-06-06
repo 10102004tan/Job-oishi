@@ -1,5 +1,6 @@
 package com.example.joboishi.Activities;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -49,6 +50,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import www.sanju.motiontoast.MotionToast;
+import www.sanju.motiontoast.MotionToastStyle;
 
 public class DetailJobActivity extends BaseActivity {
 
@@ -58,6 +61,7 @@ public class DetailJobActivity extends BaseActivity {
     private Intent intent;
     private String jobId;
     private ArrayList<JobBasic> appliedJobs = new ArrayList<JobBasic>();
+    private IJobsService iJobsService;
     private int userId;
     private DetailJobAPI detailJobAPI;
     private ProgressDialog progressDialog;
@@ -99,7 +103,7 @@ public class DetailJobActivity extends BaseActivity {
         binding.btnBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DetailJobActivity.this, "Hello world", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -136,6 +140,7 @@ public class DetailJobActivity extends BaseActivity {
                 binding.detailLayout.setVisibility(View.VISIBLE);
 
                 Log.d("test", job.getTitle());
+                Log.d("bookmark",job.getBookmark()+"");
 
                 // Responsibilities
                 if (job.getResponsibilities() != null) {
@@ -253,7 +258,6 @@ public class DetailJobActivity extends BaseActivity {
                 binding.txtCompanyName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         startActivity(intent);
                     }
                 });
@@ -262,6 +266,24 @@ public class DetailJobActivity extends BaseActivity {
                     @Override
                     public void onClick(View view) {
                         startActivity(intent);
+                    }
+                });
+
+                //bookmark xử lý
+                binding.btnBookmark.setSelected(job.getBookmark());
+                binding.btnBookmark.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (job.getBookmark()){
+                            //remove bookmark
+                            removeJobBookmark(userId, Integer.parseInt(job.getId()));
+                            binding.btnBookmark.setSelected(false);
+                        }
+                        else{
+                            //add bookmark
+                            saveJobToBookmarks(userId, Integer.parseInt(job.getId()));
+                            binding.btnBookmark.setSelected(true);
+                        }
                     }
                 });
 
@@ -554,6 +576,56 @@ public class DetailJobActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+    }
+
+
+    private void saveJobToBookmarks(int userId, int jobId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DetailJobAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        iJobsService = retrofit.create(IJobsService.class);
+        Call<Void> call = iJobsService.addBookmark(userId, jobId, type);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+                            "Đã thêm công việc thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(DetailJobActivity.this, "Lỗi khi thêm vào bookmark "+ t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void removeJobBookmark(int userId, int jobId) {
+        Call<Void> call = iJobsService.destroyBookmark(userId, jobId, type);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+                            "Đã xóa công việc thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(DetailJobActivity.this, "Lỗi khi xoa vào bookmark "+ t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("bmtest",t.getMessage());
             }
         });
     }
