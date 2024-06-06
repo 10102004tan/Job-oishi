@@ -14,14 +14,14 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface UserApi {
-    @GET("{id}")
+    @GET("/api/user/{id}")
     Call<UserApiResponse> getDetailUser(@Path("id") int userId);
 
-    @POST("{id}")
+    @POST("/api/user/{id}")
     Call<UserApiResponse> updateUserInfo(@Path("id") int userId, @Body UserRequest userUpdateRequest);
 
     @Multipart
-    @POST("{id}")
+    @POST("/api/user/{id}")
     Call<UserApiResponse> updateAvatar(@Path("id") int userId, @Part MultipartBody.Part photo_url);
 
     @POST("/api/user")

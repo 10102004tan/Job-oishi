@@ -26,14 +26,12 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
 
     private final Activity context;
     private final ArrayList<String> data;
-    private final RecyclerView recyclerView;
     private String selectedValue;
     private ItemClickListener itemClickListener;
 
     public SimpleStringRecyclerViewAdapter(Activity context, ArrayList<String> data, RecyclerView recyclerView, String selectedValue) {
         this.context = context;
         this.data = data;
-        this.recyclerView = recyclerView;
         this.selectedValue = selectedValue;
     }
 
@@ -58,13 +56,13 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
         holder.setPos(position);
         holder.title.setText(data.get(position));
 
-//        if (selectedValue.equals(data.get(position))) {
-//            holder.image.setImageResource(com.example.joboishi.R.drawable.check_svgrepo_com);
-//            holder.title.setTextColor(Color.parseColor("#1D7CA3"));
-//        } else {
-//            holder.image.setImageResource(R.drawable.border_radius_input);
-//            holder.title.setTextColor(Color.parseColor("#000000"));
-//        }
+        if (selectedValue.equals(data.get(position))) {
+            holder.image.setImageResource(com.example.joboishi.R.drawable.check_svgrepo_com);
+            holder.title.setTextColor(Color.parseColor("#1D7CA3"));
+        } else {
+            holder.image.setImageResource(R.drawable.border_radius_input);
+            holder.title.setTextColor(Color.parseColor("#000000"));
+        }
     }
 
     @Override
