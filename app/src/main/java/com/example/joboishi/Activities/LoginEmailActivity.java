@@ -164,9 +164,10 @@ public class LoginEmailActivity extends AppCompatActivity {
                                         MotionToast.GRAVITY_BOTTOM,
                                         MotionToast.LONG_DURATION,
                                         ResourcesCompat.getFont(LoginEmailActivity.this, R.font.helvetica_regular));
-                                // Chuyển sang màn hình RegisterMajorActivity
-                                Intent intent = new Intent(LoginEmailActivity.this, RegisterMajorActivity.class);
-                                intent.putExtra("caller", "LoginEmailActivity");
+
+                                //chuyển sang màn hình nhập mã
+                                Intent intent = new Intent(LoginEmailActivity.this, EmailVerificationActivity.class);
+                                intent.putExtra("email", email);
                                 startActivity(intent);
                             } else {
                                 // Xử lý lỗi nếu có
