@@ -39,6 +39,7 @@ public class AppliedJobFragment extends BaseFragment {
     private ArrayList<JobBasic> jobs;
     private IJobsService iJobsService;
     private  JobAdapter adapter;
+    static final int REQUEST_CODE = 1;
     private boolean isFirst = true;
     private final  int STATUS_NO_INTERNET = 0;
     private final  int STATUS_LOW_INTERNET = 1;
@@ -68,7 +69,8 @@ public class AppliedJobFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
                 intent.putExtra("JOB_ID",job.getId());
                 intent.putExtra("TYPE",TYPE);
-                startActivity(intent);
+//                startActivity(intent);
+                getActivity().startActivityForResult(intent, REQUEST_CODE);
             }
 
             @Override

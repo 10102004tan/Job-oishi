@@ -20,11 +20,20 @@ import com.google.firebase.messaging.RemoteMessage;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_ID = "1234567";
 
+    private static OnMessageReceivedListener onMessageReceivedListener;
+
+    public static void setOnMessageReceivedListener(OnMessageReceivedListener listener) {
+        onMessageReceivedListener = listener;
+    }
+
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
         String title = message.getNotification().getTitle();
         String body = message.getNotification().getBody();
+        if (onMessageReceivedListener != null) {
+            onMessageReceivedListener.onMessageReceived(title, body);
+        }
         showNotification(title, body);
     }
 
@@ -54,5 +63,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
         notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    public interface OnMessageReceivedListener{
+        void onMessageReceived(String title, String body);
     }
 }

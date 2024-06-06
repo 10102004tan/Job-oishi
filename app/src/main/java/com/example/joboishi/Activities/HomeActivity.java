@@ -9,19 +9,29 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.joboishi.Adapters.NotificationAdapter;
 import com.example.joboishi.Adapters.ViewPagerHomeAdapter;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.joboishi.Api.IJobsService;
+import com.example.joboishi.Api.INotificationService;
 import com.example.joboishi.Api.JobBookmarksResponse;
+import com.example.joboishi.Api.NotificationResponse;
 import com.example.joboishi.Api.UserFcmAPI;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
+import com.example.joboishi.Services.MyFirebaseMessagingService;
 import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.databinding.HomeLayoutBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -37,18 +47,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 public class HomeActivity extends AppCompatActivity{
     private static final int REQ = 111111;
     private int userId;
     private HomeLayoutBinding binding;
     private boolean hasPermission = false;
     private UserFcmAPI userFcmAPI;
+    private INotificationService iNotificationService;
 
     private HomeViewModel homeViewModel;
     private int totalBookmark = 0;
     private int totalJobApplied = -1;
     private IJobsService iJobsService;
+    private NotificationResponse notificationResponse;
+    private Menu menu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +71,14 @@ public class HomeActivity extends AppCompatActivity{
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userId = sharedPref.getInt("user_id", 0);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
+
         getTotalBookmark(userId);
         getTotalJobApplied(userId);
+        getNotifications(userId);
+
+
+
         //viewpager2
         ViewPagerHomeAdapter viewPagerHomeAdapter = new ViewPagerHomeAdapter(this);
         binding.viewPager.setUserInputEnabled(false);
@@ -72,13 +91,23 @@ public class HomeActivity extends AppCompatActivity{
            else if (item.getItemId() == R.id.nav_my_jobs){
                binding.viewPager.setCurrentItem(1);
            }
-           else if (item.getItemId() == R.id.nav_profile){
+           else if (item.getItemId() == R.id.nav_noti){
                binding.viewPager.setCurrentItem(2);
+           }
+           else if (item.getItemId() == R.id.nav_profile){
+               binding.viewPager.setCurrentItem(3);
            }
            return true;
         });
-    }
 
+        //lister fcm
+        MyFirebaseMessagingService.setOnMessageReceivedListener(new MyFirebaseMessagingService.OnMessageReceivedListener() {
+            @Override
+            public void onMessageReceived(String title, String body) {
+                getNotifications(userId);
+            }
+        });
+    }
     //onCreateViewed
 
     @Override
@@ -189,12 +218,39 @@ public class HomeActivity extends AppCompatActivity{
         });
     }
 
+
+    private void getNotifications(int userId) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(iNotificationService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        iNotificationService = retrofit.create(INotificationService.class);
+        Call<NotificationResponse> call = iNotificationService.getAllNotifications(userId);
+        call.enqueue(new Callback<NotificationResponse>() {
+            @Override
+            public void onResponse(Call<NotificationResponse> call, Response<NotificationResponse> response) {
+                if (response.isSuccessful()) {
+                    notificationResponse = response.body();
+                    homeViewModel.setNotificationResponse(notificationResponse);
+                    int countNotRead = notificationResponse.getTotalNotRead();
+                }
+            }
+            @Override
+            public void onFailure(Call<NotificationResponse> call, Throwable t) {
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK){
             getTotalBookmark(userId);
             getTotalJobApplied(userId);
+
+        }
+
+        if (requestCode == 11111 && resultCode == RESULT_OK){
+            getNotifications(userId);
+            Log.d("HomeActivity", "onActivityResult: ");
         }
     }
 }
