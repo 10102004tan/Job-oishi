@@ -272,17 +272,19 @@ public class DetailCompanyActivity extends AppCompatActivity {
 
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         for (int i = 0; i < arr.length; i++) {
-            String line = arr[i];
-            SpannableString ss = new SpannableString(line);
-            ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append(ss);
+            String line = arr[i].trim();
+            if(!line.isEmpty()) {
+                SpannableString ss = new SpannableString(line);
+                ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.append(ss);
 
-            // Tránh thêm "\n" cuối cùng
-            if (i + 1 < arr.length)
+                // Tránh thêm "\n" cuối cùng
+                if (i + 1 < arr.length)
+                    ssb.append("\n");
+
+                // Thêm khoảng trống sau mỗi đoạn văn
                 ssb.append("\n");
-
-            // Thêm khoảng trống sau mỗi đoạn văn
-            ssb.append("\n");
+            }
 
         }
         return ssb;
