@@ -13,9 +13,10 @@ public class UserRequest {
     private String country;
     private String city;
     private String province;
+    private int is_first_login;
 
 
-    public UserRequest(int id, String first_name, String last_name, String email, String birth, String gender, String education, String time_starting_work, String photo_url, String country, String city, String province) {
+    public UserRequest(int id, String first_name, String last_name, String email, String birth, String gender, String education, String time_starting_work, String photo_url, String country, String city, String province, int is_first_login) {
         this.id = id;
         this.first_name = first_name;
         this.last_name = last_name;
@@ -28,6 +29,16 @@ public class UserRequest {
         this.country = country;
         this.city = city;
         this.province = province;
+        this.is_first_login = is_first_login;
+    }
+
+
+    public int getIs_first_login() {
+        return is_first_login;
+    }
+
+    public void setIs_first_login(int is_first_login) {
+        this.is_first_login = is_first_login;
     }
 
     public UserRequest() {

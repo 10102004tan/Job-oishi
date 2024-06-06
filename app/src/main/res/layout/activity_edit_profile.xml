@@ -86,7 +86,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="@string/label_input_name" />
+                            android:text="@string/firstname_label" />
 
                         <EditText
                             android:id="@+id/firstname_textview"
@@ -123,7 +123,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="2dp"
-                            android:text="@string/firstname_label" />
+                            android:text="@string/label_input_name" />
 
                         <EditText
                             android:id="@+id/lastname_textview"
