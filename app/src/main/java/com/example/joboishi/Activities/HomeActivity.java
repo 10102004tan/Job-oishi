@@ -40,17 +40,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class HomeActivity extends AppCompatActivity{
-
     private static final int REQ = 111111;
     private int userId;
-
     private HomeLayoutBinding binding;
     private boolean hasPermission = false;
     private UserFcmAPI userFcmAPI;
 
     private HomeViewModel homeViewModel;
     private int totalBookmark = 0;
-
+    private int totalJobApplied = -1;
     private IJobsService iJobsService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +76,6 @@ public class HomeActivity extends AppCompatActivity{
            }
            return true;
         });
-
     }
 
     //onCreateViewed
@@ -170,9 +167,29 @@ public class HomeActivity extends AppCompatActivity{
             }
         });
     }
+    private void getTotalJobApplied(int userId){
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        iJobsService = retrofit.create(IJobsService.class);
+        Call<Integer> call = iJobsService.getTotalJobsApplied(userId);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()){
+                    totalJobApplied = response.body();
+                    homeViewModel.setCurrentTotalApplied(totalJobApplied);
+                }
+            }
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+    }
     @Override
     protected void onResume() {
         super.onResume();
         getTotalBookmark(userId);
+        getTotalJobApplied(userId);
     }
 }

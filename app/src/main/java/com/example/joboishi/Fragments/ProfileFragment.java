@@ -188,6 +188,10 @@ public class ProfileFragment extends Fragment {
         homeViewModel.getCurrentTotalBookmark().observe(getViewLifecycleOwner(), totalBookmark -> {
             binding.totalBookmark.setText(totalBookmark.toString());
         });
+
+        homeViewModel.getCurrentTotalApplied().observe(getViewLifecycleOwner(), totalApplied -> {
+            binding.totalApply.setText(totalApplied.toString());
+        });
     }
 
     @SuppressLint("SetTextI18n")
