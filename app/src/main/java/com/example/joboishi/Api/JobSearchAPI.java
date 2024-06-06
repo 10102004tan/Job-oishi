@@ -25,7 +25,6 @@ public interface JobSearchAPI {
     );
 
     // Lấy sang Chọn ngành nghề
-    @POST("api/jobs")
-    Call<ArrayList<JobSearch>> getListJobs();
-
+    @GET("api/jobs/keyword")
+    Call<ArrayList<String>> getListJobs();
 }

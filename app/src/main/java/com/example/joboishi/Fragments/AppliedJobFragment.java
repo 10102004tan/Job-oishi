@@ -19,7 +19,7 @@ import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
-import com.example.joboishi.abstracts.BaseFragment;
+import com.example.joboishi.Abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentAppliedJobBinding;
 import com.google.gson.Gson;
 

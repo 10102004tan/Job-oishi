@@ -7,22 +7,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.HomeTopDevFragment">
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listJob"
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/idNestedSV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingLeft="15dp"
-            android:paddingEnd="15dp" />
+            android:layout_marginTop="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listJob"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="15dp"
+                    android:paddingEnd="15dp"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/idPBLoading"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/listJob" />
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/imageNoInternet"
             android:layout_width="300dp"
             android:layout_height="300dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/idNestedSV"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -31,5 +62,7 @@
             app:lottie_rawRes="@raw/a404" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
