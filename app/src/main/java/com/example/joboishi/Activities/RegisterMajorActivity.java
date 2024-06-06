@@ -35,6 +35,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterMajorActivity extends AppCompatActivity {
     private final ArrayList<String> majorsChosen = new ArrayList<>();
+
     private RegisterMajorLayoutBinding registerMajorLayoutBinding;
     private ArrayList<Keyword> majors = new ArrayList<>();
     private RegisterMajorAdapter registerMajorAdapter;
