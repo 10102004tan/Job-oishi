@@ -21,11 +21,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HomeViewModel extends ViewModel {
     private MutableLiveData<String> selectedValue = new MutableLiveData<String>("");
     private MutableLiveData<Integer> currentTotalBookmark = new MutableLiveData<>(0);
+    private MutableLiveData<Integer> currentTotalApplied = new MutableLiveData<>(0);
     private MutableLiveData<Integer> currentTabPosition = new MutableLiveData<>(0);
     private MutableLiveData<String> selectedValueTopDev = new MutableLiveData<>("Tất cả");
     private MutableLiveData<String> selectedValueJoboishi = new MutableLiveData<>("Tất cả");
     public MutableLiveData<String> getSelectedValueJoboishi() {
         return selectedValueJoboishi;
+    }
+
+    public MutableLiveData<Integer> getCurrentTotalApplied() {
+        return currentTotalApplied;
+    }
+
+    public void setCurrentTotalApplied(int currentTotalApplied) {
+        this.currentTotalApplied.setValue(currentTotalApplied);
     }
 
     public void setSelectedValueJoboishi(String selectedValueJoboishi) {

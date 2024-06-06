@@ -54,7 +54,6 @@ public class HomeTopDevFragment extends BaseFragment {
     private int statusPreInternet = -1;
     private static int page = 1;
     private int lastPage = 1;
-    private ArrayList<Integer> arrId;
 
     private FragmentHomeTopDevBinding binding;
     private int userId;
@@ -73,12 +72,6 @@ public class HomeTopDevFragment extends BaseFragment {
             getJobs(city);
         });
 
-        homeViewModel.getCurrentTotalBookmark().observe(getViewLifecycleOwner(), total -> {
-            Log.d("bmtest", "total bookmark: "+total);
-            getAllIdBookmark(userId);
-            adapter.setArrId(arrId);
-        });
-
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
                 binding.idNestedSV.smoothScrollTo(0,0);
@@ -95,19 +88,17 @@ public class HomeTopDevFragment extends BaseFragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userId = sharedPreferences.getInt("user_id", 0);
         //get All array id bookmark
-        arrId = new ArrayList<>();
-
 
         //Start init
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
         jobList = new ArrayList<>();
-        getAllIdBookmark(userId);
         //End init@
 
 
         adapter = new JobAdapter(jobList, getContext());
+        adapter.setVisibleBookmark(false);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
         getJobs(null);
@@ -130,31 +121,23 @@ public class HomeTopDevFragment extends BaseFragment {
                 }
                 jobList.clear();
                 page = 1;
-                getAllIdBookmark(userId);
-                adapter.setArrId(arrId);
                 getJobs(city);
             }
         });
+        adapter.setVisibleBookmark(false);
         //processing add bookmark
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
-            public void onClickJob(int id) {
+            public void onClickJob(JobBasic job) {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
-                intent.putExtra("JOB_ID", id);
+                intent.putExtra("JOB_ID", job.getId());
+                intent.putExtra("TYPE",TYPE);
                 startActivity(intent);
-            }
-            @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
-                job.setBookmarked(true);
-                adapter.notifyItemChanged(pos);
-                saveJobToBookmarks(job,userId);
             }
 
             @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
-                job.setBookmarked(false);
-                adapter.notifyItemChanged(pos);
-                removeJobBookmark(userId, job.getId());
+            public void onRemoveBookmark(JobBasic jobBasic, ImageView bookmarkImage, int position) {
+                //khong lam gi
             }
         });
         //processing load more
@@ -195,7 +178,6 @@ public class HomeTopDevFragment extends BaseFragment {
                     lastPage = result.getLastPage();
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.imageNoInternet.setVisibility(View.GONE);
-                    adapter.setArrId(arrId);
                     binding.idPBLoading.setVisibility(View.GONE);
                     adapter.notifyDataSetChanged();
                 }
@@ -250,69 +232,4 @@ public class HomeTopDevFragment extends BaseFragment {
             binding.imageNoInternet.setVisibility(View.GONE);
         }
     }
-    private void saveJobToBookmarks(JobBasic job,int userId) {
-        Call<Void> call = iJobsService.addBookmark(userId, job.getId(), TYPE);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()){
-                    homeViewModel.setCurrentTotalBookmark(homeViewModel.getCurrentTotalBookmark().getValue()+1);
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Đã thêm công việc thành công",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi khi thêm vào bookmark "+ t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-    private void removeJobBookmark(int userId, int jobId) {
-        Call<Void> call = iJobsService.destroyBookmark(userId, jobId, TYPE);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()){
-                    homeViewModel.setCurrentTotalBookmark(homeViewModel.getCurrentTotalBookmark().getValue()-1);
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Đã xóa công việc thành công",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi khi xoa vào bookmark "+ t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d("bmtest",t.getMessage());
-            }
-        });
-    }
-    private void getAllIdBookmark(int userId){
-        arrId.clear();
-        Call<ArrayList<Integer>> call = iJobsService.getIdsJobBookmark(userId);
-        call.enqueue(new Callback<ArrayList<Integer>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Integer>> call, Response<ArrayList<Integer>> response) {
-                if (response.isSuccessful()){
-                    arrId.addAll(response.body());
-                    adapter.setArrId(arrId);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Integer>> call, Throwable t) {
-                Toast.makeText(getContext(), "Lỗi khi lấy danh sách bookmark "+ t.getMessage(), Toast.LENGTH_SHORT).show();
-                Log.d("bmtest",t.getMessage());
-            }
-        });
-    }
-
 }

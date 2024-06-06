@@ -101,21 +101,17 @@ public class SavedJobFragment extends BaseFragment {
         //Add event for adapter
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
-            public void onClickJob(int id) {
+            public void onClickJob(JobBasic job) {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
-                intent.putExtra("JOB_ID",id);
+                intent.putExtra("JOB_ID",job.getId());
+                intent.putExtra("TYPE",job.getType());
                 startActivity(intent);
             }
 
             @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
-                //Khong lam gi
-            }
-
-            @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
-                removeJobBookmark(userId,job.getId());
-                jobs.remove(pos);
+            public void onRemoveBookmark(JobBasic jobBasic, ImageView bookmarkImage, int position) {
+                removeJobBookmark(userId,jobBasic.getId());
+                jobs.remove(position);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -174,7 +170,7 @@ public class SavedJobFragment extends BaseFragment {
             public void onResponse(Call<JobBookmarksResponse> call, Response<JobBookmarksResponse> response) {
                 JobBookmarksResponse jobBookmarksResponse = response.body();
                 for(JobBasic job : jobBookmarksResponse.getData()){
-                    job.setBookmarked(true);
+//                    job.setBookmarked(true);
                     jobs.add(job);
                 }
                 totalPages = jobBookmarksResponse.getTotalPages();
@@ -200,8 +196,6 @@ public class SavedJobFragment extends BaseFragment {
     }
     @Override
     protected void handleNoInternet() {
-        //When no internet, disable bookmark
-        adapter.setEnableBookmark(false);
         statusPreInternet = STATUS_NO_INTERNET;
         if (isFirst) {
             binding.image.setVisibility(View.VISIBLE);
@@ -231,8 +225,6 @@ public class SavedJobFragment extends BaseFragment {
     }
     @Override
     protected void handleGoodInternet() {
-        //When internet is good, enable bookmark
-        adapter.setEnableBookmark(true);
         statusPreInternet = STATUS_GOOD_INTERNET;
         if (isFirst) {
             statusInternet = STATUS_GOOD_INTERNET;

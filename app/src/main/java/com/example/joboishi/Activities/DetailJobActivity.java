@@ -67,6 +67,7 @@ public class DetailJobActivity extends BaseActivity {
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
+    private int type = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +95,14 @@ public class DetailJobActivity extends BaseActivity {
         TextView textTitle = findViewById(R.id.toolbar_text_title);
         textTitle.setText("");
 
+        //processing bookmark
+        binding.btnBookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DetailJobActivity.this, "Hello world", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // Button back in toolbar
         ImageButton btnBack = findViewById(R.id.btn_toolbar_back);
         btnBack.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +120,7 @@ public class DetailJobActivity extends BaseActivity {
         //Lay du lieu tu job api
         //jobId = "2032881";
         jobId = getIntent().getIntExtra("JOB_ID", -1) + "";
+        type = getIntent().getIntExtra("TYPE", 0);
         if (jobId.equals("-1")) {
             // Không tìm thấy JOB_ID, xử lý lỗi
             Toast.makeText(this, "Job ID not found!", Toast.LENGTH_SHORT).show();
