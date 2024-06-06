@@ -230,7 +230,10 @@ public class HomeActivity extends AppCompatActivity{
                 if (response.isSuccessful()) {
                     notificationResponse = response.body();
                     homeViewModel.setNotificationResponse(notificationResponse);
-                    int countNotRead = notificationResponse.getTotalNotRead();
+                    String countNotRead = (notificationResponse.getTotalNotRead() > 9 ? "9+" : notificationResponse.getTotalNotRead() + "");
+                    Menu menu = binding.bottomNavigationView.getMenu();
+                    MenuItem menuItem = menu.findItem(R.id.nav_noti);
+                    menuItem.setTitle("Thông báo (" + countNotRead + ")");
                 }
             }
             @Override
@@ -249,11 +252,6 @@ public class HomeActivity extends AppCompatActivity{
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == RESULT_OK){
-
-
-        }
-
         if (requestCode == 11111 && resultCode == RESULT_OK){
             getNotifications(userId);
             Log.d("HomeActivity", "onActivityResult: ");
