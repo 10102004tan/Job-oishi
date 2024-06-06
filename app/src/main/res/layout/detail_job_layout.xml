@@ -685,13 +685,22 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_applied"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="20dp"
                         android:background="@drawable/btn_applied_job"
                         android:enabled="true"
                         android:text="Ứng tuyển ngay"
                         android:textColor="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/btnBookmark"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="15dp"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/bookmark_ic"/>
                 </LinearLayout>
             </androidx.appcompat.widget.Toolbar>
 

@@ -38,19 +38,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 public class HomeActivity extends AppCompatActivity{
-
     private static final int REQ = 111111;
     private int userId;
-
     private HomeLayoutBinding binding;
     private boolean hasPermission = false;
     private UserFcmAPI userFcmAPI;
 
     private HomeViewModel homeViewModel;
     private int totalBookmark = 0;
-
+    private int totalJobApplied = -1;
     private IJobsService iJobsService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +58,8 @@ public class HomeActivity extends AppCompatActivity{
         SharedPreferences sharedPref = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
         userId = sharedPref.getInt("user_id", 0);
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        getTotalBookmark(userId);
+        getTotalJobApplied(userId);
         //viewpager2
         ViewPagerHomeAdapter viewPagerHomeAdapter = new ViewPagerHomeAdapter(this);
         binding.viewPager.setUserInputEnabled(false);
@@ -78,7 +77,6 @@ public class HomeActivity extends AppCompatActivity{
            }
            return true;
         });
-
     }
 
     //onCreateViewed
@@ -152,6 +150,7 @@ public class HomeActivity extends AppCompatActivity{
         }
     }
     private void getTotalBookmark(int userId){
+        Log.d("test111", "getTotalBookmark: ");
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create()).build();
         iJobsService = retrofit.create(IJobsService.class);
@@ -170,9 +169,32 @@ public class HomeActivity extends AppCompatActivity{
             }
         });
     }
+    private void getTotalJobApplied(int userId){
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create()).build();
+        iJobsService = retrofit.create(IJobsService.class);
+        Call<Integer> call = iJobsService.getTotalJobsApplied(userId);
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()){
+                    totalJobApplied = response.body();
+                    homeViewModel.setCurrentTotalApplied(totalJobApplied);
+                }
+            }
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+
+            }
+        });
+    }
+
     @Override
-    protected void onResume() {
-        super.onResume();
-        getTotalBookmark(userId);
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK){
+            getTotalBookmark(userId);
+            getTotalJobApplied(userId);
+        }
     }
 }
