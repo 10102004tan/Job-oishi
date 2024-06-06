@@ -58,6 +58,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         // Tạo notification manager và hiển thị notification
         NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        // chi xu y voi api > 28
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "My Channel", NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(channel);

@@ -39,6 +39,7 @@ public class ReadNotificationActivity extends AppCompatActivity {
         if (notification != null) {
             binding.txtTitle.setText(notification.getTitle());
             binding.txtContent.setText(notification.getMessage());
+            binding.txtDate.setText(notification.getCreatedAt());
             readed(notification.getId(),userId);
         }
     }
