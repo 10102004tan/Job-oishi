@@ -284,6 +284,9 @@ public class DetailJobActivity extends BaseActivity {
                             saveJobToBookmarks(userId, Integer.parseInt(job.getId()));
                             binding.btnBookmark.setSelected(true);
                         }
+
+                        Intent result = new Intent();
+                        setResult(RESULT_OK, result);
                     }
                 });
 

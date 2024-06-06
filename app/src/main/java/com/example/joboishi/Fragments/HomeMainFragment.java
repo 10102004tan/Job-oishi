@@ -51,6 +51,7 @@ public class HomeMainFragment extends BaseFragment {
     private JobAdapter adapter;
     private ArrayList<JobBasic> jobList;
     private boolean isFirst = true;
+    static final int REQUEST_CODE = 1;
     private final  int STATUS_NO_INTERNET = 0;
     private final  int STATUS_LOW_INTERNET = 1;
     private final  int STATUS_GOOD_INTERNET = 2;
@@ -138,7 +139,8 @@ public class HomeMainFragment extends BaseFragment {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
                 intent.putExtra("JOB_ID", job.getId());
                 intent.putExtra("TYPE",TYPE);
-                startActivity(intent);
+//                startActivity(intent);
+                getActivity().startActivityForResult(intent, REQUEST_CODE);
             }
 
             @Override
