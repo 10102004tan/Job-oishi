@@ -47,6 +47,7 @@ public class NotificationFragment extends Fragment {
         HomeViewModel homeViewModel  = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         homeViewModel.getNotificationResponse().observe(getViewLifecycleOwner(), notificationResponse -> {
             notificationList = notificationResponse.getNotifications();
+            binding.toolbar.setTitle("Thông báo (Chưa đọc " + notificationResponse.getTotalNotRead() + " )");
             adapter = new NotificationAdapter(notificationList);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             binding.recyclerView.setAdapter(adapter);
