@@ -208,7 +208,7 @@ public class RegisterMajorActivity extends AppCompatActivity {
             Keyword clickedMajor = majors.get(position);
             if (!clickedMajor.getChecked()) {
                 if (majorsChosen.size() < 5) {
-                    majorsChosen.add(clickedMajor.getName());
+                    majorsChosen.add(clickedMajor.getKeyword());
                     updateChosenCountTextView();
                 } else {
                     Toast.makeText(RegisterMajorActivity.this, "Bạn đã chọn tối đa 5 vị trí.", Toast.LENGTH_SHORT).show();
