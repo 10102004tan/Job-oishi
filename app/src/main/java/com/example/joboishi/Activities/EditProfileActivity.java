@@ -528,7 +528,6 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void registerInternetBroadcastReceiver() {
         InternetBroadcastReceiver internetBroadcastReceiver = new InternetBroadcastReceiver();
         internetBroadcastReceiver.listener = new InternetBroadcastReceiver.IInternetBroadcastReceiverListener() {

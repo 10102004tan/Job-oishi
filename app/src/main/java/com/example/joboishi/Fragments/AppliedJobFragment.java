@@ -19,7 +19,7 @@ import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
-import com.example.joboishi.abstracts.BaseFragment;
+import com.example.joboishi.Abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentAppliedJobBinding;
 import com.google.gson.Gson;
 
@@ -47,6 +47,7 @@ public class AppliedJobFragment extends BaseFragment {
     private int statusPreInternet = -1;
     private boolean isFirstLoading = true;
     private int userId;
+    private static final int TYPE = 1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -63,16 +64,11 @@ public class AppliedJobFragment extends BaseFragment {
 
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
-            public void onClickJob(int id) {
+            public void onClickJob(JobBasic job) {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
-                intent.putExtra("JOB_ID",id);
-                Log.d("JOB_ID", String.valueOf(id));
+                intent.putExtra("JOB_ID",job.getId());
+                intent.putExtra("TYPE",TYPE);
                 startActivity(intent);
-            }
-
-            @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage, int position) {
-
             }
 
             @Override
@@ -103,8 +99,6 @@ public class AppliedJobFragment extends BaseFragment {
 
         return binding.getRoot();
     }
-
-
     /*
     CREATE METHODS FOR INTERNET BROADCAST RECEIVER
     */

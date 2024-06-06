@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -22,12 +23,12 @@ import android.widget.Toast;
 import com.example.joboishi.Activities.DetailJobActivity;
 import com.example.joboishi.Adapters.JobAdapter;
 import com.example.joboishi.Api.IJobsService;
+import com.example.joboishi.Api.JobsResponse;
 import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.HomeViewModel;
-import com.example.joboishi.abstracts.BaseFragment;
+import com.example.joboishi.Abstracts.BaseFragment;
 import com.example.joboishi.databinding.FragmentHomeMainBinding;
-import com.example.joboishi.databinding.FragmentHomeTopDevBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -35,7 +36,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,32 +51,36 @@ public class HomeMainFragment extends BaseFragment {
     private JobAdapter adapter;
     private ArrayList<JobBasic> jobList;
     private boolean isFirst = true;
+    static final int REQUEST_CODE = 1;
     private final  int STATUS_NO_INTERNET = 0;
     private final  int STATUS_LOW_INTERNET = 1;
     private final  int STATUS_GOOD_INTERNET = 2;
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private static int page = 1;
-    private ArrayList<Integer> arrId;
+    private static final int TYPE = 1;
+    private int lastPage = 1;
 
     private FragmentHomeMainBinding binding;
     private int userId;
     private String city;
+    private HomeViewModel homeViewModel;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        HomeViewModel homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        homeViewModel.getSelectedValue().observe(getViewLifecycleOwner(), str -> {
+        homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
+        homeViewModel.getSelectedValueJoboishi().observe(getViewLifecycleOwner(), str -> {
+            jobList.clear();
             city = (str == null || str == "Tất cả") ? "" : str.toLowerCase().trim();
-            Log.d("testt", "Joboishi: " + city.toLowerCase());
             page = 1;
+            binding.idNestedSV.smoothScrollTo(0,0);
             getJobs(city);
         });
 
         homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), position -> {
             if (position != null && position == -1) {
-                scrollToTopOfRecyclerView();
+                binding.idNestedSV.smoothScrollTo(0,0);
             }
         });
     }
@@ -92,8 +96,7 @@ public class HomeMainFragment extends BaseFragment {
         userId = sharedPreferences.getInt("user_id", userId);
 
         //get All array id bookmark
-        arrId = new ArrayList<>();
-        getAllIdBookmark(userId);
+
 
         //Start init
         Retrofit retrofit = new Retrofit.Builder().baseUrl(iJobsService.BASE_URL)
@@ -101,10 +104,8 @@ public class HomeMainFragment extends BaseFragment {
         iJobsService = retrofit.create(IJobsService.class);
         jobList = new ArrayList<>();
         //End init
-
-
         adapter = new JobAdapter(jobList, getContext());
-        adapter.setArrId(arrId);
+        adapter.setVisibleBookmark(false);
         binding.listJob.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.listJob.setAdapter(adapter);
         getJobs(null);
@@ -123,91 +124,76 @@ public class HomeMainFragment extends BaseFragment {
                     binding.imageNotInternet.setVisibility(View.VISIBLE);
                 }
                 else{
-                    page = 1;
-                    getJobs("");
-                    getAllIdBookmark(userId);
                     binding.listJob.setVisibility(View.VISIBLE);
                 }
+                page = 1;
+                jobList.clear();
+                getJobs(city);
             }
         });
 
         //processing add bookmark
         adapter.setiClickJob(new JobAdapter.IClickJob() {
             @Override
-            public void onClickJob(int id) {
+            public void onClickJob(JobBasic job) {
                 Intent intent = new Intent(getActivity(), DetailJobActivity.class);
-                intent.putExtra("JOB_ID", id);
-                startActivity(intent);
-            }
-            @Override
-            public void onAddJobBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
-                job.setBookmarked(true);
-                adapter.notifyItemChanged(pos);
-                saveJobToBookmarks(job,userId);
+                intent.putExtra("JOB_ID", job.getId());
+                intent.putExtra("TYPE",TYPE);
+//                startActivity(intent);
+                getActivity().startActivityForResult(intent, REQUEST_CODE);
             }
 
             @Override
-            public void onRemoveBookmark(JobBasic job, ImageView bookmarkImage,int pos) {
-                job.setBookmarked(false);
-                adapter.notifyItemChanged(pos);
-                Log.d("test", "onRemoveBookmark: " + pos);
-                removeJobBookmark(userId, job.getId());
+            public void onRemoveBookmark(JobBasic jobBasic, ImageView bookmarkImage, int position) {
+                //khong lam gi ca
             }
         });
         //processing load more
-        adapter.setOnLoadMoreListener(new JobAdapter.OnLoadMoreListener() {
+        binding.idNestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
-            public void onLoadMore() {
-                page+=1;
-                if (jobList.size() > 10) {
-                    Toast.makeText(getContext(), "Dang tai ...", Toast.LENGTH_SHORT).show();
+            public void onScrollChange(@NonNull NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                    page++;
+                    binding.idPBLoading.setVisibility(View.VISIBLE);
+                    if (page <= lastPage) {
+                        getJobs(city);
+                    }
                 }
-                Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(city, page, userId);
-                call.enqueue(new Callback<ArrayList<JobBasic>>() {
-                    @Override
-                    public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
-                        if (response.isSuccessful()) {
-                            jobList.addAll(response.body());
-                            binding.imageNotInternet.setVisibility(View.GONE);
-                            adapter.updateData(jobList);
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
-                        binding.swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
-                adapter.setLoading(false);
             }
         });
         return binding.getRoot();
     }
 
     private void getJobs(String city) {
-        binding.imageNotInternet.setAnimation(R.raw.fetch_api_loading);
-        binding.imageNotInternet.playAnimation();
-        binding.imageNotInternet.setVisibility(View.VISIBLE);
-        Log.d("testt", "getJobs: key gửi API " + city);
-        Call<ArrayList<JobBasic>> call = iJobsService.getListJobsDB(city, page, userId);
-        call.enqueue(new Callback<ArrayList<JobBasic>>() {
+        city = (city == null) ? "" : city;
+        Log.d("city",city);
+        if (page == 1){
+            binding.imageNotInternet.setAnimation(R.raw.fetch_api_loading);
+            binding.imageNotInternet.playAnimation();
+            binding.imageNotInternet.setVisibility(View.VISIBLE);
+            binding.idPBLoading.setVisibility(View.GONE);
+        }
+        Call<JobsResponse> call = iJobsService.getListJobs(city, page, userId,TYPE);
+        call.enqueue(new Callback<JobsResponse>() {
             @Override
-            public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
+            public void onResponse(Call<JobsResponse> call, Response<JobsResponse> response) {
                 if (response.isSuccessful()) {
-                    jobList = response.body();
-                    Log.d("testt", "Jobs received: " + jobList.size());
+                    JobsResponse result = response.body();
+                    assert result != null;
+                    jobList.addAll((ArrayList<JobBasic>)result.getListJobs());
+                    lastPage = result.getLastPage();
                     binding.swipeRefreshLayout.setRefreshing(false);
                     binding.imageNotInternet.setVisibility(View.GONE);
-                    adapter.updateData(jobList);
-                } else {
-                    Log.d("testt", "Response was not successful");
+                    binding.idPBLoading.setVisibility(View.GONE);
+                    adapter.notifyDataSetChanged();
                 }
             }
             @Override
-            public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
+            public void onFailure(Call<JobsResponse> call, Throwable t) {
                 binding.swipeRefreshLayout.setRefreshing(false);
-                Log.d("testt", "Lỗi tại đây " + t.getMessage());
             }
         });
+
     }
 
     @Override
@@ -251,64 +237,6 @@ public class HomeMainFragment extends BaseFragment {
             page = 1;
             getJobs(null);
             binding.imageNotInternet.setVisibility(View.GONE);
-        }
-    }
-
-    private void saveJobToBookmarks(JobBasic job,int userId) {
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-        bookmarksRef.child("userId"+userId).child("job"+job.getId()).setValue(job)
-                .addOnSuccessListener(aVoid -> {
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Đã thêm công việc thành công",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                })
-                .addOnFailureListener(e -> {
-                    // Xử lý lỗi
-                    Log.d("test11",e.getMessage());
-                    Toast.makeText(getContext(), "Lỗi khi thêm vào bookmark "+ e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
-
-    private void removeJobBookmark(int userId, int jobId) {
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks");
-        bookmarksRef.child("userId"+userId).child("job"+jobId).removeValue()
-                .addOnSuccessListener(aVoid -> {
-                    MotionToast.Companion.createToast(getActivity(), "😍",
-                            "Đã xoa công việc thành công",
-                            MotionToastStyle.SUCCESS,
-                            MotionToast.GRAVITY_BOTTOM,
-                            MotionToast.LONG_DURATION,
-                            ResourcesCompat.getFont(getContext(), R.font.helvetica_regular));
-                })
-                .addOnFailureListener(e -> {
-                    // Xử lý lỗi
-                    Log.d("test11",e.getMessage());
-                    Toast.makeText(getContext(), "Lỗi khi xóa khỏi bookmark "+ e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
-    private void getAllIdBookmark(int userId){
-        arrId.clear();
-        DatabaseReference bookmarksRef = FirebaseDatabase.getInstance().getReference("bookmarks").child("userId" + userId);
-        bookmarksRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DataSnapshot dataSnapshot = task.getResult();
-                    for (DataSnapshot data : dataSnapshot.getChildren()) {
-                        JobBasic job = data.getValue(JobBasic.class);
-                        arrId.add(job.getId());
-                    }
-                }
-            }
-        });
-    }
-    private void scrollToTopOfRecyclerView() {
-        LinearLayoutManager layoutManager = (LinearLayoutManager) binding.listJob.getLayoutManager();
-        if (layoutManager != null) {
-            layoutManager.smoothScrollToPosition(binding.listJob, null, 0);
         }
     }
 }

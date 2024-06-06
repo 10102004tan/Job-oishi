@@ -10,11 +10,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.databinding.ListCityRycBinding;
 
 import java.util.ArrayList;
@@ -24,16 +26,15 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
 
     private final Activity context;
     private final ArrayList<String> data;
-    private final RecyclerView recyclerView;
     private String selectedValue;
     private ItemClickListener itemClickListener;
 
     public SimpleStringRecyclerViewAdapter(Activity context, ArrayList<String> data, RecyclerView recyclerView, String selectedValue) {
         this.context = context;
         this.data = data;
-        this.recyclerView = recyclerView;
         this.selectedValue = selectedValue;
     }
+
 
     public ItemClickListener getItemClickListener() {
         return itemClickListener;
@@ -51,7 +52,6 @@ public class SimpleStringRecyclerViewAdapter extends RecyclerView.Adapter<Simple
 
     @SuppressLint("ResourceAsColor")
     public void onBindViewHolder(@NonNull MyHolder holder, @SuppressLint("RecyclerView") int position) {
-
 
         holder.setPos(position);
         holder.title.setText(data.get(position));

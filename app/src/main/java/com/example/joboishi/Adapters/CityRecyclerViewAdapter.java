@@ -10,12 +10,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 
 
 import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.example.joboishi.databinding.ListCityRycBinding;
 
 import java.util.ArrayList;
@@ -56,9 +59,7 @@ public class CityRecyclerViewAdapter extends RecyclerView.Adapter<CityRecyclerVi
 
         TextView title = holder.getBinding().getRoot().findViewById(com.example.joboishi.R.id.city_name);
         ImageView image = holder.getBinding().getRoot().findViewById(R.id.btn_check);
-
         title.setText(data.get(position).getProvinceName());
-
         // Display check icon when user choose a country
         if (selectedCity.equals(data.get(position).getProvinceName())) {
             image.setImageResource(R.drawable.check_svgrepo_com);
@@ -86,11 +87,9 @@ public class CityRecyclerViewAdapter extends RecyclerView.Adapter<CityRecyclerVi
     public class MyHolder extends RecyclerView.ViewHolder {
         private final ViewBinding binding;
         private int pos;
-
         public MyHolder(@NonNull ViewBinding view) {
             super(view.getRoot());
             binding = view;
-
             view.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

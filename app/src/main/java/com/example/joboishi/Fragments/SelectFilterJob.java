@@ -2,6 +2,7 @@ package com.example.joboishi.Fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter;
+import com.example.joboishi.Adapters.SimpleStringRecyclerViewAdapter2;
 import com.example.joboishi.R;
 import com.example.joboishi.ViewModels.HomeViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -86,7 +88,7 @@ public class SelectFilterJob extends BottomSheetDialogFragment {
         lblTitleFilter.setText(titleFilter);
 
         RecyclerView listType = view.findViewById(R.id.list_type);
-        SimpleStringRecyclerViewAdapter  recyclerViewAdapter = new SimpleStringRecyclerViewAdapter((Activity) getContext(),list, listType, selectedValue );
+        SimpleStringRecyclerViewAdapter2  recyclerViewAdapter = new SimpleStringRecyclerViewAdapter2((Activity) getContext(),list, homeViewModel,getViewLifecycleOwner());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -94,12 +96,17 @@ public class SelectFilterJob extends BottomSheetDialogFragment {
         listType.setAdapter(recyclerViewAdapter);
         recyclerViewAdapter.notifyDataSetChanged();
 
-        recyclerViewAdapter.setItemClickListener(new SimpleStringRecyclerViewAdapter.ItemClickListener() {
+        recyclerViewAdapter.setItemClickListener(new SimpleStringRecyclerViewAdapter2.ItemClickListener() {
             @Override
-            public void onItemClick(SimpleStringRecyclerViewAdapter.MyHolder holder) {
-
+            public void onItemClick(SimpleStringRecyclerViewAdapter2.MyHolder holder) {
                 selectedValue = list.get(holder.getPos());
-                homeViewModel.setSelectedValue(selectedValue);
+                homeViewModel.getCurrentTabPosition().observe(getViewLifecycleOwner(), integer -> {
+                   if (integer == 0) {
+                       homeViewModel.setSelectedValueJoboishi(selectedValue);
+                   } else {
+                       homeViewModel.setSelectedValueTopDev(selectedValue);
+                   }
+               });
                 onCloseDialog();
             }
         });

@@ -4,30 +4,16 @@ import android.animation.Animator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.joboishi.Api.UserFcmAPI;
-import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
 import com.example.joboishi.R;
-import com.example.joboishi.abstracts.BaseActivity;
+import com.example.joboishi.Abstracts.BaseActivity;
 import com.example.joboishi.databinding.SplashLayoutBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import io.github.cutelibs.cutedialog.CuteDialog;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressLint("CustomSplashScreen")
 public class SplashActivity extends BaseActivity {
@@ -96,10 +82,7 @@ public class SplashActivity extends BaseActivity {
 
             }
         });
-
         binding.lottieAnimationView.playAnimation();
-
-
     }
 
     @Override
@@ -111,6 +94,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void handleLowInternet() {
+        statusInternet = 1;
     }
 
     @Override
