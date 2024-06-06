@@ -23,30 +23,11 @@ public class JobBasic implements Serializable {
 
     @SerializedName("is_salary_visible")
     private boolean is_salary_visible = false;
-
     @SerializedName("published")
     private  String published;
-    private boolean isBookmarked;
 
-    public boolean isBookmarked() {
-        return isBookmarked;
-    }
-
-    public void setBookmarked(boolean bookmarked) {
-        isBookmarked = bookmarked;
-    }
-
-    public JobBasic(int id, String title, String company_id, String company_name, String company_logo, String sort_addresses, boolean is_salary_visible, String published, boolean isBookmarked) {
-        this.id = id;
-        this.title = title;
-        this.company_id = company_id;
-        this.company_name = company_name;
-        this.company_logo = company_logo;
-        this.sort_addresses = sort_addresses;
-        this.is_salary_visible = is_salary_visible;
-        this.published = published;
-        this.isBookmarked = isBookmarked;
-    }
+    @SerializedName("type")
+    private int type = 0;
 
     public JobBasic(int id, String title, String company_id, String company_name, String company_logo, String sort_addresses, boolean is_salary_visible, String published) {
         this.id = id;
@@ -57,6 +38,26 @@ public class JobBasic implements Serializable {
         this.sort_addresses = sort_addresses;
         this.is_salary_visible = is_salary_visible;
         this.published = published;
+    }
+
+    public JobBasic(int id, String title, String company_id, String company_name, String company_logo, String sort_addresses, boolean is_salary_visible, String published, int type) {
+        this.id = id;
+        this.title = title;
+        this.company_id = company_id;
+        this.company_name = company_name;
+        this.company_logo = company_logo;
+        this.sort_addresses = sort_addresses;
+        this.is_salary_visible = is_salary_visible;
+        this.published = published;
+        this.type = type;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public int getId() {

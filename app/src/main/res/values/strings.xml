@@ -193,7 +193,7 @@
     <string name="xem_t_t_c">Xem tất cả</string>
     <string name="ph_c_l_i_c_ng_vi_c">Phúc lợi công việc</string>
     <string name="requirements">Requirements</string>
-    <string name="develop_code_test_and_deploy_new_features_with_a_primary_focus_on_golang_80_and_python_20_ensuring_adherence_to_api_standards_extensibility_robustness_and_optimal_performance">Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance.</string>
+    <string name="develop_code_test_and_deploy_new_features_with_a_primary_focus_on_golang_80_and_python_20_ensuring_adherence_to_api_standards_extensibility_robustness_and_optimal_performance" formatted="false">Develop, code, test, and deploy new features with a primary focus on Golang (80%) and Python (20%), ensuring adherence to API standards, extensibility, robustness, and optimal performance.</string>
     <string name="resiponsiblilities">Resiponsiblilities</string>
     <string name="m_t_c_ng_vi_c">Mô tả công việc</string>
     <string name="l_p_tr_nh_back_end_web">Lập trình Back-End Web</string>
@@ -263,4 +263,6 @@
     <string name="top_dev">Top dev</string>
     <string name="kh_ng_c_k_t_n_i_m_ng">Không có kết nối mạng</string>
     <string name="ang_k_t_n_i">Đang kết nối ...</string>
+    <string name="request_verification_code">Yêu cầu mã xác minh</string>
+    <string name="verification_code">Mã xác nhận</string>
 </resources>

@@ -21,7 +21,6 @@ import com.example.joboishi.R;
 import java.util.Objects;
 
 public class LoadingDialog extends Dialog {
-
     public LoadingDialog(@NonNull Context context) {
         super(context);
 

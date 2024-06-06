@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +26,7 @@ import com.example.joboishi.Adapters.CountryRecyclerViewAdapter;
 import com.example.joboishi.Api.CountryApiResponse;
 import com.example.joboishi.Api.ProvinceApiResponse;
 import com.example.joboishi.R;
+import com.example.joboishi.ViewModels.HomeViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -84,6 +87,7 @@ public class SelectCityFragment extends BottomSheetDialogFragment {
     public static MyBottomSheetDialogFragment newInstance() {
         return new MyBottomSheetDialogFragment();
     }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -97,7 +101,6 @@ public class SelectCityFragment extends BottomSheetDialogFragment {
             FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.fragment,fragment).commit();
         }
-
         RecyclerView listCityRyc = view.findViewById(R.id.list_city_ryc);
         CityRecyclerViewAdapter recyclerViewAdapter = new CityRecyclerViewAdapter((Activity) getContext(), cityData, listCityRyc, citySelectedValue);
         // Management layout of recycler view

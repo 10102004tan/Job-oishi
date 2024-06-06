@@ -3,7 +3,6 @@ package com.example.joboishi.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -14,14 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.joboishi.Adapters.JobSearchAdapter;
+import com.example.joboishi.Adapters.OptionExperienceAdapter;
+import com.example.joboishi.Adapters.OptionJobTypeAdapter;
 import com.example.joboishi.Adapters.SearchOptionAdapter;
 import com.example.joboishi.Api.JobSearchAPI;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionExperienceFragment;
 import com.example.joboishi.Fragments.BottomSheetDialog.OptionTypeJobFragment;
 import com.example.joboishi.Fragments.MyBottomSheetDialogFragment;
 import com.example.joboishi.Models.JobBasic;
-import com.example.joboishi.R;
-import com.example.joboishi.abstracts.PaginationScrollListener;
+import com.example.joboishi.Abstracts.PaginationScrollListener;
 import com.example.joboishi.databinding.SearchResultLayoutBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -56,6 +56,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     private Boolean isRemote = false;
     private static String jobType;
     private static String experience;
+    private OptionExperienceAdapter optionExperienceAdapter;
+    private OptionJobTypeAdapter optionJobTypeAdapter;
 
     MyBottomSheetDialogFragment dialogFragment = MyBottomSheetDialogFragment.newInstance();
 
@@ -79,7 +81,8 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
         progressBar = binding.progressBar;
         animateNoData = binding.animateNoData;
         input = binding.inputMajor;
-
+        optionExperienceAdapter = new OptionExperienceAdapter(this, null);
+        optionJobTypeAdapter = new OptionJobTypeAdapter(this, null);
         Intent intent = getIntent();
         input.setText(intent.getStringExtra("key"));
         String kword = "";
@@ -278,10 +281,11 @@ public class SearchResultActivity extends AppCompatActivity implements OptionTyp
     @Override
     protected void onStop() {
         super.onStop();
+        jobType = "";
+        experience = "";
+        optionJobTypeAdapter.clearSavedSelectedPosition(this);
+        optionExperienceAdapter.clearSavedSelectedPosition(this);
+
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }

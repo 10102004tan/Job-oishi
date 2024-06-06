@@ -23,4 +23,6 @@
     <color name="selected_color">#1d7ca3</color>
     <color name="dddddd">#DDDDDD</color>
     <color name="tab_color">#0abde3</color>
+    <color name="applied_disable">#0abde3</color>
+    <color name="applied_enable">#1d7ca3</color>
 </resources>

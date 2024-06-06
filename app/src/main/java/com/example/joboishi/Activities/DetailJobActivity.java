@@ -1,6 +1,5 @@
 package com.example.joboishi.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -10,6 +9,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -29,20 +29,17 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.joboishi.Adapters.BenefitAdapter;
 import com.example.joboishi.Api.DetailJobAPI;
+import com.example.joboishi.Api.IJobsService;
 import com.example.joboishi.Api.JobAppliedAPI;
-import com.example.joboishi.BroadcastReceiver.InternetBroadcastReceiver;
+import com.example.joboishi.Models.JobBasic;
 import com.example.joboishi.Models.data.Job;
-import com.example.joboishi.Models.Jobs;
 import com.example.joboishi.R;
-import com.example.joboishi.abstracts.BaseActivity;
+import com.example.joboishi.Abstracts.BaseActivity;
 import com.example.joboishi.databinding.DetailJobLayoutBinding;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.thecode.aestheticdialogs.AestheticDialog;
 import com.thecode.aestheticdialogs.DialogStyle;
 import com.thecode.aestheticdialogs.DialogType;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -62,8 +59,10 @@ public class DetailJobActivity extends BaseActivity {
     private ArrayList<Job> jobs;
     private Job jobDetail;
     private Intent intent;
-    private String jobId;
-    private DetailJobAPI detailJobAPI;
+    private ArrayList<JobBasic> appliedJobs = new ArrayList<JobBasic>();
+    private IJobsService iJobsService;
+
+    private IJobsService detailJobAPI;
     private ProgressDialog progressDialog;
     private final  int STATUS_NO_INTERNET = 0;
     private final  int STATUS_LOW_INTERNET = 1;
@@ -71,6 +70,9 @@ public class DetailJobActivity extends BaseActivity {
     private int statusInternet = -1;
     private int statusPreInternet = -1;
     private boolean isFirst = true;
+    private int userId;
+    private int type = 0;
+    private String jobId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +82,9 @@ public class DetailJobActivity extends BaseActivity {
 
         //Dang ki receiver
         registerInternetBroadcastReceiver();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+        userId = sharedPreferences.getInt("user_id", -1);
 
         //Init progress dialog
         progressDialog = new ProgressDialog(DetailJobActivity.this);
@@ -94,6 +99,14 @@ public class DetailJobActivity extends BaseActivity {
         // Change toolbar title
         TextView textTitle = findViewById(R.id.toolbar_text_title);
         textTitle.setText("");
+
+        //processing bookmark
+        binding.btnBookmark.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         // Button back in toolbar
         ImageButton btnBack = findViewById(R.id.btn_toolbar_back);
@@ -112,13 +125,14 @@ public class DetailJobActivity extends BaseActivity {
         //Lay du lieu tu job api
         //jobId = "2032881";
         jobId = getIntent().getIntExtra("JOB_ID", -1) + "";
+        type = getIntent().getIntExtra("TYPE", 0);
         if (jobId.equals("-1")) {
             // Không tìm thấy JOB_ID, xử lý lỗi
             Toast.makeText(this, "Job ID not found!", Toast.LENGTH_SHORT).show();
-            finish(); // Kết thúc Activity nếu không có ID hợp lệ
+            finish();
             return;
         }
-        getDetailJob(jobId, new DetailJobCallback() {
+        getDetailJob(jobId, type, userId, new DetailJobCallback() {
             @Override
             public void onDetailJobLoaded(Job job) {
                 // Hide loading indicator
@@ -126,7 +140,8 @@ public class DetailJobActivity extends BaseActivity {
                 binding.shimmer.setVisibility(View.GONE);
                 binding.detailLayout.setVisibility(View.VISIBLE);
 
-//                Log.d("test", job.getContent());
+                Log.d("test", job.getTitle());
+                Log.d("bookmark",job.getBookmark()+"");
 
                 // Responsibilities
                 if (job.getResponsibilities() != null) {
@@ -176,7 +191,8 @@ public class DetailJobActivity extends BaseActivity {
 
                 // Job Content
                 if (job.getContent() != null) {
-                    binding.txtJobContent.setText(job.getContent().trim());
+                    SpannableStringBuilder content = processStringWithBullet(job.getContent().trim());
+                    binding.txtJobContent.setText(content);
                 }
 
                 // Skills
@@ -244,7 +260,6 @@ public class DetailJobActivity extends BaseActivity {
                 binding.txtCompanyName.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         startActivity(intent);
                     }
                 });
@@ -256,7 +271,42 @@ public class DetailJobActivity extends BaseActivity {
                     }
                 });
 
+                //bookmark xử lý
+                binding.btnBookmark.setSelected(job.getBookmark());
+                binding.btnBookmark.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (job.getBookmark()){
+                            //remove bookmark
+                            removeJobBookmark(userId, Integer.parseInt(job.getId()));
+                            binding.btnBookmark.setSelected(false);
+                        }
+                        else{
+                            //add bookmark
+                            saveJobToBookmarks(userId, Integer.parseInt(job.getId()));
+                            binding.btnBookmark.setSelected(true);
+                        }
+
+                        Intent result = new Intent();
+                        setResult(RESULT_OK, result);
+                    }
+                });
+
                 //Applied Job Event From Serve
+                //Get job applied
+                getJobsApplied(new AppliedJobCallback() {
+                    @Override
+                    public void onDetailJobLoaded(ArrayList<JobBasic> appliedJobs) {
+                        for (JobBasic applied: appliedJobs) {
+                            String appliedIDStr  = String.valueOf(applied.getId());
+                            Log.d("applied",appliedIDStr.equals(jobId) + "");
+                            if(appliedIDStr.equals(jobId)){
+                                binding.btnApplied.setEnabled(false);
+                                return;
+                            }
+                        }
+                    }
+                });
 
                 if (job.isIs_edit()) {
                     binding.btnApplied.setEnabled(true);
@@ -264,13 +314,23 @@ public class DetailJobActivity extends BaseActivity {
                 else {
                     binding.btnApplied.setEnabled(false);
                 }
+
+                Log.d("test", "User id in detail job: " + userId);
                 binding.btnApplied.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AppliedJob(
-                                job.getId() + "",
-                                "7"
-                        );
+                        if (userId != -1) {
+                            // Chuyen userID thanh chuoi
+                            String userIdStr = String.valueOf(userId);
+
+                            // Goi api applied job
+                            appliedJob(
+                                    job.getId() + "",
+                                    userIdStr
+                            );
+                        } else {
+                            Log.d("test", "User ID not found in SharedPreferences");
+                        }
                     }
                 });
 
@@ -288,7 +348,7 @@ public class DetailJobActivity extends BaseActivity {
             @Override
             public void onRefresh() {
                 if (statusPreInternet != statusInternet){
-                    registerInternetBroadcastReceiver();
+                    //registerInternetBroadcastReceiver();
                     isFirst = true;
                 }
                 if (statusInternet == STATUS_NO_INTERNET){
@@ -303,16 +363,18 @@ public class DetailJobActivity extends BaseActivity {
 
 
     //Ham gọi API
-    private void getDetailJob(String jobId, DetailJobCallback callback) {
+    private void getDetailJob(String jobId, int type,int userId, DetailJobCallback callback) {
         //Tao doi tuong retrofit
+        Log.d("test", type + " type");
+        Log.d("test", userId + " user id");
         Log.d("test", DetailJobAPI.BASE_URL);
         Log.d("test", jobId);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(DetailJobAPI.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        detailJobAPI = retrofit.create(DetailJobAPI.class);
-        Call<Job> call = detailJobAPI.getJobDetail(jobId);
+        detailJobAPI = retrofit.create(IJobsService.class);
+        Call<Job> call = detailJobAPI.getJobDetail(Integer.parseInt(jobId), type, userId);
         call.enqueue(new Callback<Job>() {
             @Override
             public void onResponse(Call<Job> call, Response<Job> response) {
@@ -334,7 +396,7 @@ public class DetailJobActivity extends BaseActivity {
     }
 
     //Ham Applied Job
-    private void AppliedJob (String job_id, String user_id) {
+    private void appliedJob (String job_id, String user_id) {
         //Tao Retrofit
         progressDialog.show();
         Retrofit retrofit = new Retrofit.Builder()
@@ -356,6 +418,7 @@ public class DetailJobActivity extends BaseActivity {
                 if(response.isSuccessful()){
 //                    Log.d("test", "Response");
                     progressDialog.dismiss();
+                    binding.btnApplied.setEnabled(false);
                     showDialog("Ứng tuyển thành công", true);
                 }
                 else {
@@ -374,9 +437,42 @@ public class DetailJobActivity extends BaseActivity {
 
     }
 
+    private void getJobsApplied(AppliedJobCallback callback){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(IJobsService.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        IJobsService iJobsService = retrofit.create(IJobsService.class);
+        Call<ArrayList<JobBasic>> call = iJobsService.getJobApplied(userId);
+        call.enqueue(new Callback<ArrayList<JobBasic>>() {
+            @Override
+            public void onResponse(Call<ArrayList<JobBasic>> call, Response<ArrayList<JobBasic>> response) {
+                if (response.isSuccessful()){
+
+                    appliedJobs = response.body();
+                    assert appliedJobs != null;
+                    callback.onDetailJobLoaded(appliedJobs);
+
+//                    Gson gson = new Gson();
+//                    String json = gson.toJson( response.body());
+//                    Log.d("applied",json);
+                }
+            }
+            @Override
+            public void onFailure(Call<ArrayList<JobBasic>> call, Throwable t) {
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
     public interface DetailJobCallback {
         void onDetailJobLoaded(Job job);
         void onDetailJobFailed(String errorMessage);
+    }
+
+    public interface AppliedJobCallback {
+        void onDetailJobLoaded(ArrayList<JobBasic> appliedJobs);
     }
 
     //Ham xu ly chuoi thanh cac dau cham dau dong
@@ -387,17 +483,17 @@ public class DetailJobActivity extends BaseActivity {
 
         SpannableStringBuilder ssb = new SpannableStringBuilder();
         for (int i = 0; i < arr.length; i++) {
-            String line = arr[i];
-            SpannableString ss = new SpannableString(line);
-            ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            ssb.append(ss);
-
-            // Tránh thêm "\n" cuối cùng
-            if (i + 1 < arr.length)
+            String line = arr[i].trim();
+            if(!line.isEmpty()) {
+                SpannableString ss = new SpannableString(line);
+                ss.setSpan(new BulletSpan(bulletGap), 0, line.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                ssb.append(ss);
+                // Tránh thêm "\n" cuối cùng
+                if (i + 1 < arr.length) {
+                    ssb.append("\n");
+                }
                 ssb.append("\n");
-
-            // Thêm khoảng trống sau mỗi đoạn văn
-            ssb.append("\n");
+            }
 
         }
         return ssb;
@@ -436,15 +532,21 @@ public class DetailJobActivity extends BaseActivity {
 
     @Override
     protected void handleGoodInternet() {
-        statusPreInternet = STATUS_GOOD_INTERNET;
-        if (isFirst) {
-            statusInternet = STATUS_GOOD_INTERNET;
-            isFirst = false;
-        }
-        else{
-            binding.image.setVisibility(View.GONE);
-            binding.main.setVisibility(View.VISIBLE);
-        }
+//        statusPreInternet = STATUS_GOOD_INTERNET;
+//        if (isFirst) {
+//            statusInternet = STATUS_GOOD_INTERNET;
+//            isFirst = false;
+//        }
+//        else{
+//            binding.image.setVisibility(View.GONE);
+//            binding.main.setVisibility(View.VISIBLE);
+//            MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+//                    "Kết nối mạng đã được khôi phục",
+//                    MotionToastStyle.SUCCESS,
+//                    MotionToast.GRAVITY_BOTTOM,
+//                    MotionToast.LONG_DURATION,
+//                    ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+//        }
     }
 
     //Show dialog
@@ -481,6 +583,61 @@ public class DetailJobActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+    }
+
+
+    private void saveJobToBookmarks(int userId, int jobId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DetailJobAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        iJobsService = retrofit.create(IJobsService.class);
+        Call<Void> call = iJobsService.addBookmark(userId, jobId, type);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+                            "Đã thêm công việc thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(DetailJobActivity.this, "Lỗi khi thêm vào bookmark "+ t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void removeJobBookmark(int userId, int jobId) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(DetailJobAPI.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        iJobsService = retrofit.create(IJobsService.class);
+        Call<Void> call = iJobsService.destroyBookmark(userId, jobId, type);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()){
+                    MotionToast.Companion.createToast(DetailJobActivity.this, "😍",
+                            "Đã xóa công việc thành công",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.LONG_DURATION,
+                            ResourcesCompat.getFont(DetailJobActivity.this, R.font.helvetica_regular));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(DetailJobActivity.this, "Lỗi khi xoa vào bookmark "+ t.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("bmtest",t.getMessage());
             }
         });
     }
