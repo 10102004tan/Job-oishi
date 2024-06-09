@@ -14,6 +14,7 @@ public class UserRequest {
     private String city;
     private String province;
     private int is_first_login;
+    private String verify_token_code;
 
 
     public UserRequest(int id, String first_name, String last_name, String email, String birth, String gender, String education, String time_starting_work, String photo_url, String country, String city, String province, int is_first_login) {
@@ -32,6 +33,14 @@ public class UserRequest {
         this.is_first_login = is_first_login;
     }
 
+
+    public String getVerify_token_code() {
+        return verify_token_code;
+    }
+
+    public void setVerify_token_code(String verify_token_code) {
+        this.verify_token_code = verify_token_code;
+    }
 
     public int getIs_first_login() {
         return is_first_login;
